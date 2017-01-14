@@ -1,0 +1,27 @@
+.panel.panel--styled {
+    background: #F4F2F3;
+}
+.panelTop {
+    padding: 30px;
+}
+
+.panelBottom {
+    padding-top: 20px;
+    padding-left: 30px;
+}
+.half-panel{
+    display: inline-block;
+    width: 50%;
+}
+
+.hostel-descript{
+    margin-top: 20px;
+}
+
+span.itemPrice {
+    font-size: 24px;
+    color: #FA5B58;
+}
+.hostel-name{
+    margin: 0;
+}
