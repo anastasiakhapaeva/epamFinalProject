@@ -1,4 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${locale}"/>
+<fmt:setBundle basename="i18n.text"/>
 <%--
   Created by IntelliJ IDEA.
   User: Roman
@@ -14,63 +17,28 @@
             <!-- Заголовок модального окна -->
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title">Messages</h4>
+                <h4 class="modal-title"><fmt:message key="menu.user.messages"/></h4>
             </div>
             <!-- Основное содержимое модального окна -->
             <div class="modal-body">
-                <div class="tab-content">
-                    <div class="tab-pane active" id="inbox">
 
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <%--<ul class="mail-list">--%>
-                                        <c:forEach var="elem" items="${messages}">
-                                            <div class="alert alert-info fade in">
-                                                <button name="closeButton" data-message-id="${elem.messageId}" type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                                <h4>${elem.sender}</h4>
-                                                <p>${elem.text}</p>
-                                            </div>
-                                            </c:forEach>
-                                        <%--<li>--%>
-                                            <%--<div>--%>
-                                                <%--<span class="mail-sender">You Tube</span>--%>
-                                                <%--<span class="mail-subject">New subscribers!</span>--%>
-                                                <%--<span class="mail-message-preview">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil eveniet ipsum nisi? Eaque odio quae debitis saepe explicabo alias sit tenetur animi...</span>--%>
-                                            <%--</div>--%>
-                                        <%--</li>--%>
-                                        <%--<li>--%>
-                                            <%--<div>--%>
-                                                <%--<span class="mail-sender">You Tube</span>--%>
-                                                <%--<span class="mail-subject">New subscribers!</span>--%>
-                                                <%--<span class="mail-message-preview">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil eveniet ipsum nisi? Eaque odio quae debitis saepe explicabo alias sit tenetur animi...</span>--%>
-                                            <%--</div>--%>
-                                        <%--</li>--%>
-                                        <%--<li>--%>
-                                            <%--<div>--%>
-                                                <%--<span class="mail-sender">You Tube</span>--%>
-                                                <%--<span class="mail-subject">New subscribers!</span>--%>
-                                                <%--<span class="mail-message-preview">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil eveniet ipsum nisi? Eaque odio quae debitis saepe explicabo alias sit tenetur animi...</span>--%>
-                                            <%--</div>--%>
-                                        <%--</li>--%>
-                                        <%--<li>--%>
-                                            <%--<div>--%>
-                                                <%--<span class="mail-sender">You Tube</span>--%>
-                                                <%--<span class="mail-subject">New subscribers!</span>--%>
-                                                <%--<span class="mail-message-preview">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil eveniet ipsum nisi? Eaque odio quae debitis saepe explicabo alias sit tenetur animi...</span>--%>
-                                            <%--</div>--%>
-                                        <%--</li>--%>
-                                    <%--</ul>--%>
-                                </div>
-                            </div>
+                <div>
+
+                    <c:forEach var="elem" items="${messages}">
+                        <div class="alert alert-info fade in">
+                            <button name="closeButton" data-message-id="${elem.messageId}" type="button"
+                                    class="close" data-dismiss="alert" aria-hidden="true">×
+                            </button>
+                            <h4>${elem.sender}</h4>
+                            <p>${elem.text}</p>
                         </div>
+                    </c:forEach>
 
-                    </div>
                 </div>
-
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><fmt:message
+                        key="modal.button.close"/></button>
             </div>
         </div>
     </div>

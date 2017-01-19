@@ -1,5 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${locale}"/>
+<fmt:setBundle basename="i18n.text"/>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -7,7 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Hostels in Belarus</title>
+    <title><fmt:message key="page.title"/></title>
 
     <!-- Bootstrap -->
     <link href="<c:url value="/resources/css/bootstrap.css"/>" rel="stylesheet">
@@ -23,6 +25,7 @@
     <script src="<c:url value="/resources/js/jquery-ui.min.js"/>"></script>
     <script src="<c:url value="/resources/js/parsley.min.js"/>"></script>
     <script src="<c:url value="/resources/js/ajaxuser.js"/>"></script>
+    <script src="<c:url value="/resources/js/ajaxrequests.js"/>"></script>
     <script src="<c:url value="/resources/js/notification.js"/>"></script>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -48,7 +51,7 @@
                 <div class="col col-xs-6">
                     <h3 class="panel-title">
                         <span class="fa fa-list" aria-hidden="true"></span>
-                        <span>Unconfirmed claims</span>
+                        <span><fmt:message key="page.claims.title"/></span>
                     </h3>
                 </div>
                 <%--<div class="col col-xs-6 text-right">--%>
@@ -61,12 +64,12 @@
                 <thead>
                 <tr>
                     <th class="hidden-xs">ID</th>
-                    <th><span class="fa fa-user" aria-hidden="true"></span> User</th>
-                    <th><span class="fa fa-h-square" aria-hidden="true"></span> Hostel</th>
-                    <th><span class="fa fa-users" aria-hidden="true"></span> Required places</th>
-                    <th><span class="fa fa-calendar-plus-o" aria-hidden="true"></span> Date in</th>
-                    <th><span class="fa fa-calendar-minus-o" aria-hidden="true"></span> Date out</th>
-                    <th><span class="fa fa-cog" aria-hidden="true"></span> Action</th>
+                    <th><span class="fa fa-user" aria-hidden="true"></span> <fmt:message key="page.claims.table.user"/></th>
+                    <th><span class="fa fa-h-square" aria-hidden="true"></span> <fmt:message key="page.claims.table.hostel"/></th>
+                    <th><span class="fa fa-users" aria-hidden="true"></span> <fmt:message key="page.claims.table.places"/></th>
+                    <th><span class="fa fa-calendar-plus-o" aria-hidden="true"></span> <fmt:message key="page.form.datein"/></th>
+                    <th><span class="fa fa-calendar-minus-o" aria-hidden="true"></span> <fmt:message key="page.form.dateout"/></th>
+                    <th><span class="fa fa-cog" aria-hidden="true"></span> <fmt:message key="page.claims.table.action"/></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -83,11 +86,11 @@
                         <td class="text-center">
                             <a class="btn btn-success" href="${pageContext.request.contextPath}/service?command=confirm_claim&claimId=${claim.claimId}">
                                 <span class="fa fa-check" aria-hidden="true"></span>
-                                <span> confirm</span>
+                                <span> <fmt:message key="page.claims.table.confirm"/></span>
                             </a>
                             <a class="btn btn-danger" href="${pageContext.request.contextPath}/service?command=delete_claim&claimId=${claim.claimId}">
                                 <span class="fa fa-trash" aria-hidden="true"></span>
-                                <span> delete</span>
+                                <span> <fmt:message key="page.claims.table.delete"/></span>
                             </a>
                         </td>
                     </tr>
@@ -96,25 +99,25 @@
             </table>
 
         </div>
-        <div class="panel-footer">
-            <div class="row">
-                <div class="col col-xs-4">Page 1 of 5
-                </div>
-                <div class="col col-xs-8">
-                    <ul class="pagination hidden-xs pull-right">
-                        <li><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
-                    </ul>
-                    <ul class="pagination visible-xs pull-right">
-                        <li><a href="#">«</a></li>
-                        <li><a href="#">»</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+        <%--<div class="panel-footer">--%>
+            <%--<div class="row">--%>
+                <%--<div class="col col-xs-4">Page 1 of 5--%>
+                <%--</div>--%>
+                <%--<div class="col col-xs-8">--%>
+                    <%--<ul class="pagination hidden-xs pull-right">--%>
+                        <%--<li><a href="#">1</a></li>--%>
+                        <%--<li><a href="#">2</a></li>--%>
+                        <%--<li><a href="#">3</a></li>--%>
+                        <%--<li><a href="#">4</a></li>--%>
+                        <%--<li><a href="#">5</a></li>--%>
+                    <%--</ul>--%>
+                    <%--<ul class="pagination visible-xs pull-right">--%>
+                        <%--<li><a href="#">«</a></li>--%>
+                        <%--<li><a href="#">»</a></li>--%>
+                    <%--</ul>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+        <%--</div>--%>
     </div>
     <%--<div class="container">--%>
         <%--<div class="row content-wrapper">--%>

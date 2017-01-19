@@ -1,4 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${locale}"/>
+<fmt:setBundle basename="i18n.text"/>
 <%--
   Created by IntelliJ IDEA.
   User: Roman
@@ -7,19 +10,13 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Title</title>
-</head>
-<body>
 <footer class="footer navbar-inverse">
     <div class="container">
         <div class="navbar-header">
             <a class="navbar-brand">BELHOSTEL</a>
         </div>
         <div class="collapse navbar-collapse" id="menu1">
-            <span class="copyrights">©
-            2016. belhostel.by Все права защищены.</span>
+            <span class="copyrights"><fmt:message key="footer.copyrights"/></span>
             <ul class="nav navbar-nav navbar-right">
                 <li>
                     <a href="#">
@@ -40,5 +37,3 @@
         </div>
     </div>
 </footer>
-</body>
-</html>

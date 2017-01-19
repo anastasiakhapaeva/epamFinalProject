@@ -120,3 +120,49 @@ $(function () {
         return false;
     });
 });
+
+$(function () {
+    $('#ru').on("click", function () {
+        var result = false;
+        $.ajax({
+            type: 'GET',
+            url: '/web/service',
+            data: {
+                locale: 'ru_RU',
+                command: 'ajax_change_lang'
+            },
+            async: false,
+            success: function (data) {
+                result = JSON.parse(data);
+            },
+            error: function (data) {
+                alert('error');
+            }
+        });
+        if(result){
+            location.reload();
+        }
+    });
+
+    $('#eng').on("click", function () {
+        var result = false;
+        $.ajax({
+            type: 'GET',
+            url: '/web/service',
+            data: {
+                locale: 'en_US',
+                command: 'ajax_change_lang'
+            },
+            async: false,
+            success: function (data) {
+                result = JSON.parse(data);
+            },
+            error: function (data) {
+                alert('error');
+            }
+        });
+        if(result){
+            location.reload();
+        }
+    });
+});

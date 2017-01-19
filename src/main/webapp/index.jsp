@@ -1,15 +1,15 @@
 <%@page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%--<fmt:setLocale value="${locale}"/>--%>
-<%--<fmt:setBundle basename="i18n.text"/>--%>
+<fmt:setLocale value="${locale}"/>
+<fmt:setBundle basename="i18n.text"/>
 <html>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Hostels in Belarus</title>
+    <title><fmt:message key="page.title"/></title>
     <link href="<c:url value="/resources/css/bootstrap.css"/>" rel="stylesheet">
     <link href="<c:url value="/resources/css/jquery-ui.css"/>" rel="stylesheet">
     <link href="<c:url value="/resources/css/menu.css"/>" rel="stylesheet">
@@ -43,11 +43,8 @@
     <div class="panel-content">
         <div class="container table-row">
             <div class="row title-panel">
-                <h2>Бронирование хостелов с belhostel.</h2>
-                <div class="under-title">Создайте профиль на нашем сайте и просматривайте, бронируйте, оплачивайте
-                    хостелы в
-                    любое время!
-                </div>
+                <h2><fmt:message key="page.main.title"/></h2>
+                <div class="under-title"><fmt:message key="page.main.undertitle"/></div>
             </div>
         </div>
         <div class="container table-row">
@@ -56,50 +53,49 @@
                     <div class="row vert-center">
                         <form role="form" class="form-inline form" method="post" action="${pageContext.request.contextPath}/service">
                             <div class="form-group">
-                                <span class="forinputlabel">Расположение</span>
+                                <span class="forinputlabel"><fmt:message key="page.form.location"/></span>
                                 <div class="input-group">
                             <span class="input-group-addon">
                                 <span class="fa fa-map-marker"></span>
                             </span>
                                     <select id="city" class="form-control" name="city" required="true">
                                         <option value="" disabled selected hidden>
-                                            Выберите город
+                                            <fmt:message key="page.form.choose"/>
                                         </option>
-                                        <option value="Minsk">Минск</option>
-                                        <option value="Grodno">Гродно</option>
-                                        <option value="Gomel">Гомель</option>
-                                        <option value="Mogilev">Могилев</option>
-                                        <option value="Vitebsk">Витебск</option>
-                                        <option value="Brest">Брест</option>
+                                        <option value="Minsk"><fmt:message key="page.form.minsk"/></option>
+                                        <option value="Grodno"><fmt:message key="page.form.grodno"/></option>
+                                        <option value="Gomel"><fmt:message key="page.form.gomel"/></option>
+                                        <option value="Mogilev"><fmt:message key="page.form.mogilev"/></option>
+                                        <option value="Vitebsk"><fmt:message key="page.form.vitebsk"/></option>
+                                        <option value="Brest"><fmt:message key="page.form.brest"/></option>
                                     </select>
-
                                 </div>
                             </div>
                             <div class="form-group">
-                                <span class="forinputlabel">Дата въезда</span>
+                                <span class="forinputlabel"><fmt:message key="page.form.datein"/></span>
                                 <div class="input-group">
                                 <span class="input-group-addon">
                                     <span class="fa fa-calendar-plus-o" aria-hidden="true"></span>
                                 </span>
-                                    <input id="date_in" type="text" class="form-control" name="date_in" required="true" placeholder="дата въезда">
+                                    <input id="date_in" type="text" class="form-control" name="date_in" required="true" placeholder="<fmt:message key="page.form.datein"/>">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <span class="forinputlabel">Дата выезда</span>
+                                <span class="forinputlabel"><fmt:message key="page.form.dateout"/></span>
                                 <div class="input-group">
                             <span class="input-group-addon">
                                 <span class="fa fa-calendar-minus-o" aria-hidden="true"></span>
                             </span>
-                                    <input id="date_out" type="text"  class="form-control" name="date_out" required="true" placeholder="дата выезда">
+                                    <input id="date_out" type="text"  class="form-control" name="date_out" required="true" placeholder="<fmt:message key="page.form.dateout"/>">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <span class="forinputlabel">Места</span>
-                                <input id="guests" placeholder="Количество мест" type="text" class="form-control" name="guests" required="true">
+                                <span class="forinputlabel"><fmt:message key="page.form.places"/></span>
+                                <input id="guests" placeholder="<fmt:message key="page.form.places.holder"/>" type="text" class="form-control" name="guests" required="true">
                             </div>
                             <div class="form-group">
                                 <span class="forinputlabel label-butt">Отправить</span>
-                                <button type="submit" class="btn btn-success">Подобрать</button>
+                                <button type="submit" class="btn btn-success"><fmt:message key="page.form.button.find"/></button>
                             </div>
                             <input type="hidden" name="command" value="find_hostels">
                             <input type="hidden" name="type" value="claim">
@@ -115,8 +111,8 @@
             <div class="cities">
                 <div class="city-content">
                     <div class="title-panel">
-                        <h2>Лучшие предложения на хостелы в одном из этих городов!</h2>
-                        <div class="under-title">Забронируйте номер и убедитесь сами.</div>
+                        <h2><fmt:message key="page.main.cities.title"/></h2>
+                        <div class="under-title"><fmt:message key="page.main.cities.undertitle"/></div>
                     </div>
                 </div>
                 <div class="table-row">
@@ -127,14 +123,14 @@
                                    href="${pageContext.request.contextPath}/service?command=find_hostels&type=city&city=Minsk">
                                     <img src="<c:url value="/resources/img/minsk.jpg"/>" class="img-circle img-city"
                                          width="158" height="158">
-                                    <span>Минск</span></a>
+                                    <span><fmt:message key="page.form.minsk"/></span></a>
                             </div>
                             <div class="col-lg-2">
                                 <a class="under-img"
                                    href="${pageContext.request.contextPath}/service?command=find_hostels&type=city&city=Gomel">
                                     <img src="<c:url value="/resources/img/gomel.jpg"/>" class="img-circle img-city"
                                          width="158" height="158">
-                                    <span>Гомель</span>
+                                    <span><fmt:message key="page.form.gomel"/></span>
                                 </a>
                             </div>
                             <div class="col-lg-2">
@@ -142,7 +138,7 @@
                                    href="${pageContext.request.contextPath}/service?command=find_hostels&type=city&city=Grodno">
                                     <img src="<c:url value="/resources/img/grodno.jpg"/>" class="img-circle img-city"
                                          width="158" height="158">
-                                    <span>Гродно</span>
+                                    <span><fmt:message key="page.form.grodno"/></span>
                                 </a>
                             </div>
                             <div class="col-lg-2">
@@ -150,21 +146,21 @@
                                    href="${pageContext.request.contextPath}/service?command=find_hostels&type=city&city=Mogilev">
                                     <img src="<c:url value="/resources/img/mogilev.jpg"/>" class="img-circle img-city"
                                          width="158" height="158">
-                                    <span>Могилев</span></a>
+                                    <span><fmt:message key="page.form.mogilev"/></span></a>
                             </div>
                             <div class="col-lg-2">
                                 <a class="under-img"
                                    href="${pageContext.request.contextPath}/service?command=find_hostels&type=city&city=Brest">
                                     <img src="<c:url value="/resources/img/brest.jpg"/>" class="img-circle img-city"
                                          width="158" height="158">
-                                    <span>Брест</span></a>
+                                    <span><fmt:message key="page.form.brest"/></span></a>
                             </div>
                             <div class="col-lg-2">
                                 <a class="under-img"
                                    href="${pageContext.request.contextPath}/service?command=find_hostels&type=city&city=Vitebsk">
                                     <img src="<c:url value="/resources/img/vitebsk.jpg"/>" class="img-circle img-city"
                                          width="158" height="158">
-                                    <span>Витебск</span></a>
+                                    <span><fmt:message key="page.form.vitebsk"/></span></a>
                             </div>
                         </div>
                     </div>

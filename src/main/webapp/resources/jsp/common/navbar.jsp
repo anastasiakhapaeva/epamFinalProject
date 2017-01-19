@@ -8,6 +8,9 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${locale}"/>
+<fmt:setBundle basename="i18n.text"/>
 <%--<html>--%>
 <%--<head>--%>
     <%--<title>Title</title>--%>
@@ -19,7 +22,7 @@
 <c:set var="bookedHostels" value="${bookedHostels}"/>
 <c:set var="paidHostels" value="${paidHostels}"/>
 <c:set var="messages" value="${messages}"/>
-<nav is="nav-bar" class="navbar navbar-inverse navbar-fixed-top menu" role="navigation">
+<nav id="nav-bar" class="navbar navbar-inverse navbar-fixed-top menu" role="navigation">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu">
@@ -35,7 +38,7 @@
                 <li>
                     <a href="${pageContext.request.contextPath}/service?command=go&page=main">
                         <span class="fa fa-home" aria-hidden="true"></span>
-                        <span>Главная</span>
+                        <span><fmt:message key="menu.main"/></span>
                     </a>
                 </li>
                 <li>
@@ -43,13 +46,13 @@
                         <c:when test="${not empty hostels}">
                             <a href="${pageContext.request.contextPath}/service?command=go&page=catalog">
                                 <span class="fa fa-bed" aria-hidden="true"></span>
-                                <span>Хостелы</span>
+                                <span><fmt:message key="menu.hostels"/></span>
                             </a>
                         </c:when>
                         <c:otherwise>
                             <a href="${pageContext.request.contextPath}/service?command=find_hostels&type=all">
                                 <span class="fa fa-bed" aria-hidden="true"></span>
-                                <span>Хостелы</span>
+                                <span><fmt:message key="menu.hostels"/></span>
                             </a>
                         </c:otherwise>
                     </c:choose>
@@ -59,26 +62,26 @@
                     <li>
                         <a href="${pageContext.request.contextPath}/service?command=go&page=claims">
                             <span class="fa fa-envelope-open" aria-hidden="true"></span>
-                            <span>Заявки <span class="badge">${fn:length(unconfirmedClaims)}</span></span>
+                            <span><fmt:message key="menu.claims"/> <span class="badge">${fn:length(unconfirmedClaims)}</span></span>
                         </a>
                     </li>
                 </c:if>
                 <li>
                     <a href="#userModal" role="button" data-toggle="modal">
                         <span class="fa fa-info" aria-hidden="true"></span>
-                        <span>О нас</span>
+                        <span><fmt:message key="menu.aboutus"/></span>
                     </a>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="#">
+                    <a id="ru">
                         <span id="flag_ru"></span>
                         <span>Rus</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a id="eng">
                         <span id="flag_en"></span>
                         <span>Eng</span>
                     </a>
@@ -106,7 +109,7 @@
                         </c:choose>
                         <span>${profile.firstName}
                             <c:if test="${user.banned}">
-                                <span>(banned)</span>
+                                <span><fmt:message key="menu.user.banned"/></span>
                             </c:if>
                         </span>
                         <c:if test="${not empty messages}">
@@ -115,35 +118,33 @@
                     </a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
                         <li><a tabindex="-1"
-                               href="${pageContext.request.contextPath}/service?command=go&page=profile">Профиль</a>
+                               href="${pageContext.request.contextPath}/service?command=go&page=profile"><fmt:message key="menu.user.profile"/></a>
                         </li>
                         <c:if test="${not empty messages}">
-                            <li><a tabindex="-1" href="#messageModal" role="button" data-toggle="modal">Сообщения <span class="badge">${fn:length(messages)}</span></a>
+                            <li><a tabindex="-1" href="#messageModal" role="button" data-toggle="modal"><fmt:message key="menu.user.messages"/> <span class="badge">${fn:length(messages)}</span></a>
                             </li>
 
                         </c:if>
-                        <li><a tabindex="-1" href="#depositModal" role="button" data-toggle="modal">Пополнить баланс</a>
+                        <li><a tabindex="-1" href="#depositModal" role="button" data-toggle="modal"><fmt:message key="menu.user.balance"/></a>
                         </li>
                         <c:if test="${not empty paidHostels}">
                         <li><a tabindex="-1"
-                               href="${pageContext.request.contextPath}/service?command=go&page=profile">Оплаченные
-                            хостелы</a></li>
+                               href="${pageContext.request.contextPath}/service?command=go&page=profile"><fmt:message key="menu.user.paid"/></a></li>
                             </c:if>
                             <c:if test="${not empty bookedHostels}">
                         <li><a tabindex="-1"
-                               href="${pageContext.request.contextPath}/service?command=go&page=profile">Забронированные
-                            хостелы</a></li>
+                               href="${pageContext.request.contextPath}/service?command=go&page=profile"><fmt:message key="menu.user.booked"/></a></li>
                         <li>
                             </c:if>
                         <li class="divider"></li>
-                        <li><a tabindex="-1" href="${pageContext.request.contextPath}/service?command=logout">Выйти</a>
+                        <li><a tabindex="-1" href="${pageContext.request.contextPath}/service?command=logout"><fmt:message key="menu.user.logout"/></a>
                         </li>
                     </ul>
                 </li>
                 </c:when>
                 <c:otherwise>
                     <a href="#myModal" role="button" data-toggle="modal" class="login-btn">
-                        <span>Войти</span>
+                        <span><fmt:message key="menu.signin"/></span>
                         <span class="glyphicon glyphicon-log-in no-padd"></span>
                     </a>
                 </c:otherwise>

@@ -79,6 +79,11 @@ public enum CommandEnum {
             this.command = new AjaxLoadUserCommand();
         }
     },
+    AJAX_CHANGE_LANG {
+        {
+            this.command = new AjaxLanguageCommand();
+        }
+    },
     AJAX_FREE_PLACES {
         {
             this.command = new AjaxFreePlacesCommand();

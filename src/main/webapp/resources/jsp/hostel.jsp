@@ -1,4 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${locale}"/>
+<fmt:setBundle basename="i18n.text"/>
 <%--
   Created by IntelliJ IDEA.
   User: Roman
@@ -13,7 +16,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Hostels in Belarus</title>
+    <title><fmt:message key="page.title"/></title>
 
     <!-- Bootstrap -->
     <link href="<c:url value="/resources/css/bootstrap.css"/>" rel="stylesheet">
@@ -64,11 +67,11 @@
             <%--<div class="item-container">--%>
             <h2 class="hostel-title">
                 <span>${hostel.name}</span>
-                <div class="hostel-rating pull-right">
-                    <span>Оценка: </span>
-                    <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i
-                        class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i
-                        class="fa fa-star-o"></i></div>
+                <%--<div class="hostel-rating pull-right">--%>
+                    <%--<span>Оценка: </span>--%>
+                    <%--<i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i--%>
+                        <%--class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i--%>
+                        <%--class="fa fa-star-o"></i></div>--%>
             </h2>
             <hr class="devider"/>
             <div class="col-md-12 padd-top-20">
@@ -95,7 +98,7 @@
 
                 <div class="col-md-4">
                     <div class="info-title">
-                        Contact info:
+                        <fmt:message key="page.hostel.contact"/>
                     </div>
                     <div>
                         <span class="fa fa-map-marker" aria-hidden="true"></span>
@@ -108,10 +111,10 @@
                     </div>
                     <hr>
                     <div class="info-title">
-                        <span>Total amount of places: ${hostel.freePlaces}</span>
+                        <span><fmt:message key="page.hostel.places"/> ${hostel.freePlaces}</span>
                     </div>
                     <hr>
-                    <div class="info-title">Price per night:</div>
+                    <div class="info-title"><fmt:message key="page.hostel.price"/></div>
                     <div class="hostel-price">$${hostel.price}</div>
                     <hr>
                     <c:choose>
@@ -119,25 +122,25 @@
                             <c:choose>
                                 <c:when test="${bookedHostels.contains(current)}">
                                     <div id="book-status-booked">
-                                        <div>You have booked this hostel!</div>
+                                        <div><fmt:message key="page.hostel.status.booked"/></div>
                                         <a href="${pageContext.request.contextPath}/service?command=book_cancel&hostelId=${hostel.hostelId}&userId=${currentUser.userId}"
                                            class="btn btn-danger" role="button">
-                                            Cancel booking
+                                            <fmt:message key="page.hostel.button.cancel"/>
                                         </a>
                                     </div>
                                 </c:when>
                                 <c:when test="${paidHostels.contains(current)}">
                                     <div id="book-status-paid">
-                                        <div>You have paid this hostel!</div>
+                                        <div><fmt:message key="page.hostel.status.paid"/></div>
                                     </div>
                                 </c:when>
                                 <c:when test="${currentUser.money < current.price}">
-                                    <div>You haven't got enough money to book this hostel!</div>
+                                    <div><fmt:message key="page.hostel.status.money"/></div>
                                 </c:when>
                                 <c:otherwise>
                                     <div id="book-status-free">
                                         <a href="#bookModal" role="button" data-toggle="modal" class="btn btn-success">
-                                            Book it now!
+                                            <fmt:message key="page.hostel.button.book"/>
                                         </a>
                                     </div>
                                 </c:otherwise>
@@ -156,10 +159,10 @@
                             <%--</div>--%>
                         </c:when>
                         <c:when test="${not empty currentUser and currentUser.banned}">
-                            <div>We are sorry, but you are banned on this site!</div>
+                            <div><fmt:message key="page.hostel.status.banned"/></div>
                         </c:when>
                         <c:otherwise>
-                            <div>Log in to book this hostel!</div>
+                            <div><fmt:message key="page.hostel.status.login"/></div>
                         </c:otherwise>
                     </c:choose>
 
@@ -171,10 +174,10 @@
                     <div class="col-md-12 hostel-info">
                         <ul id="myTab" class="nav nav-tabs nav_tabs">
 
-                            <li class="active"><a href="#service-one" data-toggle="tab">DESCRIPTION</a></li>
-                            <li><a href="#service-three" data-toggle="tab">REVIEWS</a></li>
+                            <li class="active"><a href="#service-one" data-toggle="tab"><fmt:message key="page.hostel.description"/></a></li>
+                            <%--<li><a href="#service-three" data-toggle="tab">REVIEWS</a></li>--%>
                             <c:if test="${currentUser.admin}">
-                                <li><a href="#edit-hostel" data-toggle="tab">EDIT HOSTEL</a></li>
+                                <li><a href="#edit-hostel" data-toggle="tab"><fmt:message key="page.hostel.edit"/></a></li>
                             </c:if>
                         </ul>
                         <div id="myTabContent" class="tab-content">
@@ -185,15 +188,15 @@
                                 </div>
 
                             </div>
-                            <div class="tab-pane fade" id="service-three">
+                            <%--<div class="tab-pane fade" id="service-three">--%>
 
-                            </div>
+                            <%--</div>--%>
                             <c:if test="${currentUser.admin}">
                                 <div class="tab-pane fade" id="edit-hostel">
                                     <form id="edit-hostel-form" role="form" class="form-horizontal my-form"
                                           action="${pageContext.request.contextPath}/service" method="post" data-parsley-validate>
                                         <div class="form-group">
-                                            <label for="hostelName" class="control-label col-sm-4">Hostel name</label>
+                                            <label for="hostelName" class="control-label col-sm-4"><fmt:message key="page.form.hostelname"/></label>
                                             <div class="col-sm-6">
                                                 <input class="form-control" name="hostelName" id="hostelName" type="text"
                                                        value="${current.name}"
@@ -202,21 +205,21 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="hostelCity" class="control-label col-sm-4">Hostel city</label>
+                                            <label for="hostelCity" class="control-label col-sm-4"><fmt:message key="page.form.hostelcity"/></label>
                                             <div class="col-sm-6">
                                                 <select id="hostelCity" class="form-control" name="hostelCity" required="true">
-                                                    <option value="Minsk">Минск</option>
-                                                    <option value="Grodno">Гродно</option>
-                                                    <option value="Gomel">Гомель</option>
-                                                    <option value="Mogilev">Могилев</option>
-                                                    <option value="Vitebsk">Витебск</option>
-                                                    <option value="Brest">Брест</option>
+                                                    <option value="Minsk"><fmt:message key="page.form.minsk"/></option>
+                                                    <option value="Grodno"><fmt:message key="page.form.grodno"/></option>
+                                                    <option value="Gomel"><fmt:message key="page.form.gomel"/></option>
+                                                    <option value="Mogilev"><fmt:message key="page.form.mogilev"/></option>
+                                                    <option value="Vitebsk"><fmt:message key="page.form.vitebsk"/></option>
+                                                    <option value="Brest"><fmt:message key="page.form.brest"/></option>
                                                     <option value="${current.city}" hidden selected>${current.city}</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="hostelAddress" class="control-label col-sm-4">Hostel address</label>
+                                            <label for="hostelAddress" class="control-label col-sm-4"><fmt:message key="page.form.hosteladdress"/></label>
                                             <div class="col-sm-6">
                                                 <input class="form-control" name="hostelAddress" id="hostelAddress"
                                                        type="text"
@@ -225,7 +228,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="hostelPhone" class="control-label col-sm-4">Hostel phone</label>
+                                            <label for="hostelPhone" class="control-label col-sm-4"><fmt:message key="page.form.hostelphone"/></label>
                                             <div class="col-sm-6">
                                                 <input id="hostelPhone" class="form-control" name="hostelPhone" type="name"
                                                        value="${current.phone}"
@@ -233,7 +236,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="hostelPrice" class="control-label col-sm-4">Price per night, $</label>
+                                            <label for="hostelPrice" class="control-label col-sm-4"><fmt:message key="page.form.hostelprice"/></label>
                                             <div class="col-sm-6">
                                                 <input class="form-control" name="hostelPrice" id="hostelPrice" type="text"
                                                        value="${current.price}"
@@ -241,7 +244,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="hostelPlaces" class="control-label col-sm-4">Max amount of places</label>
+                                            <label for="hostelPlaces" class="control-label col-sm-4"><fmt:message key="page.form.hostelplaces"/></label>
                                             <div class="col-sm-6">
                                                 <input class="form-control" name="hostelPlaces" id="hostelPlaces" type="text"
                                                        value="${current.freePlaces}"
@@ -249,7 +252,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="hostelDesc" class="control-label col-sm-4">Description</label>
+                                            <label for="hostelDesc" class="control-label col-sm-4"><fmt:message key="page.form.hosteldesc"/></label>
                                             <div class="col-sm-6">
                                                 <textarea rows="7" class="form-control" name="hostelDesc" id="hostelDesc" data-parsley-required>${current.description}</textarea>
                                             </div>
@@ -257,7 +260,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-offset-6 inline-disp">
                                                 <input class="form-control btn btn-success" type="submit" id="register_button"
-                                                       value="Save changes"/>
+                                                       value="<fmt:message key="page.form.savechanges"/>"/>
                                             </div>
                                         </div>
                                         <input type="hidden" name="hostelId" value="${current.hostelId}">
