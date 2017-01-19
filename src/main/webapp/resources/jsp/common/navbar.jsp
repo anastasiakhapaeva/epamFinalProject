@@ -11,11 +11,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <fmt:setLocale value="${locale}"/>
 <fmt:setBundle basename="i18n.text"/>
-<%--<html>--%>
-<%--<head>--%>
-    <%--<title>Title</title>--%>
-<%--</head>--%>
-<%--<body>--%>
 <c:set var="user" value="${currentUser}"/>
 <c:set var="profile" value="${userProfile}"/>
 <c:set var="hostels" value="${hostels}"/>
@@ -154,5 +149,3 @@
         </div>
     </div>
 </nav>
-<%--</body>--%>
-<%--</html>--%>
