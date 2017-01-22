@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <fmt:setLocale value="${locale}"/>
-<fmt:setBundle basename="i18n.text"/>
+<fmt:setBundle basename="i18n.msg"/>
 <html>
 <head>
     <meta charset="utf-8">
@@ -18,15 +18,21 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="<c:url value="/resources/js/jquery.1.10.2.min.js"/>"></script>
-    <script src="<c:url value="/resources/js/jquery-ui.min.js"/>"></script>
-    <script src="<c:url value="/resources/js/bootstrap.js"/>"></script>
-    <script src="<c:url value="/resources/js/parsley.min.js"/>"></script>
-    <script src="<c:url value="/resources/js/hostel.js"/>"></script>
-    <script src="<c:url value="/resources/js/validator.js"/>"></script>
-    <script src="<c:url value="/resources/js/ajaxrequests.js"/>"></script>
-    <script src="<c:url value="/resources/js/pageupdate.js"/>"></script>
-    <script src="<c:url value="/resources/js/notification.js"/>"></script>
+    <script src="<c:url value="/resources/js/lib/jquery.1.10.2.min.js"/>"></script>
+    <script src="<c:url value="/resources/js/lib/jquery.i18n.properties-min-1.0.9.js"/>"></script>
+    <script src="<c:url value="/resources/js/lib/jquery-ui.min.js"/>"></script>
+    <script src="<c:url value="/resources/js/lib/bootstrap.js"/>"></script>
+    <script src="<c:url value="/resources/js/lib/parsley.min.js"/>"></script>
+
+    <script src="<c:url value="/resources/js/app/service/MenuBarService.js"/>"></script>
+    <script src="<c:url value="/resources/js/app/controller/MenuBarController.js"/>"></script>
+    <script src="<c:url value="/resources/js/app/controller/DateController.js"/>"></script>
+    <script src="<c:url value="/resources/js/app/pageupdate.js"/>"></script>
+    <%--<script src="<c:url value="/resources/js/app/hostel.js"/>"></script>--%>
+    <%--<script src="<c:url value="/resources/js/app/validator.js"/>"></script>--%>
+    <%--<script src="<c:url value="/resources/js/app/ajaxrequests.js"/>"></script>--%>
+    <%--<script src="<c:url value="/resources/js/app/pageupdate.js"/>"></script>--%>
+    <%--<script src="<c:url value="/resources/js/app/notification.js"/>"></script>--%>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>

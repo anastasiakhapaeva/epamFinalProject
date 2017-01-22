@@ -10,7 +10,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <fmt:setLocale value="${locale}"/>
-<fmt:setBundle basename="i18n.text"/>
+<fmt:setBundle basename="i18n.msg"/>
 <c:set var="user" value="${currentUser}"/>
 <c:set var="profile" value="${userProfile}"/>
 <c:set var="hostels" value="${hostels}"/>
@@ -70,18 +70,19 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a id="ru">
+                    <a role="button" id="ru" data-locale="ru_RU">
                         <span id="flag_ru"></span>
                         <span>Rus</span>
                     </a>
                 </li>
                 <li>
-                    <a id="eng">
+                    <a role="button" id="eng" data-locale="en_US">
                         <span id="flag_en"></span>
                         <span>Eng</span>
                     </a>
                 </li>
                 </li>
+                <input id="locale" type="hidden" value="${locale}">
                 <li class="li-height">
                     <c:choose>
                     <c:when test="${not empty user}">
