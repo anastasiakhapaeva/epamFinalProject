@@ -1,153 +1,136 @@
 package edu.training.web.logic;
 
-import edu.training.web.connector.ConnectionPool;
+import edu.training.web.exception.DAOException;
+import edu.training.web.exception.LogicException;
+import edu.training.web.pool.ConnectionPool;
 import edu.training.web.dao.ClaimDAO;
 import edu.training.web.dao.HostelDAO;
 import edu.training.web.dao.ImageDAO;
 import edu.training.web.dao.UserDAO;
 import edu.training.web.entity.Hostel;
 import edu.training.web.entity.HostelImage;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import edu.training.web.pool.ProxyConnection;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
  * Created by Roman on 07.01.2017.
  */
 public class AdminAction {
-    private static final Logger LOG = LogManager.getLogger();
-    public static boolean confirmClaim(int claimId){
-        Connection cn = null;
+    public static boolean confirmClaim(int claimId) throws LogicException{
         boolean result = false;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        ClaimDAO claimDAO = new ClaimDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            boolean autoCommit = cn.getAutoCommit();
             cn.setAutoCommit(false);
-            ClaimDAO claimDao = new ClaimDAO(cn);
-            result = claimDao.confirmClaim(claimId);
+            result = claimDAO.confirmClaim(claimId);
             cn.commit();
-            cn.setAutoCommit(autoCommit);
-        }catch (SQLException e){
-            LOG.error(e);
+        }catch (SQLException | DAOException e){
+            claimDAO.rollbackConnection(cn);
+            throw new LogicException("Cannot confirm claim", e);
         }finally{
-            ConnectionPool.getInstance().putConnection(cn);
+            claimDAO.closeConnection(cn);
         }
         return result;
     }
 
-    public static boolean deleteClaim(int claimId){
-        Connection cn = null;
+    public static boolean deleteClaim(int claimId) throws LogicException{
         boolean result = false;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        ClaimDAO claimDAO = new ClaimDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            boolean autoCommit = cn.getAutoCommit();
             cn.setAutoCommit(false);
-            ClaimDAO claimDao = new ClaimDAO(cn);
-            result = claimDao.deleteClaim(claimId);
+            result = claimDAO.deleteClaim(claimId);
             cn.commit();
-            cn.setAutoCommit(autoCommit);
-        }catch (SQLException e){
-            LOG.error(e);
+        }catch (SQLException | DAOException e){
+            claimDAO.rollbackConnection(cn);
+            throw new LogicException("Cannot delete claim", e);
         }finally{
-            ConnectionPool.getInstance().putConnection(cn);
+            claimDAO.closeConnection(cn);
         }
         return result;
     }
 
-    public static boolean banUser(int userId, boolean ban){
-        Connection cn = null;
+    public static boolean banUser(int userId, boolean ban) throws LogicException{
         boolean result = false;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        UserDAO userDAO = new UserDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            boolean autoCommit = cn.getAutoCommit();
             cn.setAutoCommit(false);
-            UserDAO userDao = new UserDAO(cn);
-            result = userDao.banUser(userId, ban);
+            result = userDAO.banUser(userId, ban);
             cn.commit();
-            cn.setAutoCommit(autoCommit);
-        }catch (SQLException e){
-            LOG.error(e);
+        }catch (SQLException | DAOException e){
+            userDAO.rollbackConnection(cn);
+            throw new LogicException("Cannot ban user", e);
         }finally{
-            ConnectionPool.getInstance().putConnection(cn);
+            userDAO.closeConnection(cn);
         }
         return result;
     }
 
-    public static boolean setDiscount(int userId, double discount){
-        Connection cn = null;
+    public static boolean setDiscount(int userId, double discount) throws LogicException{
         boolean result = false;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        UserDAO userDAO = new UserDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            boolean autoCommit = cn.getAutoCommit();
             cn.setAutoCommit(false);
-            UserDAO userDao = new UserDAO(cn);
-            result = userDao.setDiscount(userId, discount);
+            result = userDAO.setDiscount(userId, discount);
             cn.commit();
-            cn.setAutoCommit(autoCommit);
-        }catch (SQLException e){
-            LOG.error(e);
+        }catch (SQLException | DAOException e){
+            userDAO.rollbackConnection(cn);
+            throw new LogicException("Cannot set discount", e);
         }finally{
-            ConnectionPool.getInstance().putConnection(cn);
+            userDAO.closeConnection(cn);
         }
         return result;
     }
 
-    public static boolean editHostel(Hostel editedHostel){
-        Connection cn = null;
+    public static boolean editHostel(Hostel editedHostel) throws LogicException{
         boolean result = false;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        HostelDAO hostelDAO = new HostelDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            boolean autoCommit = cn.getAutoCommit();
             cn.setAutoCommit(false);
-            HostelDAO hostelDao = new HostelDAO(cn);
-            result = hostelDao.editHostel(editedHostel);
+            result = hostelDAO.editHostel(editedHostel);
             cn.commit();
-            cn.setAutoCommit(autoCommit);
-        }catch (SQLException e){
-            LOG.error(e);
+        }catch (SQLException | DAOException e){
+            hostelDAO.rollbackConnection(cn);
+            throw new LogicException("Cannot edit hostel", e);
         }finally{
-            ConnectionPool.getInstance().putConnection(cn);
+            hostelDAO.closeConnection(cn);
         }
         return result;
     }
 
-    public static boolean addHostel(Hostel hostel){
-        Connection cn = null;
+    public static boolean addHostel(Hostel hostel) throws LogicException{
         boolean result = false;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        HostelDAO hostelDAO = new HostelDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            boolean autoCommit = cn.getAutoCommit();
             cn.setAutoCommit(false);
-            HostelDAO hostelDao = new HostelDAO(cn);
-            result = hostelDao.create(hostel);
+            result = hostelDAO.create(hostel);
             cn.commit();
-            cn.setAutoCommit(autoCommit);
-        }catch (SQLException e){
-            LOG.error(e);
+        }catch (SQLException | DAOException e){
+            hostelDAO.rollbackConnection(cn);
+            throw new LogicException("Cannot add hostel", e);
         }finally{
-
-            ConnectionPool.getInstance().putConnection(cn);
+            hostelDAO.closeConnection(cn);
         }
         return result;
     }
-    public static boolean addHostelImage(HostelImage img){
-        Connection cn = null;
+    public static boolean addHostelImage(HostelImage img) throws LogicException{
         boolean result = false;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        ImageDAO imageDAO = new ImageDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            boolean autoCommit = cn.getAutoCommit();
             cn.setAutoCommit(false);
-            ImageDAO imageDao = new ImageDAO(cn);
-            result = imageDao.create(img);
+            result = imageDAO.create(img);
             cn.commit();
-            cn.setAutoCommit(autoCommit);
-        }catch (SQLException e){
-            LOG.error(e);
+        }catch (SQLException | DAOException e){
+            imageDAO.rollbackConnection(cn);
+            throw new LogicException("Cannot add hostel image", e);
         }finally{
-
-            ConnectionPool.getInstance().putConnection(cn);
+            imageDAO.closeConnection(cn);
         }
         return result;
     }

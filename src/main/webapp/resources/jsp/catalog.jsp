@@ -31,6 +31,14 @@
     <script src="<c:url value="/resources/js/app/controller/DateController.js"/>"></script>
     <script src="<c:url value="/resources/js/app/controller/CatalogController.js"/>"></script>
     <script src="<c:url value="/resources/js/app/pageupdate.js"/>"></script>
+    <script src="<c:url value="/resources/js/parsley/validator.js"/>"></script>
+    <script src="<c:url value="/resources/js/i18n/en.js"/>"></script>
+    <script src="<c:url value="/resources/js/i18n/ru.js"/>"></script>
+    <script>
+        $( document ).ready(function() {
+            window.Parsley.setLocale($("#locale").val().substring(0, 2));
+        });
+    </script>
     <%--<script src="<c:url value="/resources/js/app/ajaxloadimages.js"/>"></script>--%>
     <%--<script src="<c:url value="/resources/js/app/hostel.js"/>"></script>--%>
     <%--<script src="<c:url value="/resources/js/app/validator.js"/>"></script>--%>

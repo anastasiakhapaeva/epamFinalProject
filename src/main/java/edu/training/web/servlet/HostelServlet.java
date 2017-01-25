@@ -3,11 +3,10 @@ package edu.training.web.servlet;
 
 import edu.training.web.command.ActionCommand;
 import edu.training.web.command.RequestChecker;
-import edu.training.web.connector.ConnectionPool;
+import edu.training.web.pool.ConnectionPool;
 import edu.training.web.factory.ActionFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.config.plugins.convert.TypeConverters;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;

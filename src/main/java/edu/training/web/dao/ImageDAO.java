@@ -1,6 +1,8 @@
 package edu.training.web.dao;
 
 import edu.training.web.entity.HostelImage;
+import edu.training.web.exception.DAOException;
+import edu.training.web.pool.ProxyConnection;
 
 import java.sql.*;
 import java.util.List;
@@ -8,10 +10,10 @@ import java.util.List;
 /**
  * Created by Roman on 11.01.2017.
  */
-public class ImageDAO extends AbstractDAO<Integer, HostelImage> {
+public class ImageDAO extends AbstractDAO<HostelImage> {
     private static final String SQL_INSERT_NEW_IMAGE = "INSERT INTO `Image` (`image_id`, `hostel_id`, `main_img`, `image_path`)" +
             "VALUES (?, ?, ?, ?)";
-    public ImageDAO(Connection connection) {
+    public ImageDAO(ProxyConnection connection) {
         super(connection);
     }
 
@@ -19,7 +21,7 @@ public class ImageDAO extends AbstractDAO<Integer, HostelImage> {
         return null;
     }
 
-    public boolean create(HostelImage entity) {
+    public boolean create(HostelImage entity) throws DAOException{
         boolean flag = false;
         PreparedStatement ps = null;
         try {
@@ -33,13 +35,10 @@ public class ImageDAO extends AbstractDAO<Integer, HostelImage> {
             ResultSet rs = ps.getGeneratedKeys();
             rs.next();
             entity.setImageId(rs.getInt(1));
-            if(rs != null){
-                rs.close();
-            }
         } catch (SQLException e) {
-            LOG.error(e);
+            throw new DAOException(e);
         } finally {
-            close(ps);
+            closeStatement(ps);
         }
         return flag;
     }

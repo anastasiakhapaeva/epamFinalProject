@@ -1,12 +1,12 @@
 package edu.training.web.logic;
 
-import edu.training.web.connector.ConnectionPool;
+import edu.training.web.exception.DAOException;
+import edu.training.web.exception.LogicException;
+import edu.training.web.pool.ConnectionPool;
 import edu.training.web.dao.*;
 import edu.training.web.entity.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import edu.training.web.pool.ProxyConnection;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,179 +15,177 @@ import java.util.ArrayList;
  * Created by Roman on 27.12.2016.
  */
 public class HostelManager {
-    private static final Logger LOG = LogManager.getLogger();
-    public static Hostel findHostelById(int hostelId){
-        Connection cn = null;
-        Hostel hostel = null;
+    public static Hostel findHostelById(int hostelId) throws LogicException{
+        Hostel hostel;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        HostelDAO hostelDAO = new HostelDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            HostelDAO hostelDAO = new HostelDAO(cn);
             hostel = hostelDAO.findHostelById(hostelId);
+        }catch (DAOException e){
+            throw new LogicException("Cannot find hostel by id", e);
         }finally{
-            ConnectionPool.getInstance().putConnection(cn);
+            hostelDAO.closeConnection(cn);
         }
         return hostel;
     }
 
-    public static Claim findClaimById(int claimId){
-        Connection cn = null;
-        Claim claim = null;
+    public static Claim findClaimById(int claimId) throws LogicException{
+        Claim claim;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        ClaimDAO claimDAO = new ClaimDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            ClaimDAO claimDAO = new ClaimDAO(cn);
             claim = claimDAO.findClaimById(claimId);
+        }catch (DAOException e){
+            throw new LogicException("Cannot find claim by id", e);
         }finally{
-            ConnectionPool.getInstance().putConnection(cn);
+            claimDAO.closeConnection(cn);
         }
         return claim;
     }
 
-    public static User findUserById(int userId){
-        Connection cn = null;
-        User user = null;
+    public static User findUserById(int userId) throws LogicException{
+        User user;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        UserDAO userDAO = new UserDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            UserDAO userDAO = new UserDAO(cn);
             user = userDAO.findUserById(userId);
+        }catch (DAOException e){
+            throw new LogicException("Cannot find user by id", e);
         }finally{
-            ConnectionPool.getInstance().putConnection(cn);
+            userDAO.closeConnection(cn);
         }
         return user;
     }
 
-    public static Message findMessageById(int messageId){
-        Connection cn = null;
-        Message message = null;
+    public static Message findMessageById(int messageId) throws LogicException{
+        Message message;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        MessageDAO messageDAO = new MessageDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            MessageDAO messageDAO = new MessageDAO(cn);
             message = messageDAO.findMessageById(messageId);
+        }catch (DAOException e){
+            throw new LogicException("Cannot find message by id", e);
         }finally{
-            ConnectionPool.getInstance().putConnection(cn);
+            messageDAO.closeConnection(cn);
         }
         return message;
     }
 
 
-    public static ArrayList<Hostel> findHostelsByCity(String city){
-        Connection cn = null;
+    public static ArrayList<Hostel> findHostelsByCity(String city) throws LogicException{
         ArrayList<Hostel> hostels = new ArrayList<Hostel>();
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        HostelDAO hostelDAO = new HostelDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            HostelDAO hostelDAO = new HostelDAO(cn);
             hostels = hostelDAO.findHostelsByCity(city);
+        }catch (DAOException e){
+            throw new LogicException("Cannot find hostels by city", e);
         }finally{
-            ConnectionPool.getInstance().putConnection(cn);
+            hostelDAO.closeConnection(cn);
         }
         return hostels;
     }
 
-    public static ArrayList<Hostel> findAllHostels(){
-        Connection cn = null;
-        ArrayList<Hostel> hostels = new ArrayList<Hostel>();
+    public static ArrayList<Hostel> findAllHostels() throws LogicException{
+        ArrayList<Hostel> hostels;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        HostelDAO hostelDAO = new HostelDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            HostelDAO hostelDAO = new HostelDAO(cn);
             hostels = (ArrayList<Hostel>) hostelDAO.findAll();
+        }catch (DAOException e){
+            throw new LogicException("Cannot find all hostels", e);
         }finally{
-            ConnectionPool.getInstance().putConnection(cn);
+            hostelDAO.closeConnection(cn);
         }
         return hostels;
     }
 
-    public static String loadMainImageForHostel(int id){
-        Connection cn = null;
-        String imgPath = "";
+    public static String loadMainImageForHostel(int id) throws LogicException{
+        String imgPath;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        HostelDAO hostelDAO = new HostelDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            HostelDAO hostelDAO = new HostelDAO(cn);
             imgPath = hostelDAO.loadImageForHostel(id);
+        }catch (DAOException e){
+            throw new LogicException("Cannot load main image for hostel", e);
         }finally{
-            ConnectionPool.getInstance().putConnection(cn);
+            hostelDAO.closeConnection(cn);
         }
         return imgPath;
     }
-    public static ArrayList<String> loadAllImagesForHostel(int id){
-        Connection cn = null;
-        ArrayList<String> imgPathes = new ArrayList<String>();
+    public static ArrayList<String> loadAllImagesForHostel(int id) throws LogicException{
+        ArrayList<String> imgPathes;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        HostelDAO hostelDAO = new HostelDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            HostelDAO hostelDAO = new HostelDAO(cn);
             imgPathes = hostelDAO.loadAllImagesForHostel(id);
+        }catch (DAOException e){
+            throw new LogicException("Cannot load images for hostel", e);
         }finally{
-            ConnectionPool.getInstance().putConnection(cn);
+            hostelDAO.closeConnection(cn);
         }
         return imgPathes;
     }
-    public static boolean bookHostel(Claim claim){
-        Connection cn = null;
+    public static boolean bookHostel(Claim claim) throws LogicException{
         boolean result = false;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        ClaimDAO claimDAO = new ClaimDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            boolean autoCommit = cn.getAutoCommit();
             cn.setAutoCommit(false);
-            ClaimDAO claimDao = new ClaimDAO(cn);
-            result = claimDao.create(claim);
+            result = claimDAO.create(claim);
             cn.commit();
-            cn.setAutoCommit(autoCommit);
-        }catch (SQLException e){
-            LOG.error(e);
+        }catch (SQLException | DAOException e){
+            claimDAO.rollbackConnection(cn);
+            throw new LogicException("Cannot book hostel", e);
         }finally{
-
-            ConnectionPool.getInstance().putConnection(cn);
+            claimDAO.closeConnection(cn);
         }
         return result;
     }
 
-    public static boolean deleteMessage(int messageId){
-        Connection cn = null;
+    public static boolean deleteMessage(int messageId) throws LogicException{
         boolean result = false;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        MessageDAO messageDAO = new MessageDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            boolean autoCommit = cn.getAutoCommit();
             cn.setAutoCommit(false);
-            MessageDAO messageDao = new MessageDAO(cn);
-            result = messageDao.deleteMessage(messageId);
+            result = messageDAO.deleteMessage(messageId);
             cn.commit();
-            cn.setAutoCommit(autoCommit);
-        }catch (SQLException e){
-            LOG.error(e);
+        }catch (SQLException | DAOException e){
+            messageDAO.rollbackConnection(cn);
+            throw new LogicException("Cannot delete message", e);
         }finally{
-            ConnectionPool.getInstance().putConnection(cn);
+            messageDAO.closeConnection(cn);
         }
         return result;
     }
 
-    public static boolean sendMessageToUser(Message message){
-        Connection cn = null;
+    public static boolean sendMessageToUser(Message message) throws LogicException{
         boolean result = false;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        MessageDAO messageDAO = new MessageDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            boolean autoCommit = cn.getAutoCommit();
             cn.setAutoCommit(false);
-            MessageDAO messageDAO = new MessageDAO(cn);
             result = messageDAO.create(message);
             cn.commit();
-            cn.setAutoCommit(autoCommit);
-        }catch (SQLException e){
-            LOG.error(e);
+        }catch (SQLException | DAOException e){
+            messageDAO.rollbackConnection(cn);
+            throw new LogicException("Cannot book hostel", e);
         }finally{
-
-            ConnectionPool.getInstance().putConnection(cn);
+            messageDAO.closeConnection(cn);
         }
         return result;
     }
 
-    public static Integer countFreePlaces(int hostelId, LocalDate dateIn, LocalDate dateOut){
-        Connection cn = null;
+    public static Integer countFreePlaces(int hostelId, LocalDate dateIn, LocalDate dateOut) throws LogicException{
         int freePlaces = 0;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        ClaimDAO claimDAO = new ClaimDAO(cn);
+        HostelDAO hostelDAO = new HostelDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            ClaimDAO claimDao = new ClaimDAO(cn);
-            HostelDAO hostelDao = new HostelDAO(cn);
-            Hostel current = hostelDao.findHostelById(hostelId);
+            Hostel current = hostelDAO.findHostelById(hostelId);
             freePlaces = current.getFreePlaces();
-            ArrayList<Claim> claims = claimDao.findClaimsByHostelId(hostelId);
+            ArrayList<Claim> claims = claimDAO.findClaimsByHostelId(hostelId);
             for(Claim claim : claims){
                 if(dateIn.compareTo(claim.getDateIn())>=0 && dateIn.compareTo(claim.getDateOut()) <=0){
                     freePlaces-=claim.getRequiredPlaces();
@@ -196,138 +194,104 @@ public class HostelManager {
                 }
             }
 
+        }catch (DAOException e){
+            throw new LogicException("Cannot count free places", e);
         }finally{
-            ConnectionPool.getInstance().putConnection(cn);
+            hostelDAO.closeConnection(cn);
         }
         return freePlaces;
     }
-    public static Claim findClaimByIds(int userId, int hostelId){
-        Connection cn = null;
-        Claim claim = null;
-        try {
-            cn = ConnectionPool.getInstance().getConnection();
-            ClaimDAO claimDao = new ClaimDAO(cn);
-            claim = claimDao.findClaimByIds(userId, hostelId);
-        }finally{
-            ConnectionPool.getInstance().putConnection(cn);
-        }
-        return claim;
-    }
 
-
-
-    public static boolean cancelBooking(int userId, int hostelId){
-        Connection cn = null;
+    public static boolean cancelBooking(int userId, int hostelId) throws LogicException{
         boolean result = false;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        ClaimDAO claimDAO = new ClaimDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            boolean autoCommit = cn.getAutoCommit();
             cn.setAutoCommit(false);
-            ClaimDAO claimDao = new ClaimDAO(cn);
-            result = claimDao.cancelBooking(userId, hostelId);
+            result = claimDAO.cancelBooking(userId, hostelId);
             cn.commit();
-            cn.setAutoCommit(autoCommit);
-        }catch (SQLException e){
-            LOG.error(e);
+        }catch (SQLException | DAOException e){
+            claimDAO.rollbackConnection(cn);
+            throw new LogicException("Cannot cancel booking", e);
         }finally{
-            ConnectionPool.getInstance().putConnection(cn);
+            claimDAO.closeConnection(cn);
         }
         return result;
     }
 
-    public static boolean depositMoney(int userId, double amount){
-        Connection cn = null;
+    public static boolean depositMoney(int userId, double amount) throws LogicException{
         boolean result = false;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        UserDAO userDAO = new UserDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            boolean autoCommit = cn.getAutoCommit();
             cn.setAutoCommit(false);
-            UserDAO userDao = new UserDAO(cn);
-            result = userDao.updateMoney(userId, amount);
+            result = userDAO.updateMoney(userId, amount);
             cn.commit();
-            cn.setAutoCommit(autoCommit);
-        }catch (SQLException e){
-            LOG.error(e);
+        }catch (SQLException | DAOException e){
+            userDAO.rollbackConnection(cn);
+            throw new LogicException("Cannot deposit money", e);
         }finally{
-            ConnectionPool.getInstance().putConnection(cn);
+            userDAO.closeConnection(cn);
         }
         return result;
     }
 
-    public static ArrayList<Hostel> findBookedHostelsForUser(int userId) {
-        Connection cn = null;
-        ArrayList<Hostel> bookedHostels = new ArrayList<Hostel>();
+    public static ArrayList<Hostel> findBookedHostelsForUser(int userId) throws LogicException{
+        ArrayList<Hostel> bookedHostels;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        HostelDAO hostelDAO = new HostelDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            HostelDAO hostelDAO = new HostelDAO(cn);
             bookedHostels = hostelDAO.findBookedHostels(userId);
-        } finally {
-            ConnectionPool.getInstance().putConnection(cn);
+        } catch (DAOException e){
+            throw new LogicException("Cannot find booked hostels for user", e);
+        }finally {
+            hostelDAO.closeConnection(cn);
         }
         return bookedHostels;
     }
 
-    public static ArrayList<Hostel> findPaidHostelsForUser(int userId) {
-        Connection cn = null;
-        ArrayList<Hostel> paidHostels = new ArrayList<Hostel>();
+    public static ArrayList<Hostel> findPaidHostelsForUser(int userId) throws LogicException{
+        ArrayList<Hostel> paidHostels;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        HostelDAO hostelDAO = new HostelDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            HostelDAO hostelDAO = new HostelDAO(cn);
             paidHostels = hostelDAO.findPaidHostels(userId);
-        } finally {
-            ConnectionPool.getInstance().putConnection(cn);
+        }catch (DAOException e){
+            throw new LogicException("Cannot find paid hostel for user", e);
+        }finally {
+            hostelDAO.closeConnection(cn);
         }
         return paidHostels;
     }
 
-    public static boolean paymentForHostel(int userId, double amount) {
-        Connection cn = null;
+    public static boolean paymentForHostel(int userId, double amount) throws LogicException{
         boolean result = false;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        UserDAO userDAO = new UserDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            boolean autoCommit = cn.getAutoCommit();
             cn.setAutoCommit(false);
-            UserDAO userDAO = new UserDAO(cn);
             result = userDAO.updateMoney(userId, -1*amount);
             cn.commit();
-            cn.setAutoCommit(autoCommit);
-        } catch (SQLException e){
-            LOG.error(e);
+        } catch (SQLException | DAOException e){
+            userDAO.rollbackConnection(cn);
+            throw new LogicException("Cannot pay hostel", e);
         }finally {
-            ConnectionPool.getInstance().putConnection(cn);
+            userDAO.closeConnection(cn);
         }
         return result;
     }
 
-    public static ArrayList<Claim> findUnconfirmedClaims(){
-        Connection cn = null;
+    public static ArrayList<Claim> findUnconfirmedClaims() throws LogicException{
         ArrayList<Claim> unconfirmed = new ArrayList<Claim>();
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        ClaimDAO claimDAO = new ClaimDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            ClaimDAO claimDAO = new ClaimDAO(cn);
             unconfirmed = claimDAO.findUnconfirmedClaims();
+        }catch (DAOException e){
+            throw new LogicException("Cannot find unconfirmed claims", e);
         } finally {
-            ConnectionPool.getInstance().putConnection(cn);
+            claimDAO.closeConnection(cn);
         }
         return unconfirmed;
-    }
-
-    public static boolean returnMoney(int userId, double amount) {
-        Connection cn = null;
-        boolean result = false;
-        try {
-            cn = ConnectionPool.getInstance().getConnection();
-            boolean autoCommit = cn.getAutoCommit();
-            cn.setAutoCommit(false);
-            UserDAO userDAO = new UserDAO(cn);
-            result = userDAO.updateMoney(userId, amount);
-            cn.commit();
-            cn.setAutoCommit(autoCommit);
-        } catch (SQLException e){
-            LOG.error(e);
-        }finally {
-            ConnectionPool.getInstance().putConnection(cn);
-        }
-        return result;
     }
 }

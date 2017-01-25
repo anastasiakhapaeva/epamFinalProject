@@ -1,68 +1,63 @@
 package edu.training.web.logic;
 
-import edu.training.web.connector.ConnectionPool;
+import edu.training.web.exception.DAOException;
+import edu.training.web.exception.LogicException;
+import edu.training.web.pool.ConnectionPool;
 import edu.training.web.dao.UserDAO;
 import edu.training.web.dao.UserProfileDAO;
 import edu.training.web.entity.User;
 import edu.training.web.entity.UserProfile;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import edu.training.web.pool.ProxyConnection;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
  * Created by Roman on 08.12.2016.
  */
 public class Registration {
-    private static final Logger LOG = LogManager.getLogger();
-    public static boolean register(User user, UserProfile userProfile){
+    public static boolean register(User user, UserProfile userProfile) throws LogicException{
         boolean result = false;
-        Connection cn = null;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        UserDAO userDAO = new UserDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            boolean autoCommit = cn.getAutoCommit();
             cn.setAutoCommit(false);
-            UserDAO dao = new UserDAO(cn);
-            result = dao.create(user);
+            result = userDAO.create(user);
             userProfile.setUserId(user.getUserId());
             cn.commit();
-            cn.setAutoCommit(autoCommit);
-        }catch (SQLException e){
-
-            LOG.error(e);
+        }catch (SQLException | DAOException e){
+            userDAO.rollbackConnection(cn);
+            throw new LogicException("Cannot register user", e);
         }finally {
-            ConnectionPool.getInstance().putConnection(cn);
+            userDAO.closeConnection(cn);
         }
         return result;
     }
-    public static boolean createUserProfile(UserProfile userProfile){
+    public static boolean createUserProfile(UserProfile userProfile) throws LogicException{
         boolean result = false;
-        Connection cn = null;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        UserProfileDAO profileDAO = new UserProfileDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            boolean autoCommit = cn.getAutoCommit();
             cn.setAutoCommit(false);
-            UserProfileDAO dao = new UserProfileDAO(cn);
-            result = dao.create(userProfile);
+            result = profileDAO.create(userProfile);
             cn.commit();
-            cn.setAutoCommit(autoCommit);
-        }catch (SQLException e){
-            LOG.error(e);
+        }catch (SQLException | DAOException e){
+            profileDAO.rollbackConnection(cn);
+            throw new LogicException("Cannot create user profile", e);
         }finally {
-            ConnectionPool.getInstance().putConnection(cn);
+            profileDAO.closeConnection(cn);
         }
         return result;
     }
-    public static boolean checkLoginExistance(String login){
-        Connection cn = null;
+    public static boolean checkLoginExistence(String login) throws LogicException{
         boolean result = false;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        UserDAO userDAO = new UserDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            UserDAO userDAO = new UserDAO(cn);
             result = userDAO.findUserByLogin(login);
+        }catch (DAOException e){
+            throw new LogicException("Cannot check login existence", e);
         }finally{
-            ConnectionPool.getInstance().putConnection(cn);
+            userDAO.closeConnection(cn);
         }
         return result;
     }

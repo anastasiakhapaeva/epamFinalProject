@@ -2,6 +2,8 @@ package edu.training.web.dao;
 
 import edu.training.web.converter.MD5Converter;
 import edu.training.web.entity.User;
+import edu.training.web.exception.DAOException;
+import edu.training.web.pool.ProxyConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -10,7 +12,7 @@ import java.util.List;
 /**
  * Created by Roman on 07.12.2016.
  */
-public class UserDAO extends AbstractDAO<Integer, User> {
+public class UserDAO extends AbstractDAO<User> {
     private static final String SQL_SELECT_ALL_USERS = "SELECT * FROM User";
     private static final String SQL_INSERT_NEW_USER =
             "INSERT INTO `User` (`user_id`, `username`, `password`, `money`, `is_admin`, `discount`, `is_banned`)" +
@@ -24,11 +26,11 @@ public class UserDAO extends AbstractDAO<Integer, User> {
     private MD5Converter converter = new MD5Converter();
 
 
-    public UserDAO(Connection connection) {
+    public UserDAO(ProxyConnection connection) {
         super(connection);
     }
 
-    public boolean updateMoney(int userId, double amount) {
+    public boolean updateMoney(int userId, double amount) throws DAOException{
         boolean flag = false;
         PreparedStatement ps = null;
         try {
@@ -38,31 +40,29 @@ public class UserDAO extends AbstractDAO<Integer, User> {
             ps.executeUpdate();
             flag = true;
         } catch (SQLException e) {
-            LOG.error(e);
+            throw new DAOException(e);
         } finally {
-            close(ps);
+            closeStatement(ps);
         }
         return flag;
     }
 
-    public boolean banUser(int userId, boolean ban) {
-        boolean flag = false;
+    public boolean banUser(int userId, boolean ban) throws DAOException{
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(SQL_UPDATE_BAN_USER);
             ps.setBoolean(1, ban);
             ps.setInt(2, userId);
             ps.executeUpdate();
-            flag = true;
         } catch (SQLException e) {
-            LOG.error(e);
+            throw new DAOException(e);
         } finally {
-            close(ps);
+            closeStatement(ps);
         }
         return ban;
     }
 
-    public boolean setDiscount(int userId, double discount) {
+    public boolean setDiscount(int userId, double discount) throws DAOException{
         boolean flag = false;
         PreparedStatement ps = null;
         try {
@@ -72,14 +72,14 @@ public class UserDAO extends AbstractDAO<Integer, User> {
             ps.executeUpdate();
             flag = true;
         } catch (SQLException e) {
-            LOG.error(e);
+            throw new DAOException(e);
         } finally {
-            close(ps);
+            closeStatement(ps);
         }
         return flag;
     }
 
-    public boolean findUserByLogin(String login) {
+    public boolean findUserByLogin(String login) throws DAOException{
         boolean isFounded = false;
         PreparedStatement ps = null;
         try {
@@ -89,73 +89,48 @@ public class UserDAO extends AbstractDAO<Integer, User> {
             if (resultSet.isBeforeFirst() ) {
                 isFounded = true;
             }
-            if(resultSet != null){
-                resultSet.close();
-            }
         } catch (SQLException e) {
-            LOG.error(e);
+            throw new DAOException(e);
         } finally {
-            close(ps);
+            closeStatement(ps);
         }
         return isFounded;
     }
 
-    public User findUserById(int userId) {
+    public User findUserById(int userId) throws DAOException{
         PreparedStatement ps = null;
-        User user = new User();
+        User user;
         try {
             ps = connection.prepareStatement(SQL_SELECT_USER_BY_ID);
             ps.setInt(1, userId);
             ResultSet resultSet = ps.executeQuery();
-            if (resultSet.next()) {
-                user.setUserId(resultSet.getInt("user_id"));
-                user.setUsername(resultSet.getString("username"));
-                user.setPassword(resultSet.getString("password"));
-                user.setMoney(resultSet.getDouble("money"));
-                user.setAdmin(resultSet.getBoolean("is_admin"));
-                user.setDiscount(resultSet.getDouble("discount"));
-                user.setBanned(resultSet.getBoolean("is_banned"));
-            }
-            if(resultSet != null){
-                resultSet.close();
-            }
+            user = takeUsers(resultSet).get(0);
         } catch (SQLException e) {
-            LOG.error(e);
+            throw new DAOException(e);
         } finally {
-            close(ps);
+            closeStatement(ps);
         }
         return user;
     }
 
-    public User findRegisteredUser(String login, String password) {
-        User current = new User();
+    public User findRegisteredUser(String login, String password) throws DAOException{
+        User current;
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(SQL_LOGIN_USER);
             ps.setString(1, login);
             ps.setString(2, converter.convert(password));
             ResultSet resultSet = ps.executeQuery();
-            if(resultSet.next()) {
-                current.setUserId(resultSet.getInt("user_id"));
-                current.setUsername(resultSet.getString("username"));
-                current.setPassword(resultSet.getString("password"));
-                current.setMoney(resultSet.getDouble("money"));
-                current.setAdmin(resultSet.getBoolean("is_admin"));
-                current.setDiscount(resultSet.getDouble("discount"));
-                current.setBanned(resultSet.getBoolean("is_banned"));
-            }
-            if(resultSet != null){
-                resultSet.close();
-            }
+            current = takeUsers(resultSet).get(0);
         } catch (SQLException e) {
-            LOG.error(e);
+            throw new DAOException(e);
         } finally {
-            close(ps);
+            closeStatement(ps);
         }
         return current;
     }
 
-    public boolean loginUser(String username, String password) {
+    public boolean loginUser(String username, String password) throws DAOException{
         boolean login = false;
         PreparedStatement ps = null;
         try {
@@ -166,49 +141,33 @@ public class UserDAO extends AbstractDAO<Integer, User> {
             if (resultSet.isBeforeFirst() ) {
                 login = true;
             }
-            if(resultSet != null){
-                resultSet.close();
-            }
         } catch (SQLException e) {
-            LOG.error(e);
+            throw new DAOException(e);
         } finally {
-            close(ps);
+            closeStatement(ps);
         }
         return login;
     }
 
     @Override
-    public List<User> findAll() {
-        List<User> users = new ArrayList<User>();
+    public List<User> findAll() throws DAOException{
+        List<User> users;
         Statement st = null;
         try {
             st = connection.createStatement();
             ResultSet resultSet = st.executeQuery(SQL_SELECT_ALL_USERS);
-            while (resultSet.next()) {
-                User user = new User();
-                user.setUserId(resultSet.getInt("user_id"));
-                user.setUsername(resultSet.getString("username"));
-                user.setPassword(resultSet.getString("password"));
-                user.setMoney(resultSet.getDouble("money"));
-                user.setAdmin(resultSet.getBoolean("is_admin"));
-                user.setDiscount(resultSet.getDouble("discount"));
-                user.setBanned(resultSet.getBoolean("is_banned"));
-                users.add(user);
-            }
-            if(resultSet != null){
-                resultSet.close();
-            }
+            users = takeUsers(resultSet);
         } catch (SQLException e) {
-            LOG.error(e);
+            throw new DAOException(e);
         } finally {
-            close(st);
+            closeStatement(st);
         }
         return users;
 
     }
 
     @Override
-    public boolean create(User entity) {
+    public boolean create(User entity) throws DAOException{
         boolean flag = false;
         PreparedStatement ps = null;
         try {
@@ -225,16 +184,31 @@ public class UserDAO extends AbstractDAO<Integer, User> {
             ResultSet rs = ps.getGeneratedKeys();
             rs.next();
             entity.setUserId(rs.getInt(1));
-            if(rs != null){
-                rs.close();
-            }
         } catch (SQLException e) {
-            LOG.error(e);
-
+            throw new DAOException(e);
         } finally {
-            close(ps);
+            closeStatement(ps);
         }
         return flag;
     }
 
+    private ArrayList<User> takeUsers(ResultSet rs) throws DAOException{
+        ArrayList<User> users = new ArrayList<>();
+        try {
+            while (rs.next()) {
+                User user = new User();
+                user.setUserId(rs.getInt("user_id"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                user.setMoney(rs.getDouble("money"));
+                user.setAdmin(rs.getBoolean("is_admin"));
+                user.setDiscount(rs.getDouble("discount"));
+                user.setBanned(rs.getBoolean("is_banned"));
+                users.add(user);
+            }
+        }catch (SQLException e){
+            throw new DAOException(e);
+        }
+        return users;
+    }
 }

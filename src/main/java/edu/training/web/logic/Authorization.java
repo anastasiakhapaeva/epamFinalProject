@@ -1,71 +1,71 @@
 package edu.training.web.logic;
 
-import edu.training.web.connector.ConnectionPool;
-import edu.training.web.dao.HostelDAO;
+import edu.training.web.exception.DAOException;
+import edu.training.web.exception.LogicException;
+import edu.training.web.pool.ConnectionPool;
 import edu.training.web.dao.MessageDAO;
 import edu.training.web.dao.UserDAO;
 import edu.training.web.dao.UserProfileDAO;
-import edu.training.web.entity.Hostel;
 import edu.training.web.entity.Message;
 import edu.training.web.entity.User;
 import edu.training.web.entity.UserProfile;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.sql.Connection;
+import edu.training.web.pool.ProxyConnection;
 import java.util.ArrayList;
 
 /**
  * Created by Roman on 25.12.2016.
  */
 public class Authorization {
-    private static final Logger LOG = LogManager.getLogger();
-    public static boolean login(String username, String password){
-        Connection cn = null;
+    public static boolean login(String username, String password) throws LogicException{
         boolean result = false;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        UserDAO userDAO = new UserDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            UserDAO userDAO = new UserDAO(cn);
             result = userDAO.loginUser(username, password);
+        }catch (DAOException e){
+            throw new LogicException("Cannot login user", e);
         }finally{
-            ConnectionPool.getInstance().putConnection(cn);
+            userDAO.closeConnection(cn);
         }
         return result;
     }
-    public static User getCurrentUser(String login, String password){
-        Connection cn = null;
-        User current = null;
+    public static User getCurrentUser(String login, String password) throws LogicException{
+        User current;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        UserDAO userDAO = new UserDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            UserDAO userDAO = new UserDAO(cn);
             current = userDAO.findRegisteredUser(login, password);
+        }catch (DAOException e){
+            throw new LogicException("Cannot get current user", e);
         }finally{
-            ConnectionPool.getInstance().putConnection(cn);
+            userDAO.closeConnection(cn);
         }
         return current;
     }
-    public static UserProfile getUserProfile(int id){
-        Connection cn = null;
-        UserProfile current = null;
+    public static UserProfile getUserProfile(int id) throws LogicException{
+        UserProfile current;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        UserProfileDAO profileDAO = new UserProfileDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            UserProfileDAO profileDAO = new UserProfileDAO(cn);
             current = profileDAO.findUserProfile(id);
+        }catch (DAOException e){
+            throw new LogicException("Cannot get user profile", e);
         }finally{
-            ConnectionPool.getInstance().putConnection(cn);
+            profileDAO.closeConnection(cn);
         }
         return current;
     }
 
-    public static ArrayList<Message> findMessagesForUser(int userId) {
-        Connection cn = null;
-        ArrayList<Message> messages = new ArrayList<Message>();
+    public static ArrayList<Message> findMessagesForUser(int userId) throws LogicException{
+        ArrayList<Message> messages;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        MessageDAO messageDAO = new MessageDAO(cn);
         try {
-            cn = ConnectionPool.getInstance().getConnection();
-            MessageDAO messageDAO = new MessageDAO(cn);
             messages = messageDAO.findMessagesByUserId(userId);
+        }catch (DAOException e){
+            throw new LogicException("Cannot find messages for user", e);
         } finally {
-            ConnectionPool.getInstance().putConnection(cn);
+            messageDAO.closeConnection(cn);
         }
         return messages;
     }

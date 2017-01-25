@@ -1,6 +1,8 @@
 package edu.training.web.dao;
 
 import edu.training.web.entity.Hostel;
+import edu.training.web.exception.DAOException;
+import edu.training.web.pool.ProxyConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,7 +11,7 @@ import java.util.List;
 /**
  * Created by Roman on 27.12.2016.
  */
-public class HostelDAO extends AbstractDAO<Integer, Hostel> {
+public class HostelDAO extends AbstractDAO<Hostel> {
     private static final String SQL_SELECT_ALL_HOSTELS = "SELECT * FROM Hostel";
     private static final String SQL_SELECT_HOSTELS_BY_CITY = "SELECT * FROM Hostel WHERE city=?";
     private static final String SQL_SELECT_HOSTEL_BY_ID = "SELECT * FROM Hostel WHERE hostel_id=?";
@@ -30,12 +32,12 @@ public class HostelDAO extends AbstractDAO<Integer, Hostel> {
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String IMAGE_PATH = "/web/images/";
 
-    public HostelDAO(Connection connection) {
+    public HostelDAO(ProxyConnection connection) {
         super(connection);
     }
 
 
-    public boolean editHostel(Hostel editedHostel) {
+    public boolean editHostel(Hostel editedHostel) throws DAOException{
         boolean isEdited = false;
         PreparedStatement ps = null;
         try {
@@ -51,14 +53,14 @@ public class HostelDAO extends AbstractDAO<Integer, Hostel> {
             ps.executeUpdate();
             isEdited = true;
         } catch (SQLException e) {
-            LOG.error(e);
+            throw new DAOException(e);
         } finally {
-            close(ps);
+            closeStatement(ps);
         }
         return isEdited;
     }
 
-    public String loadImageForHostel(int id) {
+    public String loadImageForHostel(int id) throws DAOException{
         String path = new String();
         PreparedStatement ps = null;
         try {
@@ -67,18 +69,15 @@ public class HostelDAO extends AbstractDAO<Integer, Hostel> {
             ResultSet resultSet = ps.executeQuery();
             resultSet.next();
             path = resultSet.getString("image_path");
-            if (resultSet != null) {
-                resultSet.close();
-            }
         } catch (SQLException e) {
-            LOG.error(e);
+            throw new DAOException(e);
         } finally {
-            close(ps);
+            closeStatement(ps);
         }
         return IMAGE_PATH + path;
     }
 
-    public ArrayList<String> loadAllImagesForHostel(int id) {
+    public ArrayList<String> loadAllImagesForHostel(int id) throws DAOException{
         ArrayList<String> imgPathes = new ArrayList<String>();
         PreparedStatement ps = null;
         try {
@@ -88,170 +87,95 @@ public class HostelDAO extends AbstractDAO<Integer, Hostel> {
             while (resultSet.next()) {
                 imgPathes.add(IMAGE_PATH + resultSet.getString("image_path"));
             }
-            if (resultSet != null) {
-                resultSet.close();
-            }
+
         } catch (SQLException e) {
-            LOG.error(e);
+            throw new DAOException(e);
         } finally {
-            close(ps);
+            closeStatement(ps);
         }
         return imgPathes;
     }
 
-    public ArrayList<Hostel> findHostelsByCity(String city) {
-        ArrayList<Hostel> hostels = new ArrayList<Hostel>();
+    public ArrayList<Hostel> findHostelsByCity(String city) throws DAOException{
+        ArrayList<Hostel> hostels;
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(SQL_SELECT_HOSTELS_BY_CITY);
             ps.setString(1, city);
             ResultSet resultSet = ps.executeQuery();
-            while (resultSet.next()) {
-                Hostel hostel = new Hostel();
-                hostel.setHostelId(resultSet.getInt("hostel_id"));
-                hostel.setName(resultSet.getString("name"));
-                hostel.setCity(resultSet.getString("city"));
-                hostel.setAddress(resultSet.getString("address"));
-                hostel.setPhone(resultSet.getString("phone"));
-                hostel.setDescription(resultSet.getString("description"));
-                hostel.setPrice(resultSet.getDouble("price"));
-                hostel.setFreePlaces(resultSet.getInt("free_places"));
-                hostel.setDeleted(resultSet.getBoolean("is_deleted"));
-                hostels.add(hostel);
-            }
-            if (resultSet != null) {
-                resultSet.close();
-            }
+            hostels = takeHostels(resultSet);
         } catch (SQLException e) {
-            LOG.error(e);
+            throw new DAOException(e);
         } finally {
-            close(ps);
+            closeStatement(ps);
         }
         return hostels;
     }
 
-    public Hostel findHostelById(int hostelId) {
-        Hostel hostel = new Hostel();
+    public Hostel findHostelById(int hostelId) throws DAOException {
+        Hostel hostel;
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(SQL_SELECT_HOSTEL_BY_ID);
             ps.setInt(1, hostelId);
             ResultSet resultSet = ps.executeQuery();
-            if (resultSet.next()) {
-                hostel.setHostelId(resultSet.getInt("hostel_id"));
-                hostel.setName(resultSet.getString("name"));
-                hostel.setCity(resultSet.getString("city"));
-                hostel.setAddress(resultSet.getString("address"));
-                hostel.setPhone(resultSet.getString("phone"));
-                hostel.setDescription(resultSet.getString("description"));
-                hostel.setPrice(resultSet.getDouble("price"));
-                hostel.setFreePlaces(resultSet.getInt("free_places"));
-                hostel.setDeleted(resultSet.getBoolean("is_deleted"));
-            }
-            if (resultSet != null) {
-                resultSet.close();
-            }
+            hostel = takeHostels(resultSet).get(0);
         } catch (SQLException e) {
-            LOG.error(e);
+            throw new DAOException(e);
         } finally {
-            close(ps);
+            closeStatement(ps);
         }
         return hostel;
     }
 
-    public List<Hostel> findAll() {
-        List<Hostel> hostels = new ArrayList<Hostel>();
+    public List<Hostel> findAll() throws DAOException{
+        List<Hostel> hostels;
         Statement st = null;
         try {
             st = connection.createStatement();
             ResultSet resultSet = st.executeQuery(SQL_SELECT_ALL_HOSTELS);
-            while (resultSet.next()) {
-                Hostel hostel = new Hostel();
-                hostel.setHostelId(resultSet.getInt("hostel_id"));
-                hostel.setName(resultSet.getString("name"));
-                hostel.setCity(resultSet.getString("city"));
-                hostel.setAddress(resultSet.getString("address"));
-                hostel.setPhone(resultSet.getString("phone"));
-                hostel.setDescription(resultSet.getString("description"));
-                hostel.setPrice(resultSet.getDouble("price"));
-                hostel.setFreePlaces(resultSet.getInt("free_places"));
-                hostel.setDeleted(resultSet.getBoolean("is_deleted"));
-                hostels.add(hostel);
-            }
-            if (resultSet != null) {
-                resultSet.close();
-            }
+            hostels = takeHostels(resultSet);
         } catch (SQLException e) {
-            LOG.error(e);
+            throw new DAOException(e);
         } finally {
-            close(st);
+            closeStatement(st);
         }
         return hostels;
     }
 
-    public ArrayList<Hostel> findBookedHostels(int userId) {
-        ArrayList<Hostel> hostels = new ArrayList<Hostel>();
+    public ArrayList<Hostel> findBookedHostels(int userId) throws DAOException {
+        ArrayList<Hostel> hostels;
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(SQL_SELECT_BOOKED_HOSTELS);
             ps.setInt(1, userId);
             ResultSet resultSet = ps.executeQuery();
-            while (resultSet.next()) {
-                Hostel hostel = new Hostel();
-                hostel.setHostelId(resultSet.getInt("hostel_id"));
-                hostel.setName(resultSet.getString("name"));
-                hostel.setCity(resultSet.getString("city"));
-                hostel.setAddress(resultSet.getString("address"));
-                hostel.setPhone(resultSet.getString("phone"));
-                hostel.setDescription(resultSet.getString("description"));
-                hostel.setPrice(resultSet.getDouble("price"));
-                hostel.setFreePlaces(resultSet.getInt("free_places"));
-                hostel.setDeleted(resultSet.getBoolean("is_deleted"));
-                hostels.add(hostel);
-            }
-            if (resultSet != null) {
-                resultSet.close();
-            }
+            hostels = takeHostels(resultSet);
         } catch (SQLException e) {
-            LOG.error(e);
+            throw new DAOException(e);
         } finally {
-            close(ps);
+            closeStatement(ps);
         }
         return hostels;
     }
 
-    public ArrayList<Hostel> findPaidHostels(int userId) {
-        ArrayList<Hostel> hostels = new ArrayList<Hostel>();
+    public ArrayList<Hostel> findPaidHostels(int userId) throws DAOException{
+        ArrayList<Hostel> hostels;
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(SQL_SELECT_PAID_HOSTELS);
             ps.setInt(1, userId);
             ResultSet resultSet = ps.executeQuery();
-            while (resultSet.next()) {
-                Hostel hostel = new Hostel();
-                hostel.setHostelId(resultSet.getInt("hostel_id"));
-                hostel.setName(resultSet.getString("name"));
-                hostel.setCity(resultSet.getString("city"));
-                hostel.setAddress(resultSet.getString("address"));
-                hostel.setPhone(resultSet.getString("phone"));
-                hostel.setDescription(resultSet.getString("description"));
-                hostel.setPrice(resultSet.getDouble("price"));
-                hostel.setFreePlaces(resultSet.getInt("free_places"));
-                hostel.setDeleted(resultSet.getBoolean("is_deleted"));
-                hostels.add(hostel);
-            }
-            if (resultSet != null) {
-                resultSet.close();
-            }
+            hostels = takeHostels(resultSet);
         } catch (SQLException e) {
-            LOG.error(e);
+            throw new DAOException(e);
         } finally {
-            close(ps);
+            closeStatement(ps);
         }
         return hostels;
     }
 
-    public boolean create(Hostel entity) {
+    public boolean create(Hostel entity) throws DAOException {
         boolean flag = false;
         PreparedStatement ps = null;
         try {
@@ -270,15 +194,33 @@ public class HostelDAO extends AbstractDAO<Integer, Hostel> {
             ResultSet rs = ps.getGeneratedKeys();
             rs.next();
             entity.setHostelId(rs.getInt(1));
-            if(rs != null){
-                rs.close();
-            }
         } catch (SQLException e) {
-            LOG.error(e);
-
+            throw new DAOException(e);
         } finally {
-            close(ps);
+            closeStatement(ps);
         }
         return flag;
+    }
+
+    private ArrayList<Hostel> takeHostels(ResultSet rs) throws DAOException{
+        ArrayList<Hostel> hostels = new ArrayList<>();
+        try {
+            while (rs.next()) {
+                Hostel hostel = new Hostel();
+                hostel.setHostelId(rs.getInt("hostel_id"));
+                hostel.setName(rs.getString("name"));
+                hostel.setCity(rs.getString("city"));
+                hostel.setAddress(rs.getString("address"));
+                hostel.setPhone(rs.getString("phone"));
+                hostel.setDescription(rs.getString("description"));
+                hostel.setPrice(rs.getDouble("price"));
+                hostel.setFreePlaces(rs.getInt("free_places"));
+                hostel.setDeleted(rs.getBoolean("is_deleted"));
+                hostels.add(hostel);
+            }
+        }catch (SQLException e){
+            throw new DAOException(e);
+        }
+        return hostels;
     }
 }

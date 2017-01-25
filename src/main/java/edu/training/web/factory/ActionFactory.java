@@ -2,7 +2,7 @@ package edu.training.web.factory;
 
 import edu.training.web.command.ActionCommand;
 import edu.training.web.command.CommandEnum;
-import edu.training.web.command.EmptyCommand;
+import edu.training.web.command.site.EmptyCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,7 +28,7 @@ public class ActionFactory {
             CommandEnum currentEnum = CommandEnum.valueOf(action.toUpperCase());
             current = currentEnum.getCurrentCommand();
         } catch (IllegalArgumentException e) {
-            LOG.error("kjgkjgkjghkljghlkj",e);
+            LOG.error("Such command doesn't exists",e);
         }
         return current;
     }

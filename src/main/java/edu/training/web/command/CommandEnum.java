@@ -1,5 +1,9 @@
 package edu.training.web.command;
 
+import edu.training.web.command.admin.*;
+import edu.training.web.command.site.*;
+import edu.training.web.command.user.*;
+
 /**
  * Created by Roman on 25.11.2016.
  */

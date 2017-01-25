@@ -2,6 +2,8 @@ package edu.training.web.dao;
 
 import edu.training.web.entity.Claim;
 import edu.training.web.entity.ClaimType;
+import edu.training.web.exception.DAOException;
+import edu.training.web.pool.ProxyConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -10,8 +12,7 @@ import java.util.List;
 /**
  * Created by Roman on 02.01.2017.
  */
-public class ClaimDAO extends AbstractDAO<Integer, Claim> {
-
+public class ClaimDAO extends AbstractDAO<Claim> {
     private static final String SQL_SELECT_CLAIM_BY_ID = "SELECT * FROM Claim WHERE claim_id=?";
     private static final String SQL_SELECT_CLAIM_BY_IDS = "SELECT * FROM Claim WHERE (is_deleted=0 AND is_confirmed=0) AND (user_id=? AND hostel_id=?)";
     private static final String SQL_SELECT_UNCONFIRMED_CLAIMS = "SELECT * FROM Claim WHERE is_deleted=0 AND is_confirmed=0 AND claimtype='reservation'";
@@ -22,69 +23,27 @@ public class ClaimDAO extends AbstractDAO<Integer, Claim> {
     private static final String SQL_INSERT_NEW_CLAIM =
             "INSERT INTO `Claim` (`claim_id`, `hostel_id`, `user_id`, `claimtype`, `required_places`, `date_in`, `date_out`, `is_confirmed`)" +
             " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    public ClaimDAO(Connection connection) {
+    public ClaimDAO(ProxyConnection connection) {
         super(connection);
     }
 
-    public Claim findClaimByIds(int userId, int hostelId) {
+    public Claim findClaimById(int claimId) throws DAOException{
+        Claim claim;
         PreparedStatement ps = null;
-        Claim claim = new Claim();
-        try {
-            ps = connection.prepareStatement(SQL_SELECT_CLAIM_BY_IDS);
-            ps.setInt(1, userId);
-            ps.setInt(2, hostelId);
-            ResultSet resultSet = ps.executeQuery();
-            if (resultSet.next()) {
-                claim.setClaimId(resultSet.getInt("claim_id"));
-                claim.setHostelId(resultSet.getInt("hostel_id"));
-                claim.setUserId(resultSet.getInt("user_id"));
-                claim.setClaimType(ClaimType.RESERVATION);
-                claim.setRequiredPlaces(resultSet.getInt("required_places"));
-                claim.setDateIn(resultSet.getDate("date_in").toLocalDate());
-                claim.setDateOut(resultSet.getDate("date_out").toLocalDate());
-                claim.setDeleted(resultSet.getBoolean("is_deleted"));
-            }
-            if(resultSet != null){
-                resultSet.close();
-            }
-        } catch (SQLException e) {
-            LOG.error(e);
-        } finally {
-            close(ps);
-        }
-        return claim;
-    }
-
-    public Claim findClaimById(int claimId) {
-        PreparedStatement ps = null;
-        Claim claim = new Claim();
         try {
             ps = connection.prepareStatement(SQL_SELECT_CLAIM_BY_ID);
             ps.setInt(1, claimId);
             ResultSet resultSet = ps.executeQuery();
-            if (resultSet.next()) {
-                claim.setClaimId(resultSet.getInt("claim_id"));
-                claim.setHostelId(resultSet.getInt("hostel_id"));
-                claim.setUserId(resultSet.getInt("user_id"));
-                claim.setClaimType(ClaimType.valueOf(resultSet.getString("claimtype").toUpperCase()));
-                claim.setRequiredPlaces(resultSet.getInt("required_places"));
-                claim.setDateIn(resultSet.getDate("date_in").toLocalDate());
-                claim.setDateOut(resultSet.getDate("date_out").toLocalDate());
-                claim.setConfirmed(resultSet.getBoolean("is_confirmed"));
-                claim.setDeleted(resultSet.getBoolean("is_deleted"));
-            }
-            if(resultSet != null){
-                resultSet.close();
-            }
+            claim = takeClaims(resultSet).get(0);
         } catch (SQLException e) {
-            LOG.error(e);
+            throw new DAOException(e);
         } finally {
-            close(ps);
+            closeStatement(ps);
         }
         return claim;
     }
 
-    public boolean cancelBooking(int userId, int hostelId) {
+    public boolean cancelBooking(int userId, int hostelId) throws DAOException {
         boolean isCanceled = false;
         PreparedStatement ps = null;
         try {
@@ -94,14 +53,14 @@ public class ClaimDAO extends AbstractDAO<Integer, Claim> {
             ps.executeUpdate();
             isCanceled = true;
         } catch (SQLException e) {
-            LOG.error(e);
+            throw new DAOException(e);
         } finally {
-            close(ps);
+            closeStatement(ps);
         }
         return isCanceled;
     }
 
-    public boolean confirmClaim(int claimId) {
+    public boolean confirmClaim(int claimId) throws DAOException{
         boolean isConfirmed = false;
         PreparedStatement ps = null;
         try {
@@ -110,14 +69,14 @@ public class ClaimDAO extends AbstractDAO<Integer, Claim> {
             ps.executeUpdate();
             isConfirmed = true;
         } catch (SQLException e) {
-            LOG.error(e);
+            throw new DAOException(e);
         } finally {
-            close(ps);
+            closeStatement(ps);
         }
         return isConfirmed;
     }
 
-    public boolean deleteClaim(int claimId) {
+    public boolean deleteClaim(int claimId) throws DAOException{
         boolean isDeleted = false;
         PreparedStatement ps = null;
         try {
@@ -126,69 +85,40 @@ public class ClaimDAO extends AbstractDAO<Integer, Claim> {
             ps.executeUpdate();
             isDeleted = true;
         } catch (SQLException e) {
-            LOG.error(e);
+            throw new DAOException(e);
         } finally {
-            close(ps);
+            closeStatement(ps);
         }
         return isDeleted;
     }
 
-    public ArrayList<Claim> findClaimsByHostelId(int hostelId){
-        ArrayList<Claim> claims = new ArrayList<Claim>();
+    public ArrayList<Claim> findClaimsByHostelId(int hostelId) throws DAOException{
+        ArrayList<Claim> claims;
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(SQL_SELECT_CLAIM_BY_HOSTEL_ID);
             ps.setInt(1, hostelId);
             ResultSet resultSet = ps.executeQuery();
-            while (resultSet.next()) {
-                Claim claim = new Claim();
-                claim.setClaimId(resultSet.getInt("claim_id"));
-                claim.setHostelId(resultSet.getInt("hostel_id"));
-                claim.setUserId(resultSet.getInt("user_id"));
-                claim.setClaimType(ClaimType.RESERVATION);
-                claim.setRequiredPlaces(resultSet.getInt("required_places"));
-                claim.setDateIn(resultSet.getDate("date_in").toLocalDate());
-                claim.setDateOut(resultSet.getDate("date_out").toLocalDate());
-                claim.setDeleted(resultSet.getBoolean("is_deleted"));
-                claims.add(claim);
-            }
-            if(resultSet != null){
-                resultSet.close();
-            }
+            claims = takeClaims(resultSet);
         } catch (SQLException e) {
-            LOG.error(e);
+            throw new DAOException(e);
         }finally {
-            close(ps);
+            closeStatement(ps);
         }
         return claims;
     }
 
-    public ArrayList<Claim> findUnconfirmedClaims(){
-        ArrayList<Claim> claims = new ArrayList<Claim>();
+    public ArrayList<Claim> findUnconfirmedClaims() throws DAOException{
+        ArrayList<Claim> claims;
         Statement st = null;
         try {
             st = connection.createStatement();
             ResultSet resultSet = st.executeQuery(SQL_SELECT_UNCONFIRMED_CLAIMS);
-            while (resultSet.next()) {
-                Claim claim = new Claim();
-                claim.setClaimId(resultSet.getInt("claim_id"));
-                claim.setHostelId(resultSet.getInt("hostel_id"));
-                claim.setUserId(resultSet.getInt("user_id"));
-                claim.setClaimType(ClaimType.valueOf(resultSet.getString("claimtype").toUpperCase()));
-                claim.setRequiredPlaces(resultSet.getInt("required_places"));
-                claim.setDateIn(resultSet.getDate("date_in").toLocalDate());
-                claim.setDateOut(resultSet.getDate("date_out").toLocalDate());
-                claim.setConfirmed(resultSet.getBoolean("is_confirmed"));
-                claim.setDeleted(resultSet.getBoolean("is_deleted"));
-                claims.add(claim);
-            }
-            if(resultSet != null){
-                resultSet.close();
-            }
+            claims = takeClaims(resultSet);
         } catch (SQLException e) {
-            LOG.error(e);
+            throw new DAOException(e);
         }finally {
-            close(st);
+            closeStatement(st);
         }
         return claims;
     }
@@ -197,7 +127,7 @@ public class ClaimDAO extends AbstractDAO<Integer, Claim> {
         return null;
     }
 
-    public boolean create(Claim entity) {
+    public boolean create(Claim entity) throws DAOException{
         boolean flag = false;
         PreparedStatement ps = null;
         try {
@@ -215,15 +145,33 @@ public class ClaimDAO extends AbstractDAO<Integer, Claim> {
             ResultSet rs = ps.getGeneratedKeys();
             rs.next();
             entity.setClaimId(rs.getInt(1));
-            if(rs != null){
-                rs.close();
-            }
         } catch (SQLException e) {
-            LOG.error(e);
-
+            throw new DAOException(e);
         } finally {
-            close(ps);
+            closeStatement(ps);
         }
         return flag;
+    }
+
+    private ArrayList<Claim> takeClaims(ResultSet rs) throws DAOException{
+        ArrayList<Claim> claims = new ArrayList<>();
+        try {
+            while (rs.next()) {
+                Claim claim = new Claim();
+                claim.setClaimId(rs.getInt("claim_id"));
+                claim.setHostelId(rs.getInt("hostel_id"));
+                claim.setUserId(rs.getInt("user_id"));
+                claim.setClaimType(ClaimType.valueOf(rs.getString("claimtype").toUpperCase()));
+                claim.setRequiredPlaces(rs.getInt("required_places"));
+                claim.setDateIn(rs.getDate("date_in").toLocalDate());
+                claim.setDateOut(rs.getDate("date_out").toLocalDate());
+                claim.setConfirmed(rs.getBoolean("is_confirmed"));
+                claim.setDeleted(rs.getBoolean("is_deleted"));
+                claims.add(claim);
+            }
+        }catch (SQLException e){
+            throw new DAOException(e);
+        }
+        return claims;
     }
 }
