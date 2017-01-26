@@ -1,5 +1,6 @@
 package edu.training.web.dao;
 
+import edu.training.web.command.PaginationControl;
 import edu.training.web.entity.Hostel;
 import edu.training.web.exception.DAOException;
 import edu.training.web.pool.ProxyConnection;
@@ -12,8 +13,8 @@ import java.util.List;
  * Created by Roman on 27.12.2016.
  */
 public class HostelDAO extends AbstractDAO<Hostel> {
-    private static final String SQL_SELECT_ALL_HOSTELS = "SELECT * FROM Hostel";
-    private static final String SQL_SELECT_HOSTELS_BY_CITY = "SELECT * FROM Hostel WHERE city=?";
+    private static final String SQL_SELECT_ALL_HOSTELS = "SELECT SQL_CALC_FOUND_ROWS * FROM Hostel LIMIT ?, ?";
+    private static final String SQL_SELECT_HOSTELS_BY_CITY = "SELECT SQL_CALC_FOUND_ROWS * FROM Hostel WHERE city=?";
     private static final String SQL_SELECT_HOSTEL_BY_ID = "SELECT * FROM Hostel WHERE hostel_id=?";
     private static final String SQL_SELECT_HOSTEL_MAIN_IMG = "SELECT image_path FROM Image WHERE hostel_id=? AND main_img=1";
     private static final String SQL_SELECT_HOSTEL_ALL_IMG = "SELECT image_path FROM Image WHERE hostel_id=?";
@@ -30,6 +31,10 @@ public class HostelDAO extends AbstractDAO<Hostel> {
     private static final String SQL_INSERT_NEW_HOSTEL =
             "INSERT INTO `Hostel` (`hostel_id`, `name`, `free_places`, `price`, `phone`, `city`, `address`, `description`, `is_deleted`)" +
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    private static final String SQL_SELECT_SUITABLE_HOSTELS = "select * from Hostel where `hostel`.`city` = ? and " +
+            "(`hostel`.`free_places` - ifnull((select sum(`claim`.`required_places`) from Claim where `claim`.`hostel_id` = `hostel`.`hostel_id` " +
+            "AND `claim`.`is_deleted` = 0 AND ((DATE(?) between `claim`.`date_in` AND `claim`.`date_out`) OR (DATE(?) < `claim`.`date_in` AND DATE(?) >= `claim`.`date_in`))), 0))>=?";
     private static final String IMAGE_PATH = "/web/images/";
 
     public HostelDAO(ProxyConnection connection) {
@@ -96,14 +101,22 @@ public class HostelDAO extends AbstractDAO<Hostel> {
         return imgPathes;
     }
 
-    public ArrayList<Hostel> findHostelsByCity(String city) throws DAOException{
+    public ArrayList<Hostel> findHostelsByCity(String city, PaginationControl control) throws DAOException{
         ArrayList<Hostel> hostels;
         PreparedStatement ps = null;
+        int offset = (control.getCurrentPage()-1)*control.getRecordsPerPage();
         try {
-            ps = connection.prepareStatement(SQL_SELECT_HOSTELS_BY_CITY);
+            ps = connection.prepareStatement(SQL_SELECT_HOSTELS_BY_CITY + " LIMIT " + offset +", " + control.getRecordsPerPage());
             ps.setString(1, city);
             ResultSet resultSet = ps.executeQuery();
             hostels = takeHostels(resultSet);
+            resultSet.close();
+            resultSet = ps.executeQuery("SELECT FOUND_ROWS()");
+            if(resultSet.next()) {
+                int numOfRecords = resultSet.getInt(1);
+                control.setNumOfRecords(numOfRecords);
+                control.setNumOfPages((int) Math.ceil(numOfRecords * 1.0 / control.getRecordsPerPage()));
+            }
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
@@ -130,11 +143,35 @@ public class HostelDAO extends AbstractDAO<Hostel> {
 
     public List<Hostel> findAll() throws DAOException{
         List<Hostel> hostels;
+//        Statement st = null;
+//        try {
+//            st = connection.createStatement();
+//            ResultSet resultSet = st.executeQuery(SQL_SELECT_ALL_HOSTELS);
+//            hostels = takeHostels(resultSet);
+//        } catch (SQLException e) {
+//            throw new DAOException(e);
+//        } finally {
+//            closeStatement(st);
+//        }
+//        return hostels;
+        return null;
+    }
+
+    public List<Hostel> findAll(PaginationControl control) throws DAOException{
+        List<Hostel> hostels;
         Statement st = null;
+        int offset = (control.getCurrentPage()-1)*control.getRecordsPerPage();
         try {
             st = connection.createStatement();
-            ResultSet resultSet = st.executeQuery(SQL_SELECT_ALL_HOSTELS);
+            ResultSet resultSet = st.executeQuery("SELECT SQL_CALC_FOUND_ROWS * FROM Hostel LIMIT " + offset +", " + control.getRecordsPerPage());
             hostels = takeHostels(resultSet);
+            resultSet.close();
+            resultSet = st.executeQuery("SELECT FOUND_ROWS()");
+            if(resultSet.next()) {
+                int numOfRecords = resultSet.getInt(1);
+                control.setNumOfRecords(numOfRecords);
+                control.setNumOfPages((int) Math.ceil(numOfRecords * 1.0 / control.getRecordsPerPage()));
+            }
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
@@ -142,6 +179,35 @@ public class HostelDAO extends AbstractDAO<Hostel> {
         }
         return hostels;
     }
+
+    public ArrayList<Hostel> findSuitableHostels(String dateIn, String dateOut, String city, int places, PaginationControl control) throws DAOException{
+        ArrayList<Hostel> hostels;
+        PreparedStatement ps = null;
+        int offset = (control.getCurrentPage()-1)*control.getRecordsPerPage();
+        try {
+            ps = connection.prepareStatement(SQL_SELECT_SUITABLE_HOSTELS + " LIMIT " + offset +", " + control.getRecordsPerPage());
+            ps.setString(1, city);
+            ps.setString(2, dateIn);
+            ps.setString(3, dateIn);
+            ps.setString(4, dateOut);
+            ps.setInt(5, places);
+            ResultSet resultSet = ps.executeQuery();
+            hostels = takeHostels(resultSet);
+            resultSet.close();
+            resultSet = ps.executeQuery("SELECT FOUND_ROWS()");
+            if(resultSet.next()) {
+                int numOfRecords = resultSet.getInt(1);
+                control.setNumOfRecords(numOfRecords);
+                control.setNumOfPages((int) Math.ceil(numOfRecords * 1.0 / control.getRecordsPerPage()));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        } finally {
+            closeStatement(ps);
+        }
+        return hostels;
+    }
+
 
     public ArrayList<Hostel> findBookedHostels(int userId) throws DAOException {
         ArrayList<Hostel> hostels;

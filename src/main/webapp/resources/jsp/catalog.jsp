@@ -35,7 +35,7 @@
     <script src="<c:url value="/resources/js/i18n/en.js"/>"></script>
     <script src="<c:url value="/resources/js/i18n/ru.js"/>"></script>
     <script>
-        $( document ).ready(function() {
+        $(document).ready(function () {
             window.Parsley.setLocale($("#locale").val().substring(0, 2));
         });
     </script>
@@ -74,7 +74,8 @@
         <div class="container">
             <div class="row">
                 <div class="pull-right">
-                    <a href="#addHostelModal" type="button" class="btn btn-primary"  data-toggle="modal"><fmt:message key="page.catalog.addhostel"/></a>
+                    <a href="#addHostelModal" type="button" class="btn btn-primary" data-toggle="modal"><fmt:message
+                            key="page.catalog.addhostel"/></a>
                 </div>
             </div>
         </div>
@@ -114,12 +115,14 @@
                             </div>
                             <div class="row panelBottom">
                                 <div class="col-md-6 text-left">
-                                    <h5><fmt:message key="page.catalog.price"/> <span class="itemPrice">$${elem.price}</span></h5>
+                                    <h5><fmt:message key="page.catalog.price"/> <span
+                                            class="itemPrice">$${elem.price}</span></h5>
                                 </div>
                                 <div class="col-md-6 text-right">
                                     <a class="btn btn-success"
                                        href="${pageContext.request.contextPath}/service?command=show_hostel&index=${hostels.indexOf(elem)}">
-                                        <span class="fa fa-info" aria-hidden="true"></span> <fmt:message key="page.catalog.more"/>
+                                        <span class="fa fa-info" aria-hidden="true"></span> <fmt:message
+                                            key="page.catalog.more"/>
                                     </a>
                                 </div>
                             </div>
@@ -129,8 +132,119 @@
             </div>
         </div>
     </c:forEach>
+
+    <div class="row">
+        <div class="text-center">
+
+            <ul class="pagination pagination-large">
+                <input id="currPage" type="hidden" value="${currentPage}">
+                <li>
+                    <select class="form-control perpage ">
+                        <option><a href="">3</a></option>
+                        <option class="active"><a href="">5</a></option>
+                        <option><a href="">10</a></option>
+                        <option><a href="">All</a></option>
+                    </select>
+                    <label style="color: white; font-weight: normal;"> hostels per page</label>
+                </li>
+                <c:if test="${currentPage != 1}">
+                    <c:choose>
+                        <c:when test="${type == 'city'}">
+                            <li>
+                                <a href="${pageContext.request.contextPath}/service?command=find_hostels&type=city&city=${city}&pageNum=${currentPage - 1}">«</a>
+                            </li>
+                        </c:when>
+                        <c:when test="${type == 'claim'}">
+                            <li><a href="" data-page-num="${currentPage - 1}">«</a></li>
+                        </c:when>
+                        <c:otherwise>
+                            <li>
+                                <a href="${pageContext.request.contextPath}/service?command=find_hostels&type=all&pageNum=${currentPage - 1}">«</a>
+                            </li>
+                        </c:otherwise>
+                    </c:choose>
+                </c:if>
+                <c:forEach begin="1" end="${noOfPages}" var="i">
+                    <c:choose>
+                        <c:when test="${currentPage eq i}">
+                            <li id="page${i}"><span>${i}</span></li>
+                        </c:when>
+                        <c:otherwise>
+                            <c:choose>
+                                <c:when test="${type == 'city'}">
+                                    <li id="page${i}">
+                                        <a href="${pageContext.request.contextPath}/service?command=find_hostels&type=city&city=${city}&pageNum=${i}">${i}</a>
+                                    </li>
+                                </c:when>
+                                <c:when test="${type == 'claim'}">
+                                    <li id="page${i}"><a id="page${i}" href="" data-page-num="${i}">${i}</a></li>
+                                </c:when>
+                                <c:otherwise>
+                                    <li id="page${i}">
+                                        <a id="page${i}"
+                                           href="${pageContext.request.contextPath}/service?command=find_hostels&type=all&pageNum=${i}">${i}</a>
+                                    </li>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
+                <c:if test="${currentPage lt noOfPages}">
+                    <c:choose>
+
+
+                        <c:when test="${type == 'city'}">
+                            <li>
+                                <a href="${pageContext.request.contextPath}/service?command=find_hostels&type=city&city=${city}&pageNum=${currentPage + 1}">»</a>
+                            </li>
+                        </c:when>
+                        <c:when test="${type == 'claim'}">
+                            <li><a href="" data-page-num="${currentPage + 1}">»</a></li>
+                        </c:when>
+                        <c:otherwise>
+                            <li>
+                                <a href="${pageContext.request.contextPath}/service?command=find_hostels&type=all&pageNum=${currentPage + 1}">»</a>
+                            </li>
+                        </c:otherwise>
+                    </c:choose>
+                </c:if>
+            </ul>
+        </div>
+    </div>
+
+    <%--For displaying Previous link except for the 1st page --%>
+    <%--<c:if test="${currentPage != 1}">--%>
+    <%--<td>--%>
+    <%--<a href="${pageContext.request.contextPath}/service?command=find_hostels&type=all&pageNum=${currentPage - 1}">Previous</a>--%>
+    <%--</td>--%>
+    <%--</c:if>--%>
+
+    <%--For displaying Page numbers.
+    The when condition does not display a link for the current page--%>
+    <%--<table border="1" cellpadding="5" cellspacing="5">--%>
+    <%--<tr>--%>
+    <%--<c:forEach begin="1" end="${noOfPages}" var="i">--%>
+    <%--<c:choose>--%>
+    <%--<c:when test="${currentPage eq i}">--%>
+    <%--<td>${i}</td>--%>
+    <%--</c:when>--%>
+    <%--<c:otherwise>--%>
+    <%--<td>--%>
+    <%--<a href="${pageContext.request.contextPath}/service?command=find_hostels&type=all&pageNum=${i}">${i}</a>--%>
+    <%--</td>--%>
+    <%--</c:otherwise>--%>
+    <%--</c:choose>--%>
+    <%--</c:forEach>--%>
+    <%--</tr>--%>
+    <%--</table>--%>
+
+    <%--For displaying Next link --%>
+    <%--<c:if test="${currentPage lt noOfPages}">--%>
+    <%--<td>--%>
+    <%--<a href="${pageContext.request.contextPath}/service?command=find_hostels&type=all&pageNum=${currentPage + 1}">Next</a>--%>
+    <%--</td>--%>
+    <%--</c:if>--%>
 </div>
 <c:import url="common/footer.jsp"/>
-
 </body>
 </html>

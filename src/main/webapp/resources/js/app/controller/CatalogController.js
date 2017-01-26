@@ -7,6 +7,8 @@ $(function () {
             init: function () {
                 this.setLang();
                 this.loadMainImages();
+                this.setCurrentPage();
+                this.bindEvents();
             },
             setLang: function () {
                 var locale = $('#locale').val();
@@ -21,6 +23,18 @@ $(function () {
                         $("#" + inputs[i].value).attr('src', data);
                     });
                 }
+            },
+            setCurrentPage: function () {
+                var currPage = $('#currPage').val();
+                $('#page' + currPage).attr('class', 'active');
+            },
+            bindEvents: function () {
+                $("a[data-page-num]").on('click', function (e) {
+                    e.preventDefault();
+                    var page = $(this).attr('data-page-num');
+                    $('#pageNum').val(page);
+                    $('#findForm').submit();
+                });
             }
         };
 

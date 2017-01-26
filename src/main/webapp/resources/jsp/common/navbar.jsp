@@ -13,7 +13,7 @@
 <fmt:setBundle basename="i18n.msg"/>
 <c:set var="user" value="${currentUser}"/>
 <c:set var="profile" value="${userProfile}"/>
-<c:set var="hostels" value="${hostels}"/>
+<c:set var="hostels" value="${hostels}" scope="request"/>
 <c:set var="bookedHostels" value="${bookedHostels}"/>
 <c:set var="paidHostels" value="${paidHostels}"/>
 <c:set var="messages" value="${messages}"/>
@@ -37,20 +37,24 @@
                     </a>
                 </li>
                 <li>
-                    <c:choose>
-                        <c:when test="${not empty hostels}">
-                            <a href="${pageContext.request.contextPath}/service?command=go&page=catalog">
-                                <span class="fa fa-bed" aria-hidden="true"></span>
-                                <span><fmt:message key="menu.hostels"/></span>
-                            </a>
-                        </c:when>
-                        <c:otherwise>
-                            <a href="${pageContext.request.contextPath}/service?command=find_hostels&type=all">
-                                <span class="fa fa-bed" aria-hidden="true"></span>
-                                <span><fmt:message key="menu.hostels"/></span>
-                            </a>
-                        </c:otherwise>
-                    </c:choose>
+                    <a href="${pageContext.request.contextPath}/service?command=find_hostels&type=all">
+                        <span class="fa fa-bed" aria-hidden="true"></span>
+                        <span><fmt:message key="menu.hostels"/></span>
+                    </a>
+                    <%--<c:choose>--%>
+                        <%--<c:when test="${not empty hostels}">--%>
+                            <%--<a href="${pageContext.request.contextPath}/service?command=go&page=catalog">--%>
+                                <%--<span class="fa fa-bed" aria-hidden="true"></span>--%>
+                                <%--<span><fmt:message key="menu.hostels"/></span>--%>
+                            <%--</a>--%>
+                        <%--</c:when>--%>
+                        <%--<c:otherwise>--%>
+                            <%--<a href="${pageContext.request.contextPath}/service?command=find_hostels&type=all">--%>
+                                <%--<span class="fa fa-bed" aria-hidden="true"></span>--%>
+                                <%--<span><fmt:message key="menu.hostels"/></span>--%>
+                            <%--</a>--%>
+                        <%--</c:otherwise>--%>
+                    <%--</c:choose>--%>
                 </li>
                 <c:if test="${user.admin}">
                     <c:set var="unconfirmedClaims" value="${unconfirmedClaims}" scope="session"/>

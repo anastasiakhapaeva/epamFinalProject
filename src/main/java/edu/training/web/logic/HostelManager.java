@@ -1,5 +1,6 @@
 package edu.training.web.logic;
 
+import edu.training.web.command.PaginationControl;
 import edu.training.web.exception.DAOException;
 import edu.training.web.exception.LogicException;
 import edu.training.web.pool.ConnectionPool;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
  * Created by Roman on 27.12.2016.
  */
 public class HostelManager {
+   // public static int noOfRecords;
     public static Hostel findHostelById(int hostelId) throws LogicException{
         Hostel hostel;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -72,12 +74,12 @@ public class HostelManager {
     }
 
 
-    public static ArrayList<Hostel> findHostelsByCity(String city) throws LogicException{
+    public static ArrayList<Hostel> findHostelsByCity(String city, PaginationControl control) throws LogicException{
         ArrayList<Hostel> hostels = new ArrayList<Hostel>();
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
         HostelDAO hostelDAO = new HostelDAO(cn);
         try {
-            hostels = hostelDAO.findHostelsByCity(city);
+            hostels = hostelDAO.findHostelsByCity(city, control);
         }catch (DAOException e){
             throw new LogicException("Cannot find hostels by city", e);
         }finally{
@@ -86,12 +88,26 @@ public class HostelManager {
         return hostels;
     }
 
-    public static ArrayList<Hostel> findAllHostels() throws LogicException{
+    public static ArrayList<Hostel> findSuitableHostels(String dateIn, String dateOut, String city, int places, PaginationControl control) throws LogicException{
+        ArrayList<Hostel> hostels = new ArrayList<Hostel>();
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        HostelDAO hostelDAO = new HostelDAO(cn);
+        try {
+            hostels = hostelDAO.findSuitableHostels(dateIn, dateOut, city, places, control);
+        }catch (DAOException e){
+            throw new LogicException("Cannot find hostels by city", e);
+        }finally{
+            hostelDAO.closeConnection(cn);
+        }
+        return hostels;
+    }
+
+    public static ArrayList<Hostel> findAllHostels(PaginationControl control) throws LogicException{
         ArrayList<Hostel> hostels;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
         HostelDAO hostelDAO = new HostelDAO(cn);
         try {
-            hostels = (ArrayList<Hostel>) hostelDAO.findAll();
+            hostels = (ArrayList<Hostel>) hostelDAO.findAll(control);
         }catch (DAOException e){
             throw new LogicException("Cannot find all hostels", e);
         }finally{

@@ -249,6 +249,11 @@ ul.mail-list li span.mail-message-preview{
     color:#A8A8A8;
 }
 
+.perpage{
+    margin-left: 50px;
+    width: inherit;
+    display: inherit;
+}
 /*.logo a {*/
     /*display: block;*/
     /*width: 151px;*/
