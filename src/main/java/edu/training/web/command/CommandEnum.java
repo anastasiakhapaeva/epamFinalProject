@@ -58,6 +58,11 @@ public enum CommandEnum {
             this.command = new BookingCommand();
         }
     },
+    MY_HOSTELS {
+        {
+            this.command = new MyHostelsCommand();
+        }
+    },
     SHOW_HOSTEL {
         {
             this.command = new ShowHostelCommand();
@@ -71,6 +76,11 @@ public enum CommandEnum {
     AJAX_DELETE_MESSAGE {
         {
             this.command = new AjaxDeleteMessageCommand();
+        }
+    },
+    AJAX_CHECK_STATE {
+        {
+            this.command = new AjaxBookingStateCommand();
         }
     },
     AJAX_LOAD_NAMES {

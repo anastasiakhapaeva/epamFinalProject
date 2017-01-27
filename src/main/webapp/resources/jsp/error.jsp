@@ -13,10 +13,10 @@
 
     <!-- Bootstrap -->
 
-    <link href="<c:url value="/resources/css/bootstrap.css"/>" rel="stylesheet">
-    <link href="<c:url value="/resources/css/menu.css"/>" rel="stylesheet">
-    <link href="<c:url value="/resources/css/jquery-ui.css"/>" rel="stylesheet">
-    <link href="<c:url value="/resources/css/font-awesome.css"/>" rel="stylesheet">
+    <link href="<c:url value="/resources/css/lib/bootstrap.css"/>" rel="stylesheet">
+    <link href="<c:url value="/resources/css/main.css"/>" rel="stylesheet">
+    <link href="<c:url value="/resources/css/lib/jquery-ui.css"/>" rel="stylesheet">
+    <link href="<c:url value="/resources/css/lib/font-awesome.css"/>" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Pattaya" rel="stylesheet">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -53,28 +53,29 @@
 </head>
 <body class="body-style">
 <c:import url="common/navbar.jsp"/>
-<c:import url="common/regmodal.jsp"/>
-<c:import url="common/depositmodal.jsp"/>
-<c:import url="common/messagemodal.jsp"/>
+<c:import url="modal/regmodal.jsp"/>
+<c:import url="modal/depositmodal.jsp"/>
+<c:import url="modal/messagemodal.jsp"/>
+<c:import url="modal/aboutmodal.jsp"/>
 <div class="main-content padd-top">
     <div class="container">
         <div class="row">
             <div class="col-md-12 text-center text-warning">
                 <img src="resources/img/error.png" alt="error" width="400">
-                <h2>${pageContext.errorData.statusCode} Error</h2>
-                <p>Sorry, an error has occurred, something went wrong!</p>
+                <h2>${pageContext.errorData.statusCode} <fmt:message key="page.error.error"/></h2>
+                <p><fmt:message key="page.error.title"/></p>
                 <c:if test="${not empty pageContext.exception}">
-                    <p>Exception: ${pageContext.exception}</p>
-                    <p>Message: ${pageContext.exception.message}</p>
+                    <p><fmt:message key="page.error.exception"/> ${pageContext.exception}</p>
+                    <p><fmt:message key="page.error.message"/> ${pageContext.exception.message}</p>
                 </c:if>
                 <c:if test="${not empty errorMessage}">
-                    <p>Error message: ${errorMessage}</p>
+                    <p><fmt:message key="page.error.errormessage"/> ${errorMessage}</p>
                 </c:if>
                 <div class="error-actions">
                     <a href="${pageContext.request.contextPath}/service?command=go&page=main"
                        class="btn btn-primary btn-lg">
                         <span class="glyphicon glyphicon-arrow-left"></span>
-                        Back Home
+                        <fmt:message key="page.error.home"/>
                     </a>
                 </div>
             </div>

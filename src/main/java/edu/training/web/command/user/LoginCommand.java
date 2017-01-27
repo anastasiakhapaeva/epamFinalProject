@@ -34,16 +34,16 @@ public class LoginCommand implements ActionCommand {
 
             User authorizedUser = Authorization.getCurrentUser(login, pass);
             UserProfile profile = Authorization.getUserProfile(authorizedUser.getUserId());
-            ArrayList<Hostel> bookedHostels = HostelManager.findBookedHostelsForUser(authorizedUser.getUserId());
-            ArrayList<Hostel> paidHostels = HostelManager.findPaidHostelsForUser(authorizedUser.getUserId());
+            //ArrayList<Hostel> bookedHostels = HostelManager.findBookedHostelsForUser(authorizedUser.getUserId());
+            //ArrayList<Hostel> paidHostels = HostelManager.findPaidHostelsForUser(authorizedUser.getUserId());
             ArrayList<Message> messages = Authorization.findMessagesForUser(authorizedUser.getUserId());
 
 
             HttpSession session = request.getSession(true);
             session.setAttribute(PARAM_CURRENT_USER, authorizedUser);
             session.setAttribute(PARAM_USER_PROFILE, profile);
-            session.setAttribute(PARAM_BOOKED_HOSTELS, bookedHostels);
-            session.setAttribute(PARAM_PAID_HOSTELS, paidHostels);
+           // session.setAttribute(PARAM_BOOKED_HOSTELS, bookedHostels);
+            //session.setAttribute(PARAM_PAID_HOSTELS, paidHostels);
             session.setAttribute(PARAM_MESSAGES, messages);
             if (authorizedUser.isAdmin()) {
                     ArrayList<Claim> unconfirmedClaims = HostelManager.findUnconfirmedClaims();

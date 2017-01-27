@@ -10,10 +10,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title><fmt:message key="page.title"/></title>
-    <link href="<c:url value="/resources/css/bootstrap.css"/>" rel="stylesheet">
-    <link href="<c:url value="/resources/css/jquery-ui.css"/>" rel="stylesheet">
-    <link href="<c:url value="/resources/css/menu.css"/>" rel="stylesheet">
-    <link href="<c:url value="/resources/css/font-awesome.css"/>" rel="stylesheet">
+    <link href="<c:url value="/resources/css/lib/bootstrap.css"/>" rel="stylesheet">
+    <link href="<c:url value="/resources/css/lib/jquery-ui.css"/>" rel="stylesheet">
+    <link href="<c:url value="/resources/css/main.css"/>" rel="stylesheet">
+    <link href="<c:url value="/resources/css/lib/font-awesome.css"/>" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Pattaya" rel="stylesheet">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -50,9 +50,10 @@
 </head>
 <body class="body-style">
 <c:import url="resources/jsp/common/navbar.jsp"/>
-<c:import url="resources/jsp/common/regmodal.jsp"/>
-<c:import url="resources/jsp/common/depositmodal.jsp"/>
-<c:import url="resources/jsp/common/messagemodal.jsp"/>
+<c:import url="resources/jsp/modal/regmodal.jsp"/>
+<c:import url="resources/jsp/modal/depositmodal.jsp"/>
+<c:import url="resources/jsp/modal/messagemodal.jsp"/>
+<c:import url="resources/jsp/modal/aboutmodal.jsp"/>
 <div class="main-content">
     <div class="panel-content">
         <div class="container table-row">

@@ -9,6 +9,7 @@ import edu.training.web.exception.LogicException;
 import edu.training.web.listener.UserSessions;
 import edu.training.web.logic.AdminAction;
 import edu.training.web.logic.HostelManager;
+import edu.training.web.logic.Messenger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,8 +35,8 @@ public class AdminConfirmCommand implements ActionCommand {
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         String page = "";
         HttpSession session = request.getSession(true);
-        int claimId = Integer.parseInt(request.getParameter(PARAM_CLAIM_ID));
         try {
+            int claimId = Integer.parseInt(request.getParameter(PARAM_CLAIM_ID));
             Claim claim = HostelManager.findClaimById(claimId);
         User user = HostelManager.findUserById(claim.getUserId());
         Hostel current = HostelManager.findHostelById(claim.getHostelId());
@@ -44,14 +45,14 @@ public class AdminConfirmCommand implements ActionCommand {
             ArrayList<Claim> unconfirmedClaims = (ArrayList<Claim>) session.getAttribute(PARAM_UNCONFIRMED_CLAIMS) ;
             unconfirmedClaims.remove(claim);
             List<HttpSession> userSessions = UserSessions.getUserSessions(user.getUserId());
-            for(HttpSession userSession : userSessions){
-                ArrayList<Hostel> bookedHostels = (ArrayList<Hostel>)userSession.getAttribute(PARAM_BOOKED_HOSTELS);
-                bookedHostels.remove(current);
-            }
+//            for(HttpSession userSession : userSessions){
+//                ArrayList<Hostel> bookedHostels = (ArrayList<Hostel>)userSession.getAttribute(PARAM_BOOKED_HOSTELS);
+//                bookedHostels.remove(current);
+//            }
             long differenceInDays = DAYS.between(claim.getDateIn(), claim.getDateOut());
             boolean isPaid = HostelManager.paymentForHostel(user.getUserId(), current.getPrice() * claim.getRequiredPlaces() * differenceInDays * (1 - user.getDiscount()/100));
             if (isPaid) {
-                Message approvalMessage = new Message(user.getUserId(), current.getName(), "You are welcome to our hostel! Waiting for you from " + claim.getDateIn() +" to " + claim.getDateOut() + " !");
+                Message approvalMessage = Messenger.generateApprovalMessage(user.getUserId(), current.getName(), claim);
                 boolean isSent = HostelManager.sendMessageToUser(approvalMessage);
                 for(HttpSession userSession : userSessions){
                     User currentUser = (User) userSession.getAttribute(PARAM_CURRENT_USER);

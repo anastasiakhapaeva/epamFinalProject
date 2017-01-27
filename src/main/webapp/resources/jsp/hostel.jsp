@@ -19,11 +19,11 @@
     <title><fmt:message key="page.title"/></title>
 
     <!-- Bootstrap -->
-    <link href="<c:url value="/resources/css/bootstrap.css"/>" rel="stylesheet">
-    <link href="<c:url value="/resources/css/menu.css"/>" rel="stylesheet">
+    <link href="<c:url value="/resources/css/lib/bootstrap.css"/>" rel="stylesheet">
+    <link href="<c:url value="/resources/css/main.css"/>" rel="stylesheet">
     <link href="<c:url value="/resources/css/hostel.css"/>" rel="stylesheet">
-    <link href="<c:url value="/resources/css/jquery-ui.css"/>" rel="stylesheet">
-    <link href="<c:url value="/resources/css/font-awesome.css"/>" rel="stylesheet">
+    <link href="<c:url value="/resources/css/lib/jquery-ui.css"/>" rel="stylesheet">
+    <link href="<c:url value="/resources/css/lib/font-awesome.css"/>" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Pattaya" rel="stylesheet">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -66,10 +66,11 @@
 <c:set var="bookedHostels" value="${bookedHostels}"/>
 <c:set var="paidHostels" value="${paidHostels}"/>
 <c:import url="common/navbar.jsp"/>
-<c:import url="common/bookmodal.jsp"/>
-<c:import url="common/regmodal.jsp"/>
-<c:import url="common/depositmodal.jsp"/>
-<c:import url="common/messagemodal.jsp"/>
+<c:import url="modal/bookmodal.jsp"/>
+<c:import url="modal/regmodal.jsp"/>
+<c:import url="modal/depositmodal.jsp"/>
+<c:import url="modal/messagemodal.jsp"/>
+<c:import url="modal/aboutmodal.jsp"/>
 <div class="main-content padd-top">
     <input type="hidden" id="main-path" value="${pageContext.request.contextPath}">
     <input type="hidden" id="loadType" value="all">
@@ -83,7 +84,7 @@
             <%--<div class="content-wrapper">--%>
             <%--<div class="item-container">--%>
             <h2 class="hostel-title">
-                <span>${hostel.name}</span>
+                <span><c:out value="${hostel.name}"/></span>
                 <%--<div class="hostel-rating pull-right">--%>
                     <%--<span>Оценка: </span>--%>
                     <%--<i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i--%>
@@ -119,43 +120,45 @@
                     </div>
                     <div>
                         <span class="fa fa-map-marker" aria-hidden="true"></span>
-                        <span> ${hostel.city}, </span>
-                        <span>${hostel.address} </span>
+                        <span> <c:out value="${hostel.city}"/>, </span>
+                        <span><c:out value="${hostel.address}"/> </span>
                     </div>
                     <div>
                         <span class="fa fa-phone" aria-hidden="true"></span>
-                        <span> ${hostel.phone}</span>
+                        <span> <c:out value="${hostel.phone}"/></span>
                     </div>
                     <hr>
                     <div class="info-title">
-                        <span><fmt:message key="page.hostel.places"/> ${hostel.freePlaces}</span>
+                        <span><fmt:message key="page.hostel.places"/> <c:out value="${hostel.freePlaces}"/></span>
                     </div>
                     <hr>
                     <div class="info-title"><fmt:message key="page.hostel.price"/></div>
-                    <div class="hostel-price">$${hostel.price}</div>
+                    <div class="hostel-price">$<c:out value="${hostel.price}"/></div>
                     <hr>
                     <c:choose>
                         <c:when test="${not empty currentUser and not currentUser.banned}">
                             <c:choose>
-                                <c:when test="${bookedHostels.contains(current)}">
-                                    <div id="book-status-booked">
-                                        <div><fmt:message key="page.hostel.status.booked"/></div>
-                                        <a href="${pageContext.request.contextPath}/service?command=book_cancel&hostelId=${hostel.hostelId}&userId=${currentUser.userId}"
-                                           class="btn btn-danger" role="button">
-                                            <fmt:message key="page.hostel.button.cancel"/>
-                                        </a>
-                                    </div>
-                                </c:when>
-                                <c:when test="${paidHostels.contains(current)}">
-                                    <div id="book-status-paid">
-                                        <div><fmt:message key="page.hostel.status.paid"/></div>
-                                    </div>
-                                </c:when>
+                                <%--<c:when test="${bookedHostels.contains(current)}">--%>
+
+                                <%--</c:when>--%>
+                                <%--<c:when test="${paidHostels.contains(current)}">--%>
+                                    <%--<div id="book-status-paid">--%>
+                                        <%--<div><fmt:message key="page.hostel.status.paid"/></div>--%>
+                                    <%--</div>--%>
+                                <%--</c:when>--%>
                                 <c:when test="${currentUser.money < current.price}">
                                     <div><fmt:message key="page.hostel.status.money"/></div>
                                 </c:when>
+
                                 <c:otherwise>
-                                    <div id="book-status-free">
+                                <div id="book-status-booked" class="hidden">
+                                    <div><fmt:message key="page.hostel.status.booked"/></div>
+                                    <a href="${pageContext.request.contextPath}/service?command=book_cancel&hostelId=${hostel.hostelId}&userId=${currentUser.userId}"
+                                       class="btn btn-danger" role="button">
+                                        <fmt:message key="page.hostel.button.cancel"/>
+                                    </a>
+                                </div>
+                                    <div id="book-status-free" class="hidden">
                                         <a href="#bookModal" role="button" data-toggle="modal" class="btn btn-success">
                                             <fmt:message key="page.hostel.button.book"/>
                                         </a>
@@ -201,7 +204,7 @@
                             <div class="tab-pane fade in active" id="service-one">
 
                                 <div class="container hostel-info">
-                                    ${hostel.description}
+                                    <c:out value="${hostel.description}"/>
                                 </div>
 
                             </div>

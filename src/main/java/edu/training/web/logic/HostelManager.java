@@ -252,6 +252,23 @@ public class HostelManager {
         return result;
     }
 
+    public static boolean isBookedHostelByUser(int userId, int hostelId) throws LogicException{
+        boolean result = false;
+        ProxyConnection cn = ConnectionPool.getInstance().getConnection();
+        ClaimDAO claimDAO = new ClaimDAO(cn);
+        try {
+            cn.setAutoCommit(false);
+            result = claimDAO.findClaimByIds(userId, hostelId);
+            cn.commit();
+        }catch (SQLException | DAOException e){
+            claimDAO.rollbackConnection(cn);
+            throw new LogicException("Cannot deposit money", e);
+        }finally{
+            claimDAO.closeConnection(cn);
+        }
+        return result;
+    }
+
     public static ArrayList<Hostel> findBookedHostelsForUser(int userId) throws LogicException{
         ArrayList<Hostel> bookedHostels;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();

@@ -13,12 +13,10 @@
 <div id="bookModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            <!-- Заголовок модального окна -->
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h4 class="modal-title"><fmt:message key="bookmodal.title"/></h4>
             </div>
-            <!-- Основное содержимое модального окна -->
             <div class="modal-body">
                 <div id="book-info" class="text-info marg-bott text-center"><fmt:message key="bookmodal.payment.info"/>
                 </div>

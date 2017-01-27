@@ -29,15 +29,15 @@ public class CancelBookingCommand implements ActionCommand {
         String page = PARAM_HOSTEL_PAGE;
         HttpSession session = request.getSession(true);
         User currentUser = (User) session.getAttribute(PARAM_CURRENT_USER);
-        ArrayList<Hostel> bookedHostels = (ArrayList<Hostel>) session.getAttribute(PARAM_BOOKED_HOSTELS);
+        //ArrayList<Hostel> bookedHostels = (ArrayList<Hostel>) session.getAttribute(PARAM_BOOKED_HOSTELS);
         try {
             int hostelId = Integer.parseInt(request.getParameter(PARAM_HOSTEL_ID));
-            Hostel current = HostelManager.findHostelById(hostelId);
+            //Hostel current = HostelManager.findHostelById(hostelId);
 
             boolean res = HostelManager.cancelBooking(currentUser.getUserId(), hostelId);
-            if (res) {
-                bookedHostels.remove(current);
-            }
+//            if (res) {
+//                bookedHostels.remove(current);
+//            }
         }catch (NumberFormatException | LogicException e){
             LOG.error(e);
             request.setAttribute(PARAM_ERROR_MESSAGE, e);

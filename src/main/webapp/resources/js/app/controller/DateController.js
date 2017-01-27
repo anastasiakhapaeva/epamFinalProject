@@ -8,6 +8,10 @@ $(function () {
                 this.bindEvents();
             },
             bindEvents: function () {
+                $("#date_in, #date_out").keydown(function (e) {
+                    e.preventDefault();
+                });
+
                 var dates = $("#date_in, #date_out").datepicker({
                     dateFormat: 'yy-mm-dd',
                     beforeShow: function () {

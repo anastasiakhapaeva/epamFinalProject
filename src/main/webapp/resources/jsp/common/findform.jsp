@@ -61,12 +61,9 @@
     <input type="hidden" name="command" value="find_hostels">
     <input type="hidden" name="type" value="claim">
     <input id="pageNum" type="hidden" name="pageNum" value="1">
+    <input id="perPage" type="hidden" name="perPage" value="3">
 </form>
 <script>
-    $("#date_in, #date_out").keydown(function (e) {
-        e.preventDefault();
-    });
-
     $('#guests').on('change invalid', function () {
         if (this.validity.valueMissing) {
             this.setCustomValidity($.i18n.prop('msg.required'));

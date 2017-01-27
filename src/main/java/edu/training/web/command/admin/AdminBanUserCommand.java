@@ -7,6 +7,7 @@ import edu.training.web.exception.LogicException;
 import edu.training.web.listener.UserSessions;
 import edu.training.web.logic.AdminAction;
 import edu.training.web.logic.HostelManager;
+import edu.training.web.logic.Messenger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,7 +34,7 @@ public class AdminBanUserCommand implements ActionCommand {
             List<HttpSession> userSessions = UserSessions.getUserSessions(user.getUserId());
             boolean isBanned = AdminAction.banUser(userId, !user.isBanned());
             if (isBanned) {
-                Message banMessage = new Message(user.getUserId(), "Administration", "You are banned for violating the rules of the system!");
+                Message banMessage = Messenger.generateBanMessage(userId);
                 boolean isSent = HostelManager.sendMessageToUser(banMessage);
                 for (HttpSession userSession : userSessions) {
                     if (isSent) {
@@ -44,7 +45,7 @@ public class AdminBanUserCommand implements ActionCommand {
                     }
                 }
             } else {
-                Message unbanMessage = new Message(user.getUserId(), "Administration", "You was unbanned!");
+                Message unbanMessage = Messenger.generateUnbanMessage(userId);
                 boolean isSent = HostelManager.sendMessageToUser(unbanMessage);
                 for (HttpSession userSession : userSessions) {
                     if (isSent) {

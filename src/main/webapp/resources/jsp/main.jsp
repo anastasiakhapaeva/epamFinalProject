@@ -13,10 +13,10 @@
 
     <!-- Bootstrap -->
 
-    <link href="<c:url value="/resources/css/bootstrap.css"/>" rel="stylesheet">
-    <link href="<c:url value="/resources/css/menu.css"/>" rel="stylesheet">
-    <link href="<c:url value="/resources/css/jquery-ui.css"/>" rel="stylesheet">
-    <link href="<c:url value="/resources/css/font-awesome.css"/>" rel="stylesheet">
+    <link href="<c:url value="/resources/css/lib/bootstrap.css"/>" rel="stylesheet">
+    <link href="<c:url value="/resources/css/main.css"/>" rel="stylesheet">
+    <link href="<c:url value="/resources/css/lib/jquery-ui.css"/>" rel="stylesheet">
+    <link href="<c:url value="/resources/css/lib/font-awesome.css"/>" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Pattaya" rel="stylesheet">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -53,9 +53,10 @@
 </head>
 <body class="body-style">
 <c:import url="common/navbar.jsp"/>
-<c:import url="common/regmodal.jsp"/>
-<c:import url="common/depositmodal.jsp"/>
-<c:import url="common/messagemodal.jsp"/>
+<c:import url="modal/regmodal.jsp"/>
+<c:import url="modal/depositmodal.jsp"/>
+<c:import url="modal/messagemodal.jsp"/>
+<c:import url="modal/aboutmodal.jsp"/>
 <div class="main-content">
     <div class="panel-content">
         <div class="container table-row">

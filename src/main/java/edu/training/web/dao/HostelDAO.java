@@ -43,7 +43,7 @@ public class HostelDAO extends AbstractDAO<Hostel> {
 
 
     public boolean editHostel(Hostel editedHostel) throws DAOException{
-        boolean isEdited = false;
+        int edited = 0;
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(SQL_UPDATE_HOSTEL);
@@ -55,18 +55,17 @@ public class HostelDAO extends AbstractDAO<Hostel> {
             ps.setString(6, editedHostel.getAddress());
             ps.setString(7, editedHostel.getDescription());
             ps.setInt(8, editedHostel.getHostelId());
-            ps.executeUpdate();
-            isEdited = true;
+            edited = ps.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
             closeStatement(ps);
         }
-        return isEdited;
+        return edited > 0;
     }
 
     public String loadImageForHostel(int id) throws DAOException{
-        String path = new String();
+        String path = "";
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(SQL_SELECT_HOSTEL_MAIN_IMG);
@@ -242,7 +241,7 @@ public class HostelDAO extends AbstractDAO<Hostel> {
     }
 
     public boolean create(Hostel entity) throws DAOException {
-        boolean flag = false;
+        int flag = 0;
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(SQL_INSERT_NEW_HOSTEL, Statement.RETURN_GENERATED_KEYS);
@@ -255,8 +254,7 @@ public class HostelDAO extends AbstractDAO<Hostel> {
             ps.setString(7, entity.getAddress());
             ps.setString(8, entity.getDescription());
             ps.setBoolean(9, entity.isDeleted());
-            ps.executeUpdate();
-            flag = true;
+            flag = ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             rs.next();
             entity.setHostelId(rs.getInt(1));
@@ -265,7 +263,7 @@ public class HostelDAO extends AbstractDAO<Hostel> {
         } finally {
             closeStatement(ps);
         }
-        return flag;
+        return flag > 0;
     }
 
     private ArrayList<Hostel> takeHostels(ResultSet rs) throws DAOException{

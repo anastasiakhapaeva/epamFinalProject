@@ -2,6 +2,8 @@ package edu.training.web.command.site;
 
 import edu.training.web.command.ActionCommand;
 import edu.training.web.entity.Hostel;
+import edu.training.web.exception.LogicException;
+import edu.training.web.logic.HostelManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,8 +15,7 @@ import java.util.ArrayList;
  */
 public class ShowHostelCommand implements ActionCommand {
     private static final String PARAM_HOSTEL = "hostel";
-    private static final String PARAM_HOSTELS = "hostels";
-    private static final String PARAM_HOSTEL_INDEX = "index";
+    private static final String PARAM_HOSTEL_ID = "id";
     private static final String PARAM_HOSTEL_PAGE = "/resources/jsp/hostel.jsp";
     private static final String PARAM_ERROR_MESSAGE = "errorMessage";
     private static final String PARAM_ERROR = "/resources/jsp/error.jsp";
@@ -23,10 +24,10 @@ public class ShowHostelCommand implements ActionCommand {
         String page = PARAM_HOSTEL_PAGE;
         HttpSession session = request.getSession(true);
         try {
-            int index = Integer.parseInt(request.getParameter(PARAM_HOSTEL_INDEX));
-            Hostel current = ((ArrayList<Hostel>) session.getAttribute(PARAM_HOSTELS)).get(index);
+            int id = Integer.parseInt(request.getParameter(PARAM_HOSTEL_ID));
+            Hostel current = HostelManager.findHostelById(id);
             session.setAttribute(PARAM_HOSTEL, current);
-        }catch (NumberFormatException e){
+        }catch (NumberFormatException | LogicException e){
             LOG.error(e);
             request.setAttribute(PARAM_ERROR_MESSAGE, e);
             page = PARAM_ERROR;

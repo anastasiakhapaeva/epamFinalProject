@@ -20,6 +20,23 @@ var BookingService = (function () {
                     console.error("ajax error: cannot count available places");
                 }
             });
+        },
+        checkBookingState: function(userId, hostelId, callback){
+            $.ajax({
+                type: 'GET',
+                url: '/web/service',
+                data: {
+                    userId: userId,
+                    hostelId: hostelId,
+                    command: 'ajax_check_state',
+                },
+                success: function (data) {
+                    callback(data);
+                },
+                error: function (data) {
+                    console.error("ajax error: cannot check booking state");
+                }
+            });
         }
     };
 

@@ -41,32 +41,19 @@
                         <span class="fa fa-bed" aria-hidden="true"></span>
                         <span><fmt:message key="menu.hostels"/></span>
                     </a>
-                    <%--<c:choose>--%>
-                        <%--<c:when test="${not empty hostels}">--%>
-                            <%--<a href="${pageContext.request.contextPath}/service?command=go&page=catalog">--%>
-                                <%--<span class="fa fa-bed" aria-hidden="true"></span>--%>
-                                <%--<span><fmt:message key="menu.hostels"/></span>--%>
-                            <%--</a>--%>
-                        <%--</c:when>--%>
-                        <%--<c:otherwise>--%>
-                            <%--<a href="${pageContext.request.contextPath}/service?command=find_hostels&type=all">--%>
-                                <%--<span class="fa fa-bed" aria-hidden="true"></span>--%>
-                                <%--<span><fmt:message key="menu.hostels"/></span>--%>
-                            <%--</a>--%>
-                        <%--</c:otherwise>--%>
-                    <%--</c:choose>--%>
                 </li>
                 <c:if test="${user.admin}">
                     <c:set var="unconfirmedClaims" value="${unconfirmedClaims}" scope="session"/>
                     <li>
                         <a href="${pageContext.request.contextPath}/service?command=go&page=claims">
                             <span class="fa fa-envelope-open" aria-hidden="true"></span>
-                            <span><fmt:message key="menu.claims"/> <span class="badge">${fn:length(unconfirmedClaims)}</span></span>
+                            <span><fmt:message key="menu.claims"/> <span
+                                    class="badge">${fn:length(unconfirmedClaims)}</span></span>
                         </a>
                     </li>
                 </c:if>
                 <li>
-                    <a href="#userModal" role="button" data-toggle="modal">
+                    <a href="#aboutModal" role="button" data-toggle="modal">
                         <span class="fa fa-info" aria-hidden="true"></span>
                         <span><fmt:message key="menu.aboutus"/></span>
                     </a>
@@ -101,8 +88,8 @@
                     <a id="drop1" role="button" class="dropdown-toggle" data-toggle="dropdown">
                         <c:choose>
                             <c:when test="${user.banned}">
-                            <span class="fa fa-ban" aria-hidden="true"></span>
-                        </c:when>
+                                <span class="fa fa-ban" aria-hidden="true"></span>
+                            </c:when>
                             <c:otherwise>
                                 <span class="fa fa-user" aria-hidden="true"></span>
                             </c:otherwise>
@@ -118,26 +105,30 @@
                     </a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
                         <li><a tabindex="-1"
-                               href="${pageContext.request.contextPath}/service?command=go&page=profile"><fmt:message key="menu.user.profile"/></a>
+                               href="${pageContext.request.contextPath}/service?command=go&page=profile"><fmt:message
+                                key="menu.user.profile"/></a>
                         </li>
                         <c:if test="${not empty messages}">
-                            <li><a tabindex="-1" href="#messageModal" role="button" data-toggle="modal"><fmt:message key="menu.user.messages"/> <span class="badge">${fn:length(messages)}</span></a>
+                            <li><a tabindex="-1" href="#messageModal" role="button" data-toggle="modal"><fmt:message
+                                    key="menu.user.messages"/> <span class="badge">${fn:length(messages)}</span></a>
                             </li>
 
                         </c:if>
-                        <li><a tabindex="-1" href="#depositModal" role="button" data-toggle="modal"><fmt:message key="menu.user.balance"/></a>
+                        <li><a tabindex="-1" href="#depositModal" role="button" data-toggle="modal"><fmt:message
+                                key="menu.user.balance"/></a>
                         </li>
-                        <c:if test="${not empty paidHostels}">
+                            <li><a tabindex="-1"
+                                   href="${pageContext.request.contextPath}/service?command=my_hostels&bookType=payment"><fmt:message
+                                    key="menu.user.paid"/></a></li>
                         <li><a tabindex="-1"
-                               href="${pageContext.request.contextPath}/service?command=go&page=profile"><fmt:message key="menu.user.paid"/></a></li>
-                            </c:if>
-                            <c:if test="${not empty bookedHostels}">
-                        <li><a tabindex="-1"
-                               href="${pageContext.request.contextPath}/service?command=go&page=profile"><fmt:message key="menu.user.booked"/></a></li>
+                               href="${pageContext.request.contextPath}/service?command=my_hostels&bookType=reservation"><fmt:message
+                                key="menu.user.booked"/></a></li>
                         <li>
-                            </c:if>
+
                         <li class="divider"></li>
-                        <li><a tabindex="-1" href="${pageContext.request.contextPath}/service?command=logout"><fmt:message key="menu.user.logout"/></a>
+                        <li><a tabindex="-1"
+                               href="${pageContext.request.contextPath}/service?command=logout"><fmt:message
+                                key="menu.user.logout"/></a>
                         </li>
                     </ul>
                 </li>

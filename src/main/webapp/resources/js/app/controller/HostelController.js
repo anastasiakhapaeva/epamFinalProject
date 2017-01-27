@@ -7,6 +7,7 @@ $(function () {
             init: function () {
                 this.setLang();
                 this.loadAllImages();
+                this.checkBookingState();
                 this.bindEvents();
             },
             setLang: function () {
@@ -22,6 +23,20 @@ $(function () {
                     var j;
                     for(j=0;j<images.length;j++){
                         $("#img" + j).attr('src', images[j]);
+                    }
+                });
+            },
+            checkBookingState: function () {
+                var hostelId = $('#hostel_id').val();
+                var userId = $('#user_id').val();
+                BookingService.checkBookingState(userId, hostelId, function (data) {
+                    var result = JSON.parse(data);
+                    if(result){
+                        $('#book-status-booked').removeAttr('class');
+                        $('#book-status-free').attr('class','hidden');
+                    }else{
+                        $('#book-status-booked').attr('class','hidden');
+                        $('#book-status-free').removeAttr('class');
                     }
                 });
             },

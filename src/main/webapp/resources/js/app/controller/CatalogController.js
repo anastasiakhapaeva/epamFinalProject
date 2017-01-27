@@ -3,6 +3,7 @@
  */
 $(function () {
     var catalogCtrl = (function () {
+
         var methods = {
             init: function () {
                 this.setLang();
@@ -26,15 +27,35 @@ $(function () {
             },
             setCurrentPage: function () {
                 var currPage = $('#currPage').val();
-                $('#page' + currPage).attr('class', 'active');
+                var hostelPerPage = $('#hostelsPerPage').val();
+                $('#lipage' + currPage).attr('class', 'active');
+                $('#selectPerPage').val(hostelPerPage);
             },
             bindEvents: function () {
+                var previous;
                 $("a[data-page-num]").on('click', function (e) {
                     e.preventDefault();
                     var page = $(this).attr('data-page-num');
+                    var perPage = $('#hostelsPerPage').val();
                     $('#pageNum').val(page);
+                    $('#perPage').val(perPage);
                     $('#findForm').submit();
                 });
+
+                $('#selectPerPage').on('focus', function () {
+                    previous = this.value;
+                }).change(function () {
+                    var perPage = $("#selectPerPage option:selected" ).text();
+                    $('#hostelsPerPage').val(perPage);
+                    $('a[data-page]').each(function () {
+                        var href = $(this).attr('href');
+                        var newHref = href.replace("perPage=" + previous, "perPage="+perPage);
+                        $(this).attr('href', newHref);
+                    });
+                    var currPage = $('#currPage').val();
+                    $('#page1')[0].click();
+                });
+
             }
         };
 

@@ -7,6 +7,7 @@ import edu.training.web.exception.LogicException;
 import edu.training.web.listener.UserSessions;
 import edu.training.web.logic.AdminAction;
 import edu.training.web.logic.HostelManager;
+import edu.training.web.logic.Messenger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,7 +36,7 @@ public class AdminSetDiscountCommand implements ActionCommand {
             List<HttpSession> userSessions = UserSessions.getUserSessions(user.getUserId());
             boolean isDiscountSet = AdminAction.setDiscount(userId, discount);
             if (isDiscountSet) {
-                Message discountMessage = new Message(user.getUserId(), "Administration", "Your discount has changed!");
+                Message discountMessage = Messenger.generateDiscountMessage(userId);
                 boolean isSent = HostelManager.sendMessageToUser(discountMessage);
                 for (HttpSession userSession : userSessions) {
                     if (isSent) {

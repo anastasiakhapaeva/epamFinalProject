@@ -14,16 +14,12 @@
 <div id="messageModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            <!-- Заголовок модального окна -->
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h4 class="modal-title"><fmt:message key="menu.user.messages"/></h4>
             </div>
-            <!-- Основное содержимое модального окна -->
             <div class="modal-body">
-
                 <div>
-
                     <c:forEach var="elem" items="${messages}">
                         <div class="alert alert-info fade in">
                             <button name="closeButton" data-message-id="${elem.messageId}" type="button"
@@ -33,7 +29,6 @@
                             <p>${elem.text}</p>
                         </div>
                     </c:forEach>
-
                 </div>
             </div>
             <div class="modal-footer">

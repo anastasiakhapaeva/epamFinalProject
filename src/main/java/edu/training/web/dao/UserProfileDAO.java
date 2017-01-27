@@ -57,7 +57,7 @@ public class UserProfileDAO extends AbstractDAO<UserProfile> {
 
     @Override
     public boolean create(UserProfile entity) throws DAOException{
-        boolean flag = false;
+        int flag = 0;
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(SQL_INSERT_NEW_USERPROFILE);
@@ -67,14 +67,13 @@ public class UserProfileDAO extends AbstractDAO<UserProfile> {
             ps.setString(4, entity.getPhone());
             ps.setString(5, entity.getCity());
             ps.setString(6, entity.getEmail());
-            ps.executeUpdate();
-            flag = true;
+            flag = ps.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
             closeStatement(ps);
         }
-        return flag;
+        return flag > 0;
     }
 
     private ArrayList<UserProfile> takeProfiles(ResultSet rs) throws DAOException{

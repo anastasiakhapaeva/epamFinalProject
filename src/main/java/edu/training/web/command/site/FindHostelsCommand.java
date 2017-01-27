@@ -40,6 +40,10 @@ public class FindHostelsCommand implements ActionCommand {
         if(request.getParameter("pageNum") != null) {
             paginationControl.setCurrentPage(Integer.parseInt(request.getParameter("pageNum")));
         }
+
+        if(request.getParameter("perPage") != null){
+            paginationControl.setRecordsPerPage(Integer.parseInt(request.getParameter("perPage")));
+        }
         HttpSession session = request.getSession(true);
 
         String city = request.getParameter(PARAM_CITY);
@@ -72,7 +76,7 @@ public class FindHostelsCommand implements ActionCommand {
             }
 
             session.setAttribute(PARAM_HOSTELS, hostels);
-            response.sendRedirect(request.getContextPath() + PARAM_CATALOG + "&currentPage=" + paginationControl.getCurrentPage() + "&noOfPages=" + paginationControl.getNumOfPages() + "&type=" + type + requestString);
+            response.sendRedirect(request.getContextPath() + PARAM_CATALOG + "&currentPage=" + paginationControl.getCurrentPage() + "&noOfPages=" + paginationControl.getNumOfPages() + "&perPage=" + paginationControl.getRecordsPerPage() + "&type=" + type + requestString);
         } catch (IOException | NumberFormatException | LogicException e) {
             LOG.error(e);
             request.setAttribute(PARAM_ERROR_MESSAGE, e);

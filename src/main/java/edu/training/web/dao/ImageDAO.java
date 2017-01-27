@@ -22,7 +22,7 @@ public class ImageDAO extends AbstractDAO<HostelImage> {
     }
 
     public boolean create(HostelImage entity) throws DAOException{
-        boolean flag = false;
+        int flag = 0;
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(SQL_INSERT_NEW_IMAGE, Statement.RETURN_GENERATED_KEYS);
@@ -30,8 +30,7 @@ public class ImageDAO extends AbstractDAO<HostelImage> {
             ps.setInt(2, entity.getHostelId());
             ps.setBoolean(3, entity.isMain());
             ps.setString(4, entity.getFileName());
-            ps.executeUpdate();
-            flag = true;
+            flag = ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             rs.next();
             entity.setImageId(rs.getInt(1));
@@ -40,7 +39,7 @@ public class ImageDAO extends AbstractDAO<HostelImage> {
         } finally {
             closeStatement(ps);
         }
-        return flag;
+        return flag > 0;
     }
 
 }

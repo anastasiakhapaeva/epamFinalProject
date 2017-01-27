@@ -17,7 +17,7 @@ public class ClaimDAO extends AbstractDAO<Claim> {
     private static final String SQL_SELECT_CLAIM_BY_IDS = "SELECT * FROM Claim WHERE (is_deleted=0 AND is_confirmed=0) AND (user_id=? AND hostel_id=?)";
     private static final String SQL_SELECT_UNCONFIRMED_CLAIMS = "SELECT * FROM Claim WHERE is_deleted=0 AND is_confirmed=0 AND claimtype='reservation'";
     private static final String SQL_SELECT_CLAIM_BY_HOSTEL_ID = "SELECT * FROM Claim WHERE is_deleted=0 AND hostel_id=?";
-    private static final String SQL_UPDATE_CLAIM_BY_IDS = "UPDATE Claim SET is_deleted=1 WHERE user_id=? AND hostel_id=?";
+    private static final String SQL_UPDATE_CLAIM_BY_IDS = "UPDATE Claim SET is_deleted=1 WHERE user_id=? AND hostel_id=? AND is_confirmed=0 AND is_deleted = 0";
     private static final String SQL_UPDATE_CLAIM_BY_ID = "UPDATE Claim SET is_confirmed=1 WHERE claim_id=?";
     private static final String SQL_DELETE_CLAIM_BY_ID = "UPDATE Claim SET is_deleted=1 WHERE claim_id=?";
     private static final String SQL_INSERT_NEW_CLAIM =
@@ -43,53 +43,69 @@ public class ClaimDAO extends AbstractDAO<Claim> {
         return claim;
     }
 
+    public boolean findClaimByIds(int userId, int hostelId) throws DAOException{
+        boolean isBooked = false;
+        PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement(SQL_SELECT_CLAIM_BY_IDS);
+            ps.setInt(1, userId);
+            ps.setInt(2, hostelId);
+            ResultSet resultSet = ps.executeQuery();
+            if(resultSet.isBeforeFirst()){
+                isBooked = true;
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        } finally {
+            closeStatement(ps);
+        }
+        return isBooked;
+    }
+
     public boolean cancelBooking(int userId, int hostelId) throws DAOException {
-        boolean isCanceled = false;
+        int canceled = 0;
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(SQL_UPDATE_CLAIM_BY_IDS);
             ps.setInt(1, userId);
             ps.setInt(2, hostelId);
-            ps.executeUpdate();
-            isCanceled = true;
+            canceled = ps.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
             closeStatement(ps);
         }
-        return isCanceled;
+        return canceled > 0;
     }
 
     public boolean confirmClaim(int claimId) throws DAOException{
-        boolean isConfirmed = false;
+        int confirmed = 0;
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(SQL_UPDATE_CLAIM_BY_ID);
             ps.setInt(1, claimId);
-            ps.executeUpdate();
-            isConfirmed = true;
+            confirmed = ps.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
             closeStatement(ps);
         }
-        return isConfirmed;
+        return confirmed > 0;
     }
 
     public boolean deleteClaim(int claimId) throws DAOException{
-        boolean isDeleted = false;
+        int deleted = 0;
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(SQL_DELETE_CLAIM_BY_ID);
             ps.setInt(1, claimId);
-            ps.executeUpdate();
-            isDeleted = true;
+            deleted = ps.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
             closeStatement(ps);
         }
-        return isDeleted;
+        return deleted > 0;
     }
 
     public ArrayList<Claim> findClaimsByHostelId(int hostelId) throws DAOException{
@@ -128,7 +144,7 @@ public class ClaimDAO extends AbstractDAO<Claim> {
     }
 
     public boolean create(Claim entity) throws DAOException{
-        boolean flag = false;
+        int flag = 0;
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(SQL_INSERT_NEW_CLAIM, Statement.RETURN_GENERATED_KEYS);
@@ -140,8 +156,7 @@ public class ClaimDAO extends AbstractDAO<Claim> {
             ps.setDate(6, Date.valueOf(entity.getDateIn()));
             ps.setDate(7,Date.valueOf(entity.getDateOut()));
             ps.setBoolean(8, entity.isConfirmed());
-            ps.executeUpdate();
-            flag = true;
+            flag = ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             rs.next();
             entity.setClaimId(rs.getInt(1));
@@ -150,7 +165,7 @@ public class ClaimDAO extends AbstractDAO<Claim> {
         } finally {
             closeStatement(ps);
         }
-        return flag;
+        return flag > 0;
     }
 
     private ArrayList<Claim> takeClaims(ResultSet rs) throws DAOException{

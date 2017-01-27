@@ -41,7 +41,7 @@
                             <div class="form-group">
                                 <label for="userPass" class="control-label col-sm-4"><fmt:message key="regmodal.password"/>*</label>
                                 <div class="col-sm-6">
-                                    <input id="pass_main " class="form-control" name="userPass" id="userPass"
+                                    <input id="pass_main" class="form-control" name="userPass" id="userPass"
                                            type="password"
                                            placeholder="<fmt:message key="regmodal.password.holder"/>"
                                            data-parsley-password="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{6,}$"

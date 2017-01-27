@@ -42,19 +42,18 @@ public class MessageDAO extends AbstractDAO<Message> {
     }
 
     public boolean deleteMessage(int messageId) throws DAOException{
-        boolean isDeleted = false;
+        int deleted = 0;
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(SQL_DELETE_MESSAGE_BY_ID);
             ps.setInt(1, messageId);
-            ps.executeUpdate();
-            isDeleted = true;
+            deleted = ps.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
             closeStatement(ps);
         }
-        return isDeleted;
+        return deleted > 0;
     }
 
     public ArrayList<Message> findMessagesByUserId(int userId) throws DAOException{
@@ -77,7 +76,7 @@ public class MessageDAO extends AbstractDAO<Message> {
     }
 
     public boolean create(Message entity) throws DAOException{
-        boolean flag = false;
+        int flag = 0;
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(SQL_INSERT_NEW_MESSAGE, Statement.RETURN_GENERATED_KEYS);
@@ -86,8 +85,7 @@ public class MessageDAO extends AbstractDAO<Message> {
             ps.setString(3, entity.getSender());
             ps.setString(4, entity.getText());
             ps.setBoolean(5, entity.isDeleted());
-            ps.executeUpdate();
-            flag = true;
+            flag = ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             rs.next();
             entity.setMessageId(rs.getInt(1));
@@ -96,7 +94,7 @@ public class MessageDAO extends AbstractDAO<Message> {
         } finally {
             closeStatement(ps);
         }
-        return flag;
+        return flag > 0;
     }
 
     private ArrayList<Message> takeMessages(ResultSet rs) throws DAOException{

@@ -31,20 +31,19 @@ public class UserDAO extends AbstractDAO<User> {
     }
 
     public boolean updateMoney(int userId, double amount) throws DAOException{
-        boolean flag = false;
+        int flag = 0;
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(SQL_UPDATE_MONEY_USER);
             ps.setDouble(1, amount);
             ps.setInt(2, userId);
-            ps.executeUpdate();
-            flag = true;
+            flag = ps.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
             closeStatement(ps);
         }
-        return flag;
+        return flag > 0;
     }
 
     public boolean banUser(int userId, boolean ban) throws DAOException{
@@ -63,20 +62,19 @@ public class UserDAO extends AbstractDAO<User> {
     }
 
     public boolean setDiscount(int userId, double discount) throws DAOException{
-        boolean flag = false;
+        int flag = 0;
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(SQL_UPDATE_DISCOUNT_USER);
             ps.setDouble(1, discount);
             ps.setInt(2, userId);
-            ps.executeUpdate();
-            flag = true;
+            flag = ps.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
             closeStatement(ps);
         }
-        return flag;
+        return flag > 0;
     }
 
     public boolean findUserByLogin(String login) throws DAOException{
@@ -168,7 +166,7 @@ public class UserDAO extends AbstractDAO<User> {
 
     @Override
     public boolean create(User entity) throws DAOException{
-        boolean flag = false;
+        int flag = 0;
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(SQL_INSERT_NEW_USER, Statement.RETURN_GENERATED_KEYS);
@@ -179,8 +177,7 @@ public class UserDAO extends AbstractDAO<User> {
             ps.setBoolean(5, entity.isAdmin());
             ps.setDouble(6, entity.getDiscount());
             ps.setBoolean(7, entity.isBanned());
-            ps.executeUpdate();
-            flag = true;
+            flag = ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             rs.next();
             entity.setUserId(rs.getInt(1));
@@ -189,7 +186,7 @@ public class UserDAO extends AbstractDAO<User> {
         } finally {
             closeStatement(ps);
         }
-        return flag;
+        return flag > 0;
     }
 
     private ArrayList<User> takeUsers(ResultSet rs) throws DAOException{

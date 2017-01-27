@@ -9,6 +9,7 @@ import edu.training.web.exception.LogicException;
 import edu.training.web.listener.UserSessions;
 import edu.training.web.logic.AdminAction;
 import edu.training.web.logic.HostelManager;
+import edu.training.web.logic.Messenger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,16 +42,16 @@ public class AdminDeleteCommand implements ActionCommand {
                 ArrayList<Claim> unconfirmedClaims = (ArrayList<Claim>) session.getAttribute(PARAM_UNCONFIRMED_CLAIMS);
                 unconfirmedClaims.remove(claim);
                 List<HttpSession> userSessions = UserSessions.getUserSessions(user.getUserId());
-                for (HttpSession userSession : userSessions) {
-                    ArrayList<Hostel> bookedHostels = (ArrayList<Hostel>) userSession.getAttribute(PARAM_BOOKED_HOSTELS);
-                    bookedHostels.remove(current);
-                }
-                Message refusingMessage = new Message(user.getUserId(), "Administration", "You can't book " + current.getName() + " from " + claim.getDateIn() + " to " + claim.getDateOut() + " !");
-                boolean isSent = HostelManager.sendMessageToUser(refusingMessage);
+//                for (HttpSession userSession : userSessions) {
+//                    ArrayList<Hostel> bookedHostels = (ArrayList<Hostel>) userSession.getAttribute(PARAM_BOOKED_HOSTELS);
+//                    bookedHostels.remove(current);
+//                }
+                Message rejectionMessage = Messenger.generateRejectionMessage(user.getUserId(), current.getName(), claim);
+                boolean isSent = HostelManager.sendMessageToUser(rejectionMessage);
                 if (isSent) {
                     for (HttpSession userSession : userSessions) {
                         ArrayList<Message> messages = (ArrayList<Message>) userSession.getAttribute(PARAM_MESSAGES);
-                        messages.add(refusingMessage);
+                        messages.add(rejectionMessage);
                     }
                 }
             }
