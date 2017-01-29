@@ -28,7 +28,7 @@ public class ActionFactory {
             CommandEnum currentEnum = CommandEnum.valueOf(action.toUpperCase());
             current = currentEnum.getCurrentCommand();
         } catch (IllegalArgumentException e) {
-            LOG.error("Such command doesn't exists",e);
+            LOG.error("Such command doesn't exists", e);
         }
         return current;
     }

@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * Created by Roman on 27.12.2016.
  */
 public class HostelManager {
-   // public static int noOfRecords;
+
     public static Hostel findHostelById(int hostelId) throws LogicException{
         Hostel hostel;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -107,7 +107,7 @@ public class HostelManager {
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
         HostelDAO hostelDAO = new HostelDAO(cn);
         try {
-            hostels = (ArrayList<Hostel>) hostelDAO.findAll(control);
+            hostels = (ArrayList<Hostel>) hostelDAO.findAllHostels(control);
         }catch (DAOException e){
             throw new LogicException("Cannot find all hostels", e);
         }finally{
@@ -121,7 +121,7 @@ public class HostelManager {
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
         HostelDAO hostelDAO = new HostelDAO(cn);
         try {
-            imgPath = hostelDAO.loadImageForHostel(id);
+            imgPath = hostelDAO.loadImageForHostelById(id);
         }catch (DAOException e){
             throw new LogicException("Cannot load main image for hostel", e);
         }finally{
@@ -130,19 +130,19 @@ public class HostelManager {
         return imgPath;
     }
     public static ArrayList<String> loadAllImagesForHostel(int id) throws LogicException{
-        ArrayList<String> imgPathes;
+        ArrayList<String> imgPaths;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
         HostelDAO hostelDAO = new HostelDAO(cn);
         try {
-            imgPathes = hostelDAO.loadAllImagesForHostel(id);
+            imgPaths = hostelDAO.loadAllImagesForHostelById(id);
         }catch (DAOException e){
             throw new LogicException("Cannot load images for hostel", e);
         }finally{
             hostelDAO.closeConnection(cn);
         }
-        return imgPathes;
+        return imgPaths;
     }
-    public static boolean bookHostel(Claim claim) throws LogicException{
+    public static boolean bookHostelByClaim(Claim claim) throws LogicException{
         boolean result = false;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
         ClaimDAO claimDAO = new ClaimDAO(cn);
@@ -159,13 +159,13 @@ public class HostelManager {
         return result;
     }
 
-    public static boolean deleteMessage(int messageId) throws LogicException{
+    public static boolean deleteMessageById(int messageId) throws LogicException{
         boolean result = false;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
         MessageDAO messageDAO = new MessageDAO(cn);
         try {
             cn.setAutoCommit(false);
-            result = messageDAO.deleteMessage(messageId);
+            result = messageDAO.deleteMessageById(messageId);
             cn.commit();
         }catch (SQLException | DAOException e){
             messageDAO.rollbackConnection(cn);
@@ -218,13 +218,13 @@ public class HostelManager {
         return freePlaces;
     }
 
-    public static boolean cancelBooking(int userId, int hostelId) throws LogicException{
+    public static boolean cancelBookingByIds(int userId, int hostelId) throws LogicException{
         boolean result = false;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
         ClaimDAO claimDAO = new ClaimDAO(cn);
         try {
             cn.setAutoCommit(false);
-            result = claimDAO.cancelBooking(userId, hostelId);
+            result = claimDAO.cancelBookingByIds(userId, hostelId);
             cn.commit();
         }catch (SQLException | DAOException e){
             claimDAO.rollbackConnection(cn);
@@ -235,13 +235,13 @@ public class HostelManager {
         return result;
     }
 
-    public static boolean depositMoney(int userId, double amount) throws LogicException{
+    public static boolean depositMoneyForUser(int userId, double amount) throws LogicException{
         boolean result = false;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
         UserDAO userDAO = new UserDAO(cn);
         try {
             cn.setAutoCommit(false);
-            result = userDAO.updateMoney(userId, amount);
+            result = userDAO.updateMoneyForUser(userId, amount);
             cn.commit();
         }catch (SQLException | DAOException e){
             userDAO.rollbackConnection(cn);
@@ -274,7 +274,7 @@ public class HostelManager {
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
         HostelDAO hostelDAO = new HostelDAO(cn);
         try {
-            bookedHostels = hostelDAO.findBookedHostels(userId);
+            bookedHostels = hostelDAO.findBookedHostelsForUser(userId);
         } catch (DAOException e){
             throw new LogicException("Cannot find booked hostels for user", e);
         }finally {
@@ -288,7 +288,7 @@ public class HostelManager {
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
         HostelDAO hostelDAO = new HostelDAO(cn);
         try {
-            paidHostels = hostelDAO.findPaidHostels(userId);
+            paidHostels = hostelDAO.findPaidHostelsForUser(userId);
         }catch (DAOException e){
             throw new LogicException("Cannot find paid hostel for user", e);
         }finally {
@@ -297,13 +297,13 @@ public class HostelManager {
         return paidHostels;
     }
 
-    public static boolean paymentForHostel(int userId, double amount) throws LogicException{
+    public static boolean payForHostel(int userId, double amount) throws LogicException{
         boolean result = false;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
         UserDAO userDAO = new UserDAO(cn);
         try {
             cn.setAutoCommit(false);
-            result = userDAO.updateMoney(userId, -1*amount);
+            result = userDAO.updateMoneyForUser(userId, -1*amount);
             cn.commit();
         } catch (SQLException | DAOException e){
             userDAO.rollbackConnection(cn);

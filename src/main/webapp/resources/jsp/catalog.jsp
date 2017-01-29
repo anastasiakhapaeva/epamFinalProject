@@ -34,17 +34,6 @@
     <script src="<c:url value="/resources/js/parsley/validator.js"/>"></script>
     <script src="<c:url value="/resources/js/i18n/en.js"/>"></script>
     <script src="<c:url value="/resources/js/i18n/ru.js"/>"></script>
-    <script>
-        $(document).ready(function () {
-            window.Parsley.setLocale($("#locale").val().substring(0, 2));
-        });
-    </script>
-    <%--<script src="<c:url value="/resources/js/app/ajaxloadimages.js"/>"></script>--%>
-    <%--<script src="<c:url value="/resources/js/app/hostel.js"/>"></script>--%>
-    <%--<script src="<c:url value="/resources/js/app/validator.js"/>"></script>--%>
-    <%--<script src="<c:url value="/resources/js/app/pageupdate.js"/>"></script>--%>
-    <%--<script src="<c:url value="/resources/js/app/ajaxrequests.js"/>"></script>--%>
-    <%--<script src="<c:url value="/resources/js/app/notification.js"/>"></script>--%>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -84,7 +73,7 @@
     <c:choose>
     <c:when test="${not empty hostels}">
     <div class="text-center">
-        <h1 class="myHostelsTitle">Найденные хостелы</h1>
+        <h1 class="myHostelsTitle"><fmt:message key="page.bookedhostels.found"/></h1>
     </div>
     <c:forEach var="elem" items="${hostels}">
         <div class="container">
@@ -100,18 +89,18 @@
                                              src="http://placehold.it/150x150" alt=""/>
                                     </div>
                                     <div class="col-md-8">
-                                        <h2 class="hostel-name">${elem.name}</h2>
+                                        <h2 class="hostel-name"><c:out value="${elem.name}"/></h2>
                                         <div>
                                             <span class="fa fa-map-marker" aria-hidden="true"></span>
-                                            <span> ${elem.city}, </span>
-                                            <span>${elem.address} </span>
+                                            <span> <c:out value="${elem.city}"/>, </span>
+                                            <span><c:out value="${elem.address}"/> </span>
                                         </div>
                                         <div>
                                             <span class="fa fa-phone" aria-hidden="true"></span>
-                                            <span> ${elem.phone}</span>
+                                            <span> <c:out value="${elem.phone}"/></span>
                                         </div>
                                         <div>
-                                            <p class="hostel-descript">${elem.description}</p>
+                                            <p class="hostel-descript"><c:out value="${elem.description}"/></p>
                                         </div>
                                     </div>
                                 </div>
@@ -122,13 +111,12 @@
                             <div class="row panelBottom">
                                 <div class="col-md-6 text-left">
                                     <h5><fmt:message key="page.catalog.price"/> <span
-                                            class="itemPrice">$${elem.price}</span></h5>
+                                            class="itemPrice">$<c:out value="${elem.price}"/></span></h5>
                                 </div>
                                 <div class="col-md-6 text-right">
                                     <a class="btn btn-success"
                                        href="${pageContext.request.contextPath}/service?command=show_hostel&id=${elem.hostelId}">
-                                        <span class="fa fa-info" aria-hidden="true"></span> <fmt:message
-                                            key="page.catalog.more"/>
+                                        <span class="fa fa-info" aria-hidden="true"></span> <fmt:message key="page.catalog.more"/>
                                     </a>
                                 </div>
                             </div>
@@ -226,7 +214,7 @@
 </c:when>
 <c:otherwise>
     <div class="text-center">
-        <h1 class="myHostelsTitle">Ничего не найдено. Попробуйте задать другие критерии поиска.</h1>
+        <h1 class="myHostelsTitle"><fmt:message key="page.catalog.nohostels"/></h1>
     </div>
 </c:otherwise>
 </c:choose>

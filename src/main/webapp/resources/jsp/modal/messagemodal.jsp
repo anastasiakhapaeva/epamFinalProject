@@ -25,8 +25,8 @@
                             <button name="closeButton" data-message-id="${elem.messageId}" type="button"
                                     class="close" data-dismiss="alert" aria-hidden="true">×
                             </button>
-                            <h4>${elem.sender}</h4>
-                            <p>${elem.text}</p>
+                            <h4><c:out value="${elem.sender}"/></h4>
+                            <p><c:out value="${elem.text}"/></p>
                         </div>
                     </c:forEach>
                 </div>

@@ -29,21 +29,8 @@
 
     <script src="<c:url value="/resources/js/app/service/MenuBarService.js"/>"></script>
     <script src="<c:url value="/resources/js/app/controller/MenuBarController.js"/>"></script>
-    <script src="<c:url value="/resources/js/app/controller/DateController.js"/>"></script>
-    <script src="<c:url value="/resources/js/app/pageupdate.js"/>"></script>
-    <script src="<c:url value="/resources/js/parsley/validator.js"/>"></script>
     <script src="<c:url value="/resources/js/i18n/en.js"/>"></script>
     <script src="<c:url value="/resources/js/i18n/ru.js"/>"></script>
-    <script>
-        $(document).ready(function () {
-            window.Parsley.setLocale($("#locale").val().substring(0, 2));
-        });
-    </script>
-    <%--<script src="<c:url value="/resources/js/app/hostel.js"/>"></script>--%>
-    <%--<script src="<c:url value="/resources/js/app/validator.js"/>"></script>--%>
-    <%--<script src="<c:url value="/resources/js/app/ajaxrequests.js"/>"></script>--%>
-    <%--<script src="<c:url value="/resources/js/app/pageupdate.js"/>"></script>--%>
-    <%--<script src="<c:url value="/resources/js/app/notification.js"/>"></script>--%>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -69,7 +56,7 @@
                     <p><fmt:message key="page.error.message"/> ${pageContext.exception.message}</p>
                 </c:if>
                 <c:if test="${not empty errorMessage}">
-                    <p><fmt:message key="page.error.errormessage"/> ${errorMessage}</p>
+                    <p><fmt:message key="page.error.errormessage"/> <c:out value="${errorMessage}"/></p>
                 </c:if>
                 <div class="error-actions">
                     <a href="${pageContext.request.contextPath}/service?command=go&page=main"

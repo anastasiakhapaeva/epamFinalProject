@@ -31,16 +31,6 @@
     <script src="<c:url value="/resources/js/parsley/validator.js"/>"></script>
     <script src="<c:url value="/resources/js/i18n/en.js"/>"></script>
     <script src="<c:url value="/resources/js/i18n/ru.js"/>"></script>
-    <script>
-        $( document ).ready(function() {
-            window.Parsley.setLocale($("#locale").val().substring(0, 2));
-        });
-    </script>
-    <%--<script src="<c:url value="/resources/js/app/hostel.js"/>"></script>--%>
-    <%--<script src="<c:url value="/resources/js/app/validator.js"/>"></script>--%>
-    <%--<script src="<c:url value="/resources/js/app/ajaxrequests.js"/>"></script>--%>
-    <%--<script src="<c:url value="/resources/js/app/pageupdate.js"/>"></script>--%>
-    <%--<script src="<c:url value="/resources/js/app/notification.js"/>"></script>--%>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -136,28 +126,5 @@
     </div>
 </div>
 <c:import url="resources/jsp/common/footer.jsp"/>
-<%--<hr>--%>
-<%--<div class="row">--%>
-<%--<div class="col-xs-8">--%>
-<%--<ul class="list-unstyled list-inline pull-left">--%>
-<%--<li><a href="#">Terms of Service</a></li>--%>
-<%--<li><a href="#">Contact Us</a></li>--%>
-<%--<li><a href="#">Privacy</a></li>--%>
-<%--</ul>--%>
-<%--</div>--%>
-<%--<div class="col-xs-4">--%>
-<%--<p class="text-muted pull-right">© 2015 Company Name. All rights reserved</p>--%>
-<%--</div>--%>
-<%--</div>--%>
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<%--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>--%>
-<%--<!-- Include all compiled plugins (below), or include individual files as needed -->--%>
-<%--<script src="<c:url value="/resources/js/jquery.1.10.2.min.js"/>"></script>--%>
-<%--<script src="<c:url value="/resources/js/jquery-ui.min.js"/>"></script>--%>
-<%--<script src="<c:url value="/resources/js/bootstrap.js"/>"></script>--%>
-<%--<script src="<c:url value="/resources/js/parsley.min.js"/>"></script>--%>
-<%--<script src="<c:url value="/resources/js/validator.js"/>"></script>--%>
-<%--<script src="<c:url value="/resources/js/ajaxrequests.js"/>"></script>--%>
-<%--<script src="<c:url value="/resources/js/pageupdate.js"/>"></script>--%>
 </body>
 </html>

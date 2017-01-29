@@ -19,6 +19,7 @@ import java.nio.file.Files;
 public class ImageServlet extends HttpServlet {
     private static final Logger LOG = LogManager.getLogger();
     private static final String IMG_MAIN_PATH = "../hostels";
+
     public ImageServlet() {
         super();
     }
@@ -32,7 +33,6 @@ public class ImageServlet extends HttpServlet {
         String filename = request.getPathInfo().substring(1);
         File file = new File(IMG_MAIN_PATH, filename);
         Files.copy(file.toPath(), response.getOutputStream());
-
     }
 
     public void destroy() {

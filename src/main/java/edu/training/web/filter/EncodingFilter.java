@@ -8,12 +8,13 @@ import java.io.IOException;
 /**
  * Created by Roman on 30.12.2016.
  */
-@WebFilter(urlPatterns = { "/service" },
+@WebFilter(urlPatterns = {"/service"},
         initParams = {
-                @WebInitParam(name = "encoding", value = "UTF-8", description = "Encoding Param") })
+                @WebInitParam(name = "encoding", value = "UTF-8", description = "Encoding Param")})
 
 public class EncodingFilter implements Filter {
     private String code;
+
     public void init(FilterConfig filterConfig) throws ServletException {
         code = filterConfig.getInitParameter("encoding");
     }

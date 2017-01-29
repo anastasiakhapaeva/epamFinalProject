@@ -43,17 +43,6 @@
     <script src="<c:url value="/resources/js/parsley/validator.js"/>"></script>
     <script src="<c:url value="/resources/js/i18n/en.js"/>"></script>
     <script src="<c:url value="/resources/js/i18n/ru.js"/>"></script>
-    <script>
-        $( document ).ready(function() {
-            window.Parsley.setLocale($("#locale").val().substring(0, 2));
-        });
-    </script>
-    <%--<script src="<c:url value="/resources/js/app/ajaxloadimages.js"/>"></script>--%>
-    <%--<script src="<c:url value="/resources/js/app/ajaxrequests.js"/>"></script>--%>
-    <%--<script src="<c:url value="/resources/js/app/hostel.js"/>"></script>--%>
-    <%--<script src="<c:url value="/resources/js/app/validator.js"/>"></script>--%>
-    <%--<script src="<c:url value="/resources/js/app/pageupdate.js"/>"></script>--%>
-    <%--<script src="<c:url value="/resources/js/app/notification.js"/>"></script>--%>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -81,15 +70,8 @@
     <input type="hidden" id="us-discount" value="${currentUser.discount}">
     <div class="container">
         <div class="row content-wrapper">
-            <%--<div class="content-wrapper">--%>
-            <%--<div class="item-container">--%>
             <h2 class="hostel-title">
                 <span><c:out value="${hostel.name}"/></span>
-                <%--<div class="hostel-rating pull-right">--%>
-                    <%--<span>Оценка: </span>--%>
-                    <%--<i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i--%>
-                        <%--class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i--%>
-                        <%--class="fa fa-star-o"></i></div>--%>
             </h2>
             <hr class="devider"/>
             <div class="col-md-12 padd-top-20">
@@ -138,26 +120,18 @@
                     <c:choose>
                         <c:when test="${not empty currentUser and not currentUser.banned}">
                             <c:choose>
-                                <%--<c:when test="${bookedHostels.contains(current)}">--%>
-
-                                <%--</c:when>--%>
-                                <%--<c:when test="${paidHostels.contains(current)}">--%>
-                                    <%--<div id="book-status-paid">--%>
-                                        <%--<div><fmt:message key="page.hostel.status.paid"/></div>--%>
-                                    <%--</div>--%>
-                                <%--</c:when>--%>
                                 <c:when test="${currentUser.money < current.price}">
                                     <div><fmt:message key="page.hostel.status.money"/></div>
                                 </c:when>
 
                                 <c:otherwise>
-                                <div id="book-status-booked" class="hidden">
-                                    <div><fmt:message key="page.hostel.status.booked"/></div>
-                                    <a href="${pageContext.request.contextPath}/service?command=book_cancel&hostelId=${hostel.hostelId}&userId=${currentUser.userId}"
-                                       class="btn btn-danger" role="button">
-                                        <fmt:message key="page.hostel.button.cancel"/>
-                                    </a>
-                                </div>
+                                    <div id="book-status-booked" class="hidden">
+                                        <div><fmt:message key="page.hostel.status.booked"/></div>
+                                        <a href="${pageContext.request.contextPath}/service?command=book_cancel&hostelId=${hostel.hostelId}&userId=${currentUser.userId}"
+                                           class="btn btn-danger" role="button">
+                                            <fmt:message key="page.hostel.button.cancel"/>
+                                        </a>
+                                    </div>
                                     <div id="book-status-free" class="hidden">
                                         <a href="#bookModal" role="button" data-toggle="modal" class="btn btn-success">
                                             <fmt:message key="page.hostel.button.book"/>
@@ -165,18 +139,6 @@
                                     </div>
                                 </c:otherwise>
                             </c:choose>
-
-                            <%--<div id="book-status-booked" class="hidden">--%>
-                            <%--<div>You have booked this hostel! Wait for administrator approval.</div>--%>
-                            <%--<a href="${pageContext.request.contextPath}/service?command=book_cancel&hostelId=${hostel.hostelId}&userId=${currentUser.userId}" class="btn btn-danger" role="button">--%>
-                            <%--Cancel booking--%>
-                            <%--</a>--%>
-                            <%--</div>--%>
-                            <%--<div id="book-status-free" class="hidden">--%>
-                            <%--<a href="#bookModal" role="button" data-toggle="modal" class="btn btn-success" >--%>
-                            <%--Book it now!--%>
-                            <%--</a>--%>
-                            <%--</div>--%>
                         </c:when>
                         <c:when test="${not empty currentUser and currentUser.banned}">
                             <div><fmt:message key="page.hostel.status.banned"/></div>
@@ -188,16 +150,16 @@
 
                 </div>
             </div>
-            <%--</div>--%>
             <div class="col-md-12">
                 <div class="row">
                     <div class="col-md-12 hostel-info">
                         <ul id="myTab" class="nav nav-tabs nav_tabs">
 
-                            <li class="active"><a href="#service-one" data-toggle="tab"><fmt:message key="page.hostel.description"/></a></li>
-                            <%--<li><a href="#service-three" data-toggle="tab">REVIEWS</a></li>--%>
+                            <li class="active"><a href="#service-one" data-toggle="tab"><fmt:message
+                                    key="page.hostel.description"/></a></li>
                             <c:if test="${currentUser.admin}">
-                                <li><a href="#edit-hostel" data-toggle="tab"><fmt:message key="page.hostel.edit"/></a></li>
+                                <li><a href="#edit-hostel" data-toggle="tab"><fmt:message key="page.hostel.edit"/></a>
+                                </li>
                             </c:if>
                         </ul>
                         <div id="myTabContent" class="tab-content">
@@ -208,38 +170,44 @@
                                 </div>
 
                             </div>
-                            <%--<div class="tab-pane fade" id="service-three">--%>
-
-                            <%--</div>--%>
                             <c:if test="${currentUser.admin}">
                                 <div class="tab-pane fade" id="edit-hostel">
                                     <form id="edit-hostel-form" role="form" class="form-horizontal my-form"
-                                          action="${pageContext.request.contextPath}/service" method="post" data-parsley-validate>
+                                          action="${pageContext.request.contextPath}/service" method="post"
+                                          data-parsley-validate>
                                         <div class="form-group">
-                                            <label for="hostelName" class="control-label col-sm-4"><fmt:message key="page.form.hostelname"/></label>
+                                            <label for="hostelName" class="control-label col-sm-4"><fmt:message
+                                                    key="page.form.hostelname"/></label>
                                             <div class="col-sm-6">
-                                                <input class="form-control" name="hostelName" id="hostelName" type="text"
+                                                <input class="form-control" name="hostelName" id="hostelName"
+                                                       type="text"
                                                        value="${current.name}"
                                                        data-parsley-required>
-                                                <%--<div id="err-login"></div>--%>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="hostelCity" class="control-label col-sm-4"><fmt:message key="page.form.hostelcity"/></label>
+                                            <label for="hostelCity" class="control-label col-sm-4"><fmt:message
+                                                    key="page.form.hostelcity"/></label>
                                             <div class="col-sm-6">
-                                                <select id="hostelCity" class="form-control" name="hostelCity" required="true">
+                                                <select id="hostelCity" class="form-control" name="hostelCity"
+                                                        required="true">
                                                     <option value="Minsk"><fmt:message key="page.form.minsk"/></option>
-                                                    <option value="Grodno"><fmt:message key="page.form.grodno"/></option>
+                                                    <option value="Grodno"><fmt:message
+                                                            key="page.form.grodno"/></option>
                                                     <option value="Gomel"><fmt:message key="page.form.gomel"/></option>
-                                                    <option value="Mogilev"><fmt:message key="page.form.mogilev"/></option>
-                                                    <option value="Vitebsk"><fmt:message key="page.form.vitebsk"/></option>
+                                                    <option value="Mogilev"><fmt:message
+                                                            key="page.form.mogilev"/></option>
+                                                    <option value="Vitebsk"><fmt:message
+                                                            key="page.form.vitebsk"/></option>
                                                     <option value="Brest"><fmt:message key="page.form.brest"/></option>
-                                                    <option value="${current.city}" hidden selected>${current.city}</option>
+                                                    <option value="${current.city}" hidden
+                                                            selected>${current.city}</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="hostelAddress" class="control-label col-sm-4"><fmt:message key="page.form.hosteladdress"/></label>
+                                            <label for="hostelAddress" class="control-label col-sm-4"><fmt:message
+                                                    key="page.form.hosteladdress"/></label>
                                             <div class="col-sm-6">
                                                 <input class="form-control" name="hostelAddress" id="hostelAddress"
                                                        type="text"
@@ -248,38 +216,48 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="hostelPhone" class="control-label col-sm-4"><fmt:message key="page.form.hostelphone"/></label>
+                                            <label for="hostelPhone" class="control-label col-sm-4"><fmt:message
+                                                    key="page.form.hostelphone"/></label>
                                             <div class="col-sm-6">
-                                                <input id="hostelPhone" class="form-control" name="hostelPhone" type="name"
+                                                <input id="hostelPhone" class="form-control" name="hostelPhone"
+                                                       type="name"
                                                        value="${current.phone}"
                                                        data-parsley-required>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="hostelPrice" class="control-label col-sm-4"><fmt:message key="page.form.hostelprice"/></label>
+                                            <label for="hostelPrice" class="control-label col-sm-4"><fmt:message
+                                                    key="page.form.hostelprice"/></label>
                                             <div class="col-sm-6">
-                                                <input class="form-control" name="hostelPrice" id="hostelPrice" type="text"
+                                                <input class="form-control" name="hostelPrice" id="hostelPrice"
+                                                       type="text"
                                                        value="${current.price}"
                                                        data-parsley-required>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="hostelPlaces" class="control-label col-sm-4"><fmt:message key="page.form.hostelplaces"/></label>
+                                            <label for="hostelPlaces" class="control-label col-sm-4"><fmt:message
+                                                    key="page.form.hostelplaces"/></label>
                                             <div class="col-sm-6">
-                                                <input class="form-control" name="hostelPlaces" id="hostelPlaces" type="text"
+                                                <input class="form-control" name="hostelPlaces" id="hostelPlaces"
+                                                       type="text"
                                                        value="${current.freePlaces}"
                                                        data-parsley-required>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="hostelDesc" class="control-label col-sm-4"><fmt:message key="page.form.hosteldesc"/></label>
+                                            <label for="hostelDesc" class="control-label col-sm-4"><fmt:message
+                                                    key="page.form.hosteldesc"/></label>
                                             <div class="col-sm-6">
-                                                <textarea rows="7" class="form-control" name="hostelDesc" id="hostelDesc" data-parsley-required>${current.description}</textarea>
+                                                <textarea rows="7" class="form-control" name="hostelDesc"
+                                                          id="hostelDesc"
+                                                          data-parsley-required>${current.description}</textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-sm-offset-6 inline-disp">
-                                                <input class="form-control btn btn-success" type="submit" id="register_button"
+                                                <input class="form-control btn btn-success" type="submit"
+                                                       id="register_button"
                                                        value="<fmt:message key="page.form.savechanges"/>"/>
                                             </div>
                                         </div>
@@ -294,7 +272,6 @@
                 </div>
             </div>
         </div>
-        <%--</div>--%>
     </div>
 </div>
 <c:import url="common/footer.jsp"/>

@@ -5,15 +5,17 @@ import edu.training.web.entity.User;
 import edu.training.web.entity.UserProfile;
 import edu.training.web.exception.LogicException;
 import edu.training.web.logic.Registration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  * Created by Roman on 08.12.2016.
  */
-public class RegisterCommand implements ActionCommand {
+public class RegistrationCommand implements ActionCommand {
+    private static final Logger LOG = LogManager.getLogger();
     private static final String PARAM_NAME_LOGIN = "userLogin";
     private static final String PARAM_NAME_PASSWORD = "userPass";
     private static final String PARAM_NAME_EMAIL = "userEmail";
@@ -24,9 +26,9 @@ public class RegisterCommand implements ActionCommand {
     private static final String PARAM_INDEX = "/index.jsp";
     private static final String PARAM_ERROR_MESSAGE = "errorMessage";
     private static final String PARAM_ERROR = "/resources/jsp/error.jsp";
+
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         String page = PARAM_INDEX;
-        HttpSession session = request.getSession(true);
 
         String login = request.getParameter(PARAM_NAME_LOGIN);
         String email = request.getParameter(PARAM_NAME_EMAIL);
@@ -38,10 +40,10 @@ public class RegisterCommand implements ActionCommand {
 
         User newUser = new User(login, pass);
         UserProfile newUserProfile = new UserProfile(firstName, lastName, email, phone, city);
+        newUser.setProfile(newUserProfile);
         try {
-            Registration.register(newUser, newUserProfile);
-            Registration.createUserProfile(newUserProfile);
-        }catch (LogicException e){
+            Registration.register(newUser);
+        } catch (LogicException e) {
             LOG.error(e);
             request.setAttribute(PARAM_ERROR_MESSAGE, e);
             page = PARAM_ERROR;

@@ -6,20 +6,22 @@ import edu.training.web.entity.HostelImage;
 import edu.training.web.exception.LogicException;
 import edu.training.web.logic.AdminAction;
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.*;
-import java.util.ArrayList;
 
 /**
  * Created by Roman on 11.01.2017.
  */
-public class AdminAddHostelCommand implements ActionCommand {
+public class AddHostelCommand implements ActionCommand {
+    private static final Logger LOG = LogManager.getLogger();
     private static final String PARAM_HOSTEL_NAME = "newHostelName";
-    private static final String PARAM_HOSTEL_CITY= "newHostelCity";
+    private static final String PARAM_HOSTEL_CITY = "newHostelCity";
     private static final String PARAM_HOSTEL_ADDRESS = "newHostelAddress";
     private static final String PARAM_HOSTEL_PHONE = "newHostelPhone";
     private static final String PARAM_HOSTEL_PRICE = "newHostelPrice";
@@ -33,6 +35,7 @@ public class AdminAddHostelCommand implements ActionCommand {
     private static final String IMG_TYPE = ".jpg";
     private static final String PARAM_CATALOG = "/resources/jsp/catalog.jsp";
     private static final String PARAM_ERROR = "/resources/jsp/error.jsp";
+
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String page = PARAM_CATALOG;
         String hostelName = request.getParameter(PARAM_HOSTEL_NAME);
@@ -46,8 +49,8 @@ public class AdminAddHostelCommand implements ActionCommand {
             Hostel newHostel = new Hostel(hostelName, hostelPlaces, hostelPrice, hostelPhone, hostelCity, hostelDesc, hostelAddress);
             boolean res = AdminAction.addHostel(newHostel);
             if (res) {
-                InputStream inputStream = null;
-                OutputStream outputStream = null;
+                InputStream inputStream;
+                OutputStream outputStream;
                 Part filePartOne = request.getPart(PARAM_PHOTO_ONE);
                 Part filePartTwo = request.getPart(PARAM_PHOTO_TWO);
                 Part filePartThree = request.getPart(PARAM_PHOTO_THREE);
@@ -66,7 +69,7 @@ public class AdminAddHostelCommand implements ActionCommand {
                     }
                 }
             }
-        }catch (NumberFormatException | LogicException e){
+        } catch (IOException | NumberFormatException | LogicException e) {
             LOG.error(e);
             request.setAttribute(PARAM_ERROR_MESSAGE, e);
             page = PARAM_ERROR;

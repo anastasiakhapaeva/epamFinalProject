@@ -10,6 +10,7 @@ $(function () {
            },
            setLang: function () {
                var locale = $('#locale').val();
+               window.Parsley.setLocale(locale.substring(0, 2));
                setLang(locale);
            },
            bindEvents: function () {

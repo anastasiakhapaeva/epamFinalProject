@@ -1,4 +1,5 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <fmt:setLocale value="${locale}"/>
 <fmt:setBundle basename="i18n.msg"/>
 <%--
@@ -13,12 +14,10 @@
 <div id="userModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            <!-- Заголовок модального окна -->
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h4 class="modal-title"><fmt:message key="page.profile.title"/></h4>
             </div>
-            <!-- Основное содержимое модального окна -->
             <div class="modal-body">
                 <div>
                     <div class="panel panel-info">
@@ -83,11 +82,11 @@
                         <div class="panel-footer">
                             <div class="container">
                                 <div>
-                                    <a id="set-discount-user" href="#" type="button"
+                                    <a id="set-discount-user" href="" type="button"
                                        class="btn btn-sm btn-warning"><span
                                             class="glyphicon glyphicon-edit"></span><fmt:message
                                             key="usermodal.button.discount"/></a>
-                                    <a id="ban-user" href="#" type="button" class="btn btn-sm btn-danger"><span
+                                    <a id="ban-user" href="" type="button" class="btn btn-sm btn-danger"><span
                                             class="glyphicon glyphicon-remove"></span><fmt:message
                                             key="usermodal.button.ban"/></a>
                                     <div class="inline-disp pull-right">

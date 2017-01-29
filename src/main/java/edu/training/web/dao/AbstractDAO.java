@@ -8,20 +8,20 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 
 /**
  * Created by Roman on 07.12.2016.
  */
-public abstract class AbstractDAO <T extends Entity> {
+public abstract class AbstractDAO<T extends Entity> {
     protected static final Logger LOG = LogManager.getLogger();
-    protected ProxyConnection connection;
-    public AbstractDAO(ProxyConnection connection) {
+    ProxyConnection connection;
+
+    AbstractDAO(ProxyConnection connection) {
         this.connection = connection;
     }
 
-    public abstract List<T> findAll() throws DAOException;
     public abstract boolean create(T entity) throws DAOException;
+
     public void closeStatement(Statement st) {
         try {
             if (st != null) {
@@ -32,23 +32,23 @@ public abstract class AbstractDAO <T extends Entity> {
         }
     }
 
-    public void closeConnection(ProxyConnection connection){
-        try{
-            if( connection != null) {
+    public void closeConnection(ProxyConnection connection) {
+        try {
+            if (connection != null) {
                 connection.setAutoCommit(true);
                 connection.close();
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             LOG.error("Cannot return connection to pool: ", e);
         }
     }
 
-    public void rollbackConnection(ProxyConnection connection){
-        try{
-            if( connection != null) {
+    public void rollbackConnection(ProxyConnection connection) {
+        try {
+            if (connection != null) {
                 connection.rollback();
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             LOG.error("Cannot rollback connection: ", e);
         }
     }

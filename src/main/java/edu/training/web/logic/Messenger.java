@@ -2,7 +2,6 @@ package edu.training.web.logic;
 
 import edu.training.web.entity.Claim;
 import edu.training.web.entity.Message;
-
 import java.util.ResourceBundle;
 
 /**
@@ -59,4 +58,5 @@ public class Messenger {
         generatedText = generatedText.replaceAll(DATEOUT_SUBSTITUTE, claim.getDateOut().toString());
         return new Message(userId, sender, generatedText);
     }
+
 }

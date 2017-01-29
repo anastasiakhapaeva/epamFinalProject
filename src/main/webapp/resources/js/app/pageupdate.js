@@ -14,7 +14,7 @@ window.onload = function () {
 
     var places = sessionStorage.getItem('places');
     if (places !== null) $('#guests').val(places);
-}
+};
 
 window.onbeforeunload = function () {
     if ($('#city').val() !== null && $('#city').val() !== undefined) {
@@ -29,4 +29,4 @@ window.onbeforeunload = function () {
     if ($('#guests').val() !== null && $('#guests').val() !== undefined) {
         sessionStorage.setItem("places", $('#guests').val());
     }
-}
+};

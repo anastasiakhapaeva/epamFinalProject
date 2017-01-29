@@ -5,15 +5,15 @@ import edu.training.web.entity.UserProfile;
 import edu.training.web.exception.DAOException;
 import edu.training.web.pool.ProxyConnection;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Roman on 25.12.2016.
  */
 public class UserProfileDAO extends AbstractDAO<UserProfile> {
-    private static final String SQL_SELECT_ALL_USERPROFILES = "SELECT * FROM UserProfile";
     private static final String SQL_INSERT_NEW_USERPROFILE =
             "INSERT INTO `UserProfile` (`user_id`, `firstname`, `lastname`, `phone`, `city`, `email`)" +
                     " VALUES (?, ?, ?, ?, ?, ?)";
@@ -23,7 +23,7 @@ public class UserProfileDAO extends AbstractDAO<UserProfile> {
         super(connection);
     }
 
-    public UserProfile findUserProfile(int id) throws DAOException{
+    public UserProfile findUserProfileById(int id) throws DAOException {
         UserProfile userProfile;
         PreparedStatement ps = null;
         try {
@@ -40,23 +40,7 @@ public class UserProfileDAO extends AbstractDAO<UserProfile> {
     }
 
     @Override
-    public List<UserProfile> findAll() throws DAOException{
-        List<UserProfile> userProfiles;
-        Statement st = null;
-        try {
-            st = connection.createStatement();
-            ResultSet resultSet = st.executeQuery(SQL_SELECT_ALL_USERPROFILES);
-            userProfiles = takeProfiles(resultSet);
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        } finally {
-            closeStatement(st);
-        }
-        return userProfiles;
-    }
-
-    @Override
-    public boolean create(UserProfile entity) throws DAOException{
+    public boolean create(UserProfile entity) throws DAOException {
         int flag = 0;
         PreparedStatement ps = null;
         try {
@@ -76,7 +60,7 @@ public class UserProfileDAO extends AbstractDAO<UserProfile> {
         return flag > 0;
     }
 
-    private ArrayList<UserProfile> takeProfiles(ResultSet rs) throws DAOException{
+    private ArrayList<UserProfile> takeProfiles(ResultSet rs) throws DAOException {
         ArrayList<UserProfile> userProfiles = new ArrayList<>();
         try {
             while (rs.next()) {
@@ -89,7 +73,7 @@ public class UserProfileDAO extends AbstractDAO<UserProfile> {
                 userProfile.setEmail(rs.getString("email"));
                 userProfiles.add(userProfile);
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new DAOException(e);
         }
         return userProfiles;

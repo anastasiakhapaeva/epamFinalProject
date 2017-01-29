@@ -11,6 +11,9 @@ span.glyphicon{
 .li-height {
     height: 50px;
 }
+.media-middle{
+    vertical-align: middle !important;
+}
 .profile-username{
     color:#00b1b1;
 }

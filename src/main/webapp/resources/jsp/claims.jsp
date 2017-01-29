@@ -30,18 +30,11 @@
     <script src="<c:url value="/resources/js/app/service/LoadService.js"/>"></script>
     <script src="<c:url value="/resources/js/app/service/AdminService.js"/>"></script>
     <script src="<c:url value="/resources/js/app/controller/ClaimsController.js"/>"></script>
+    <script src="<c:url value="/resources/js/app/controller/UserController.js"/>"></script>
     <script src="<c:url value="/resources/js/app/controller/MenuBarController.js"/>"></script>
     <script src="<c:url value="/resources/js/parsley/validator.js"/>"></script>
     <script src="<c:url value="/resources/js/i18n/en.js"/>"></script>
     <script src="<c:url value="/resources/js/i18n/ru.js"/>"></script>
-    <script>
-        $(document).ready(function () {
-            window.Parsley.setLocale($("#locale").val().substring(0, 2));
-        });
-    </script>
-    <%--<script src="<c:url value="/resources/js/app/ajaxuser.js"/>"></script>--%>
-    <%--<script src="<c:url value="/resources/js/app/ajaxrequests.js"/>"></script>--%>
-    <%--<script src="<c:url value="/resources/js/app/notification.js"/>"></script>--%>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -59,71 +52,81 @@
 <c:import url="modal/aboutmodal.jsp"/>
 <div id="claims" class="main-content padd-top">
     <input type="hidden" id="main-path" value="${pageContext.request.contextPath}">
-    <div class="container">
-        <div class="row">
-            <div class="panel panel-default panel-table">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col col-xs-6">
-                            <h3 class="panel-title">
-                                <span class="fa fa-list" aria-hidden="true"></span>
-                                <span><fmt:message key="page.claims.title"/></span>
-                            </h3>
+    <c:choose>
+        <c:when test="${empty unconfirmedClaims}">
+            <div class="text-center">
+                <h1 class="myHostelsTitle"><fmt:message key="page.claims.noclaims"/></h1>
+            </div>
+        </c:when>
+        <c:otherwise>
+            <div class="container">
+                <div class="row">
+                    <div class="panel panel-default panel-table">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col col-xs-6">
+                                    <h3 class="panel-title">
+                                        <span class="fa fa-list" aria-hidden="true"></span>
+                                        <span><fmt:message key="page.claims.title"/></span>
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                <tr>
+                                    <th class="hidden-xs">ID</th>
+                                    <th><span class="fa fa-user" aria-hidden="true"></span> <fmt:message
+                                            key="page.claims.table.user"/></th>
+                                    <th><span class="fa fa-h-square" aria-hidden="true"></span> <fmt:message
+                                            key="page.claims.table.hostel"/></th>
+                                    <th><span class="fa fa-users" aria-hidden="true"></span> <fmt:message
+                                            key="page.claims.table.places"/></th>
+                                    <th><span class="fa fa-calendar-plus-o" aria-hidden="true"></span> <fmt:message
+                                            key="page.form.datein"/></th>
+                                    <th><span class="fa fa-calendar-minus-o" aria-hidden="true"></span> <fmt:message
+                                            key="page.form.dateout"/></th>
+                                    <th><span class="fa fa-cog" aria-hidden="true"></span> <fmt:message
+                                            key="page.claims.table.action"/></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <c:forEach var="claim" items="${unconfirmedClaims}">
+                                    <input name="user_id" type="hidden" value="${claim.userId}">
+                                    <input name="hostel_id" type="hidden" value="${claim.hostelId}">
+                                    <tr>
+                                        <td>${claim.claimId}</td>
+                                        <td><a href="#userModal" role="button" data-toggle="modal"
+                                               data-name="user${claim.userId}" data-user-id="${claim.userId}"></a></td>
+                                        <td><span data-name="hostel${claim.hostelId}"
+                                                  data-hostel-id="${claim.hostelId}"></span>
+                                        </td>
+                                        <td><c:out value="${claim.requiredPlaces}"/></td>
+                                        <td><c:out value="${claim.dateIn}"/></td>
+                                        <td><c:out value="${claim.dateOut}"/></td>
+                                        <td class="text-center">
+                                            <a class="btn btn-success"
+                                               href="${pageContext.request.contextPath}/service?command=confirm_claim&claimId=${claim.claimId}">
+                                                <span class="fa fa-check" aria-hidden="true"></span>
+                                                <span> <fmt:message key="page.claims.table.confirm"/></span>
+                                            </a>
+                                            <a class="btn btn-danger"
+                                               href="${pageContext.request.contextPath}/service?command=delete_claim&claimId=${claim.claimId}">
+                                                <span class="fa fa-trash" aria-hidden="true"></span>
+                                                <span> <fmt:message key="page.claims.table.delete"/></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-                <div class="panel-body">
-                    <table class="table table-striped table-bordered">
-                        <thead>
-                        <tr>
-                            <th class="hidden-xs">ID</th>
-                            <th><span class="fa fa-user" aria-hidden="true"></span> <fmt:message
-                                    key="page.claims.table.user"/></th>
-                            <th><span class="fa fa-h-square" aria-hidden="true"></span> <fmt:message
-                                    key="page.claims.table.hostel"/></th>
-                            <th><span class="fa fa-users" aria-hidden="true"></span> <fmt:message
-                                    key="page.claims.table.places"/></th>
-                            <th><span class="fa fa-calendar-plus-o" aria-hidden="true"></span> <fmt:message
-                                    key="page.form.datein"/></th>
-                            <th><span class="fa fa-calendar-minus-o" aria-hidden="true"></span> <fmt:message
-                                    key="page.form.dateout"/></th>
-                            <th><span class="fa fa-cog" aria-hidden="true"></span> <fmt:message
-                                    key="page.claims.table.action"/></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach var="claim" items="${unconfirmedClaims}">
-                            <input name="user_id" type="hidden" value="${claim.userId}">
-                            <input name="hostel_id" type="hidden" value="${claim.hostelId}">
-                            <tr>
-                                <td>${claim.claimId}</td>
-                                <td><a href="#userModal" role="button" data-toggle="modal"
-                                       data-name="user${claim.userId}" data-user-id="${claim.userId}"></a></td>
-                                <td><span data-name="hostel${claim.hostelId}" data-hostel-id="${claim.hostelId}"></span>
-                                </td>
-                                <td>${claim.requiredPlaces}</td>
-                                <td>${claim.dateIn}</td>
-                                <td>${claim.dateOut}</td>
-                                <td class="text-center">
-                                    <a class="btn btn-success"
-                                       href="${pageContext.request.contextPath}/service?command=confirm_claim&claimId=${claim.claimId}">
-                                        <span class="fa fa-check" aria-hidden="true"></span>
-                                        <span> <fmt:message key="page.claims.table.confirm"/></span>
-                                    </a>
-                                    <a class="btn btn-danger"
-                                       href="${pageContext.request.contextPath}/service?command=delete_claim&claimId=${claim.claimId}">
-                                        <span class="fa fa-trash" aria-hidden="true"></span>
-                                        <span> <fmt:message key="page.claims.table.delete"/></span>
-                                    </a>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
-                </div>
             </div>
-        </div>
-    </div>
+        </c:otherwise>
+    </c:choose>
 </div>
 <c:import url="common/footer.jsp"/>
 </body>

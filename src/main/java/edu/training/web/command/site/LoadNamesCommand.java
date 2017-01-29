@@ -2,22 +2,23 @@ package edu.training.web.command.site;
 
 import com.google.gson.Gson;
 import edu.training.web.command.ActionCommand;
-import edu.training.web.entity.Entity;
-import edu.training.web.entity.User;
 import edu.training.web.entity.UserProfile;
 import edu.training.web.exception.LogicException;
 import edu.training.web.logic.Authorization;
 import edu.training.web.logic.HostelManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
- * Created by Roman on 09.01.2017.
+ * Created by Roman on 07.01.2017.
  */
-public class AjaxLoadUserCommand implements ActionCommand {
+public class LoadNamesCommand implements ActionCommand {
+    private static final Logger LOG = LogManager.getLogger();
+    private static final String PARAM_HOSTEL_ID = "hostelId";
     private static final String PARAM_USER_ID = "userId";
     private static final String PARAM_ERROR_MESSAGE = "errorMessage";
     private static final String PARAM_ERROR = "/resources/jsp/error.jsp";
@@ -25,14 +26,14 @@ public class AjaxLoadUserCommand implements ActionCommand {
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         String page = "";
         try {
+            String[] names = new String[2];
+            int hostelId = Integer.parseInt(request.getParameter(PARAM_HOSTEL_ID));
             int userId = Integer.parseInt(request.getParameter(PARAM_USER_ID));
-            User user = HostelManager.findUserById(userId);
-            UserProfile userProfile = Authorization.getUserProfile(userId);
-            ArrayList<Entity> userInfo = new ArrayList<Entity>();
-            userInfo.add(user);
-            userInfo.add(userProfile);
-            String s = new Gson().toJson(userInfo);
-            response.getWriter().write(s);
+            UserProfile userProfile = Authorization.findUserProfileById(userId);
+            names[0] = userProfile.getLastName() + " " + userProfile.getFirstName();
+            names[1] = HostelManager.findHostelById(hostelId).getName();
+            String json = new Gson().toJson(names);
+            response.getWriter().write(json);
         } catch (IOException | NumberFormatException | LogicException e) {
             LOG.error(e);
             request.setAttribute(PARAM_ERROR_MESSAGE, e);

@@ -3,9 +3,12 @@ package edu.training.web.command.user;
 import edu.training.web.command.ActionCommand;
 import edu.training.web.entity.*;
 import edu.training.web.exception.LogicException;
+import edu.training.web.exception.NoSuchTypeException;
 import edu.training.web.listener.UserSessions;
 import edu.training.web.logic.HostelManager;
 import edu.training.web.logic.Messenger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,14 +23,13 @@ import java.util.List;
  * Created by Roman on 01.01.2017.
  */
 public class BookingCommand implements ActionCommand {
+    private static final Logger LOG = LogManager.getLogger();
     private static final String PARAM_HOSTEL_ID = "hostel_id";
     private static final String PARAM_CURRENT_USER = "currentUser";
     private static final String PARAM_DATE_IN = "date_in";
     private static final String PARAM_DATE_OUT = "date_out";
     private static final String PARAM_GUESTS = "guests";
     private static final String PARAM_BOOKING_TYPE = "bookingType";
-    private static final String PARAM_PAID_HOSTELS = "paidHostels";
-    private static final String PARAM_BOOKED_HOSTELS = "bookedHostels";
     private static final String PARAM_UNCONFIRMED_CLAIMS = "unconfirmedClaims";
     private static final String DATE_FORMAT = "yyyy-MM-dd";
     private static final String PARAM_HOSTEL_PAGE = "/service?command=go&page=hostel";
@@ -50,11 +52,8 @@ public class BookingCommand implements ActionCommand {
             switch (bookingType) {
                 case RESERVATION:
                     newClaim.setConfirmed(false);
-                   // ArrayList<Hostel> bookedHostels = (ArrayList<Hostel>) session.getAttribute(PARAM_BOOKED_HOSTELS);
-                    boolean resReserve = HostelManager.bookHostel(newClaim);
+                    boolean resReserve = HostelManager.bookHostelByClaim(newClaim);
                     if (resReserve) {
-                        //Hostel current = HostelManager.findHostelById(hostelId);
-                        //bookedHostels.add(current);
                         List<HttpSession> adminSessions = UserSessions.getAdminsSessions();
                         for (HttpSession adminSession : adminSessions) {
                             ArrayList<Claim> unconfirmedClaims = (ArrayList<Claim>) adminSession.getAttribute(PARAM_UNCONFIRMED_CLAIMS);
@@ -64,16 +63,14 @@ public class BookingCommand implements ActionCommand {
                     break;
                 case PAYMENT:
                     newClaim.setConfirmed(true);
-                    //ArrayList<Hostel> paidHostels = (ArrayList<Hostel>) session.getAttribute(PARAM_PAID_HOSTELS);
-                    boolean resPayment = HostelManager.bookHostel(newClaim);
+                    boolean resPayment = HostelManager.bookHostelByClaim(newClaim);
                     if (resPayment) {
                         Hostel current = HostelManager.findHostelById(hostelId);
-                       // paidHostels.add(current);
-                        boolean isPaid = HostelManager.paymentForHostel(currentUser.getUserId(), current.getPrice() * guests * (1 - currentUser.getDiscount() / 100));
+                        boolean isPaid = HostelManager.payForHostel(currentUser.getUserId(), current.getPrice() * guests * (1 - currentUser.getDiscount() / 100));
                         if (isPaid) {
                             Message paymentMessage = Messenger.generatePaymentMessage(currentUser.getUserId(), current.getName(), newClaim);
                             boolean isSent = HostelManager.sendMessageToUser(paymentMessage);
-                            if(isSent) {
+                            if (isSent) {
                                 List<HttpSession> userSessions = UserSessions.getUserSessions(currentUser.getUserId());
                                 for (HttpSession userSession : userSessions) {
                                     ArrayList<Message> messages = (ArrayList<Message>) userSession.getAttribute(PARAM_MESSAGES);
@@ -84,11 +81,13 @@ public class BookingCommand implements ActionCommand {
                         }
                     }
                     break;
+                default:
+                    throw new NoSuchTypeException("No such constant in ClaimType enum");
             }
 
 
             response.sendRedirect(request.getContextPath() + PARAM_HOSTEL_PAGE);
-        } catch (IOException | NumberFormatException | LogicException e) {
+        } catch (IOException | NoSuchTypeException | NumberFormatException | LogicException e) {
             LOG.error(e);
             request.setAttribute(PARAM_ERROR_MESSAGE, e);
             page = PARAM_ERROR;

@@ -7,7 +7,6 @@ import edu.training.web.pool.ProxyConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Roman on 07.12.2016.
@@ -30,7 +29,7 @@ public class UserDAO extends AbstractDAO<User> {
         super(connection);
     }
 
-    public boolean updateMoney(int userId, double amount) throws DAOException{
+    public boolean updateMoneyForUser(int userId, double amount) throws DAOException {
         int flag = 0;
         PreparedStatement ps = null;
         try {
@@ -46,7 +45,7 @@ public class UserDAO extends AbstractDAO<User> {
         return flag > 0;
     }
 
-    public boolean banUser(int userId, boolean ban) throws DAOException{
+    public boolean banUserById(int userId, boolean ban) throws DAOException {
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(SQL_UPDATE_BAN_USER);
@@ -61,7 +60,7 @@ public class UserDAO extends AbstractDAO<User> {
         return ban;
     }
 
-    public boolean setDiscount(int userId, double discount) throws DAOException{
+    public boolean setDiscountForUser(int userId, double discount) throws DAOException {
         int flag = 0;
         PreparedStatement ps = null;
         try {
@@ -77,14 +76,14 @@ public class UserDAO extends AbstractDAO<User> {
         return flag > 0;
     }
 
-    public boolean findUserByLogin(String login) throws DAOException{
+    public boolean findUserByLogin(String login) throws DAOException {
         boolean isFounded = false;
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(SQL_SELECT_USER_BY_USERNAME);
             ps.setString(1, login);
             ResultSet resultSet = ps.executeQuery();
-            if (resultSet.isBeforeFirst() ) {
+            if (resultSet.isBeforeFirst()) {
                 isFounded = true;
             }
         } catch (SQLException e) {
@@ -95,7 +94,7 @@ public class UserDAO extends AbstractDAO<User> {
         return isFounded;
     }
 
-    public User findUserById(int userId) throws DAOException{
+    public User findUserById(int userId) throws DAOException {
         PreparedStatement ps = null;
         User user;
         try {
@@ -111,7 +110,7 @@ public class UserDAO extends AbstractDAO<User> {
         return user;
     }
 
-    public User findRegisteredUser(String login, String password) throws DAOException{
+    public User findRegisteredUser(String login, String password) throws DAOException {
         User current;
         PreparedStatement ps = null;
         try {
@@ -128,7 +127,7 @@ public class UserDAO extends AbstractDAO<User> {
         return current;
     }
 
-    public boolean loginUser(String username, String password) throws DAOException{
+    public boolean loginUser(String username, String password) throws DAOException {
         boolean login = false;
         PreparedStatement ps = null;
         try {
@@ -136,7 +135,7 @@ public class UserDAO extends AbstractDAO<User> {
             ps.setString(1, username);
             ps.setString(2, converter.convert(password));
             ResultSet resultSet = ps.executeQuery();
-            if (resultSet.isBeforeFirst() ) {
+            if (resultSet.isBeforeFirst()) {
                 login = true;
             }
         } catch (SQLException e) {
@@ -147,9 +146,8 @@ public class UserDAO extends AbstractDAO<User> {
         return login;
     }
 
-    @Override
-    public List<User> findAll() throws DAOException{
-        List<User> users;
+    public ArrayList<User> findAllUsers() throws DAOException {
+        ArrayList<User> users;
         Statement st = null;
         try {
             st = connection.createStatement();
@@ -165,7 +163,7 @@ public class UserDAO extends AbstractDAO<User> {
     }
 
     @Override
-    public boolean create(User entity) throws DAOException{
+    public boolean create(User entity) throws DAOException {
         int flag = 0;
         PreparedStatement ps = null;
         try {
@@ -189,7 +187,7 @@ public class UserDAO extends AbstractDAO<User> {
         return flag > 0;
     }
 
-    private ArrayList<User> takeUsers(ResultSet rs) throws DAOException{
+    private ArrayList<User> takeUsers(ResultSet rs) throws DAOException {
         ArrayList<User> users = new ArrayList<>();
         try {
             while (rs.next()) {
@@ -203,7 +201,7 @@ public class UserDAO extends AbstractDAO<User> {
                 user.setBanned(rs.getBoolean("is_banned"));
                 users.add(user);
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new DAOException(e);
         }
         return users;

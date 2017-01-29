@@ -13,39 +13,44 @@ public enum CommandEnum {
             this.command = new ForwardCommand();
         }
     },
-    CONFIRM_CLAIM{
+    CONFIRM_CLAIM {
         {
-            this.command = new AdminConfirmCommand();
+            this.command = new ConfirmCommand();
         }
     },
     DELETE_CLAIM {
         {
-            this.command = new AdminDeleteCommand();
+            this.command = new DeleteCommand();
         }
     },
     DEPOSIT_MONEY {
         {
-            this.command = new AjaxDepositMoneyCommand();
+            this.command = new DepositMoneyCommand();
         }
     },
     SET_DISCOUNT_USER {
         {
-            this.command = new AdminSetDiscountCommand();
+            this.command = new SetDiscountCommand();
         }
     },
     EDIT_HOSTEL {
         {
-            this.command = new AdminEditHostelCommand();
+            this.command = new EditHostelCommand();
+        }
+    },
+    SHOW_USERS {
+        {
+            this.command = new ShowUsersCommand();
         }
     },
     ADD_HOSTEL {
         {
-            this.command = new AdminAddHostelCommand();
+            this.command = new AddHostelCommand();
         }
     },
     BAN_USER {
         {
-            this.command = new AdminBanUserCommand();
+            this.command = new BanUserCommand();
         }
     },
     BOOK_CANCEL {
@@ -60,7 +65,7 @@ public enum CommandEnum {
     },
     MY_HOSTELS {
         {
-            this.command = new MyHostelsCommand();
+            this.command = new ShowMyHostelsCommand();
         }
     },
     SHOW_HOSTEL {
@@ -75,47 +80,47 @@ public enum CommandEnum {
     },
     AJAX_DELETE_MESSAGE {
         {
-            this.command = new AjaxDeleteMessageCommand();
+            this.command = new DeleteMessageCommand();
         }
     },
     AJAX_CHECK_STATE {
         {
-            this.command = new AjaxBookingStateCommand();
+            this.command = new BookingStateCommand();
         }
     },
     AJAX_LOAD_NAMES {
         {
-            this.command = new AjaxLoadNamesCommand();
+            this.command = new LoadNamesCommand();
         }
     },
     AJAX_LOAD_USER {
         {
-            this.command = new AjaxLoadUserCommand();
+            this.command = new LoadUserCommand();
         }
     },
     AJAX_CHANGE_LANG {
         {
-            this.command = new AjaxLanguageCommand();
+            this.command = new LanguageCommand();
         }
     },
     AJAX_FREE_PLACES {
         {
-            this.command = new AjaxFreePlacesCommand();
+            this.command = new FreePlacesCommand();
         }
     },
     AJAX_LOAD_IMG {
         {
-            this.command = new AjaxLoadImageCommand();
+            this.command = new LoadImageCommand();
         }
     },
     AJAX_REGISTR {
         {
-            this.command = new AjaxRegistrationCommand();
+            this.command = new LoginExistenceCommand();
         }
     },
     AJAX_AUTHO {
         {
-            this.command = new AjaxAuthorizationCommand();
+            this.command = new AuthorizationCommand();
         }
     },
     EMPTY {
@@ -125,7 +130,7 @@ public enum CommandEnum {
     },
     REGISTER {
         {
-            this.command = new RegisterCommand();
+            this.command = new RegistrationCommand();
         }
     },
     LOGIN {
@@ -140,6 +145,7 @@ public enum CommandEnum {
 
     };
     ActionCommand command;
+
     public ActionCommand getCurrentCommand() {
         return command;
     }

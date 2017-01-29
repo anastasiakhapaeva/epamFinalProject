@@ -12,10 +12,7 @@
 <fmt:setLocale value="${locale}"/>
 <fmt:setBundle basename="i18n.msg"/>
 <c:set var="user" value="${currentUser}"/>
-<c:set var="profile" value="${userProfile}"/>
 <c:set var="hostels" value="${hostels}" scope="request"/>
-<c:set var="bookedHostels" value="${bookedHostels}"/>
-<c:set var="paidHostels" value="${paidHostels}"/>
 <c:set var="messages" value="${messages}"/>
 <nav id="nav-bar" class="navbar navbar-inverse navbar-fixed-top menu" role="navigation">
     <div class="container">
@@ -44,12 +41,27 @@
                 </li>
                 <c:if test="${user.admin}">
                     <c:set var="unconfirmedClaims" value="${unconfirmedClaims}" scope="session"/>
-                    <li>
-                        <a href="${pageContext.request.contextPath}/service?command=go&page=claims">
-                            <span class="fa fa-envelope-open" aria-hidden="true"></span>
-                            <span><fmt:message key="menu.claims"/> <span
-                                    class="badge">${fn:length(unconfirmedClaims)}</span></span>
+
+                    <li class="dropdown">
+                        <a id="dropadmin" role="button" class="dropdown-toggle" data-toggle="dropdown">
+                            <span class="fa fa-cog" aria-hidden="true"></span>
+                            <span><fmt:message key="menu.admin"/> <span class="badge">${fn:length(unconfirmedClaims)}</span></span>
                         </a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropadmin">
+                            <li tabindex="-1">
+                                <a href="${pageContext.request.contextPath}/service?command=go&page=claims">
+                                    <span class="fa fa-envelope-open" aria-hidden="true"></span>
+                                    <span><fmt:message key="menu.claims"/> <span
+                                            class="badge">${fn:length(unconfirmedClaims)}</span></span>
+                                </a>
+                            </li>
+                            <li tabindex="-1">
+                                <a href="${pageContext.request.contextPath}/service?command=show_users">
+                                    <span class="fa fa-users" aria-hidden="true"></span>
+                                    <span><fmt:message key="users.users"/></span>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </c:if>
                 <li>
@@ -94,7 +106,7 @@
                                 <span class="fa fa-user" aria-hidden="true"></span>
                             </c:otherwise>
                         </c:choose>
-                        <span>${profile.firstName}
+                        <span>${user.profile.firstName}
                             <c:if test="${user.banned}">
                                 <span><fmt:message key="menu.user.banned"/></span>
                             </c:if>

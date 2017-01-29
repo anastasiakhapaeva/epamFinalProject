@@ -8,6 +8,8 @@ import edu.training.web.listener.UserSessions;
 import edu.training.web.logic.AdminAction;
 import edu.training.web.logic.HostelManager;
 import edu.training.web.logic.Messenger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,10 +21,12 @@ import java.util.List;
 /**
  * Created by Roman on 10.01.2017.
  */
-public class AdminBanUserCommand implements ActionCommand {
+public class SetDiscountCommand implements ActionCommand {
+    private static final Logger LOG = LogManager.getLogger();
     private static final String PARAM_USER_ID = "userId";
     private static final String PARAM_MESSAGES = "messages";
     private static final String PARAM_CURRENT_USER = "currentUser";
+    private static final String PARAM_DISCOUNT = "discount";
     private static final String PARAM_ERROR_MESSAGE = "errorMessage";
     private static final String PARAM_ERROR = "/resources/jsp/error.jsp";
 
@@ -30,33 +34,23 @@ public class AdminBanUserCommand implements ActionCommand {
         String page = "";
         try {
             int userId = Integer.parseInt(request.getParameter(PARAM_USER_ID));
+            double discount = Double.parseDouble(request.getParameter(PARAM_DISCOUNT));
             User user = HostelManager.findUserById(userId);
             List<HttpSession> userSessions = UserSessions.getUserSessions(user.getUserId());
-            boolean isBanned = AdminAction.banUser(userId, !user.isBanned());
-            if (isBanned) {
-                Message banMessage = Messenger.generateBanMessage(userId);
-                boolean isSent = HostelManager.sendMessageToUser(banMessage);
+            boolean isDiscountSet = AdminAction.setDiscountForUser(userId, discount);
+            if (isDiscountSet) {
+                Message discountMessage = Messenger.generateDiscountMessage(userId);
+                boolean isSent = HostelManager.sendMessageToUser(discountMessage);
                 for (HttpSession userSession : userSessions) {
+                    User currentUser = (User) userSession.getAttribute(PARAM_CURRENT_USER);
+                    currentUser.setDiscount(discount);
                     if (isSent) {
-                        User currentUser = (User) userSession.getAttribute(PARAM_CURRENT_USER);
                         ArrayList<Message> messages = (ArrayList<Message>) userSession.getAttribute(PARAM_MESSAGES);
-                        messages.add(banMessage);
-                        currentUser.setBanned(isBanned);
-                    }
-                }
-            } else {
-                Message unbanMessage = Messenger.generateUnbanMessage(userId);
-                boolean isSent = HostelManager.sendMessageToUser(unbanMessage);
-                for (HttpSession userSession : userSessions) {
-                    if (isSent) {
-                        User currentUser = (User) userSession.getAttribute(PARAM_CURRENT_USER);
-                        ArrayList<Message> messages = (ArrayList<Message>) userSession.getAttribute(PARAM_MESSAGES);
-                        messages.add(unbanMessage);
-                        currentUser.setBanned(isBanned);
+                        messages.add(discountMessage);
                     }
                 }
             }
-            response.getWriter().write(Boolean.toString(isBanned));
+            response.getWriter().write(Boolean.toString(isDiscountSet));
         } catch (IOException | NumberFormatException | LogicException e) {
             LOG.error(e);
             request.setAttribute(PARAM_ERROR_MESSAGE, e);

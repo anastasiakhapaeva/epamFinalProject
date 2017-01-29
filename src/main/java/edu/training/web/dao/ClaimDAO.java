@@ -7,7 +7,6 @@ import edu.training.web.pool.ProxyConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Roman on 02.01.2017.
@@ -22,12 +21,14 @@ public class ClaimDAO extends AbstractDAO<Claim> {
     private static final String SQL_DELETE_CLAIM_BY_ID = "UPDATE Claim SET is_deleted=1 WHERE claim_id=?";
     private static final String SQL_INSERT_NEW_CLAIM =
             "INSERT INTO `Claim` (`claim_id`, `hostel_id`, `user_id`, `claimtype`, `required_places`, `date_in`, `date_out`, `is_confirmed`)" +
-            " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String SQL_DELETE_ALL_CLAIMS_BY_ID = "UPDATE Claim SET is_deleted=1 WHERE user_id=? AND is_confirmed=0 AND is_deleted=0";
+
     public ClaimDAO(ProxyConnection connection) {
         super(connection);
     }
 
-    public Claim findClaimById(int claimId) throws DAOException{
+    public Claim findClaimById(int claimId) throws DAOException {
         Claim claim;
         PreparedStatement ps = null;
         try {
@@ -43,7 +44,22 @@ public class ClaimDAO extends AbstractDAO<Claim> {
         return claim;
     }
 
-    public boolean findClaimByIds(int userId, int hostelId) throws DAOException{
+    public boolean deleteAllClaimsForUser(int userId) throws DAOException {
+        int deleted = 0;
+        PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement(SQL_DELETE_ALL_CLAIMS_BY_ID);
+            ps.setInt(1, userId);
+            deleted = ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        } finally {
+            closeStatement(ps);
+        }
+        return deleted > 0;
+    }
+
+    public boolean findClaimByIds(int userId, int hostelId) throws DAOException {
         boolean isBooked = false;
         PreparedStatement ps = null;
         try {
@@ -51,7 +67,7 @@ public class ClaimDAO extends AbstractDAO<Claim> {
             ps.setInt(1, userId);
             ps.setInt(2, hostelId);
             ResultSet resultSet = ps.executeQuery();
-            if(resultSet.isBeforeFirst()){
+            if (resultSet.isBeforeFirst()) {
                 isBooked = true;
             }
         } catch (SQLException e) {
@@ -62,7 +78,7 @@ public class ClaimDAO extends AbstractDAO<Claim> {
         return isBooked;
     }
 
-    public boolean cancelBooking(int userId, int hostelId) throws DAOException {
+    public boolean cancelBookingByIds(int userId, int hostelId) throws DAOException {
         int canceled = 0;
         PreparedStatement ps = null;
         try {
@@ -78,7 +94,7 @@ public class ClaimDAO extends AbstractDAO<Claim> {
         return canceled > 0;
     }
 
-    public boolean confirmClaim(int claimId) throws DAOException{
+    public boolean confirmClaimById(int claimId) throws DAOException {
         int confirmed = 0;
         PreparedStatement ps = null;
         try {
@@ -93,7 +109,7 @@ public class ClaimDAO extends AbstractDAO<Claim> {
         return confirmed > 0;
     }
 
-    public boolean deleteClaim(int claimId) throws DAOException{
+    public boolean deleteClaimById(int claimId) throws DAOException {
         int deleted = 0;
         PreparedStatement ps = null;
         try {
@@ -108,7 +124,7 @@ public class ClaimDAO extends AbstractDAO<Claim> {
         return deleted > 0;
     }
 
-    public ArrayList<Claim> findClaimsByHostelId(int hostelId) throws DAOException{
+    public ArrayList<Claim> findClaimsByHostelId(int hostelId) throws DAOException {
         ArrayList<Claim> claims;
         PreparedStatement ps = null;
         try {
@@ -118,13 +134,13 @@ public class ClaimDAO extends AbstractDAO<Claim> {
             claims = takeClaims(resultSet);
         } catch (SQLException e) {
             throw new DAOException(e);
-        }finally {
+        } finally {
             closeStatement(ps);
         }
         return claims;
     }
 
-    public ArrayList<Claim> findUnconfirmedClaims() throws DAOException{
+    public ArrayList<Claim> findUnconfirmedClaims() throws DAOException {
         ArrayList<Claim> claims;
         Statement st = null;
         try {
@@ -133,17 +149,13 @@ public class ClaimDAO extends AbstractDAO<Claim> {
             claims = takeClaims(resultSet);
         } catch (SQLException e) {
             throw new DAOException(e);
-        }finally {
+        } finally {
             closeStatement(st);
         }
         return claims;
     }
 
-    public List<Claim> findAll() {
-        return null;
-    }
-
-    public boolean create(Claim entity) throws DAOException{
+    public boolean create(Claim entity) throws DAOException {
         int flag = 0;
         PreparedStatement ps = null;
         try {
@@ -154,7 +166,7 @@ public class ClaimDAO extends AbstractDAO<Claim> {
             ps.setString(4, entity.getClaimType().toString().toLowerCase());
             ps.setInt(5, entity.getRequiredPlaces());
             ps.setDate(6, Date.valueOf(entity.getDateIn()));
-            ps.setDate(7,Date.valueOf(entity.getDateOut()));
+            ps.setDate(7, Date.valueOf(entity.getDateOut()));
             ps.setBoolean(8, entity.isConfirmed());
             flag = ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
@@ -168,7 +180,7 @@ public class ClaimDAO extends AbstractDAO<Claim> {
         return flag > 0;
     }
 
-    private ArrayList<Claim> takeClaims(ResultSet rs) throws DAOException{
+    private ArrayList<Claim> takeClaims(ResultSet rs) throws DAOException {
         ArrayList<Claim> claims = new ArrayList<>();
         try {
             while (rs.next()) {
@@ -184,7 +196,7 @@ public class ClaimDAO extends AbstractDAO<Claim> {
                 claim.setDeleted(rs.getBoolean("is_deleted"));
                 claims.add(claim);
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new DAOException(e);
         }
         return claims;

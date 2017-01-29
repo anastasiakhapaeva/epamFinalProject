@@ -3,21 +3,17 @@ package edu.training.web.dao;
 import edu.training.web.entity.Message;
 import edu.training.web.exception.DAOException;
 import edu.training.web.pool.ProxyConnection;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Roman on 08.01.2017.
  */
 public class MessageDAO extends AbstractDAO<Message> {
-    private static final Logger LOG = LogManager.getLogger();
     private static final String SQL_SELECT_MESSAGE_BY_ID = "SELECT * FROM Message WHERE message_id=?";
     private static final String SQL_DELETE_MESSAGE_BY_ID = "UPDATE Message SET is_deleted=1 WHERE message_id=?";
-    private static final String SQL_SELECT_MESSAGES_BY_ID="SELECT * FROM Message WHERE user_id=? and is_deleted=0";
+    private static final String SQL_SELECT_MESSAGES_BY_ID = "SELECT * FROM Message WHERE user_id=? and is_deleted=0";
     private static final String SQL_INSERT_NEW_MESSAGE =
             "INSERT INTO `Message` (`message_id`, `user_id`, `sender`, `text`, `is_deleted`) VALUES (?, ?, ?, ?, ?)";
 
@@ -25,7 +21,7 @@ public class MessageDAO extends AbstractDAO<Message> {
         super(connection);
     }
 
-    public Message findMessageById(int messageId) throws DAOException{
+    public Message findMessageById(int messageId) throws DAOException {
         Message message;
         PreparedStatement ps = null;
         try {
@@ -41,7 +37,7 @@ public class MessageDAO extends AbstractDAO<Message> {
         return message;
     }
 
-    public boolean deleteMessage(int messageId) throws DAOException{
+    public boolean deleteMessageById(int messageId) throws DAOException {
         int deleted = 0;
         PreparedStatement ps = null;
         try {
@@ -56,7 +52,7 @@ public class MessageDAO extends AbstractDAO<Message> {
         return deleted > 0;
     }
 
-    public ArrayList<Message> findMessagesByUserId(int userId) throws DAOException{
+    public ArrayList<Message> findMessagesByUserId(int userId) throws DAOException {
         ArrayList<Message> messages;
         PreparedStatement ps = null;
         try {
@@ -71,11 +67,8 @@ public class MessageDAO extends AbstractDAO<Message> {
         }
         return messages;
     }
-    public List<Message> findAll() {
-        return null;
-    }
 
-    public boolean create(Message entity) throws DAOException{
+    public boolean create(Message entity) throws DAOException {
         int flag = 0;
         PreparedStatement ps = null;
         try {
@@ -97,7 +90,7 @@ public class MessageDAO extends AbstractDAO<Message> {
         return flag > 0;
     }
 
-    private ArrayList<Message> takeMessages(ResultSet rs) throws DAOException{
+    private ArrayList<Message> takeMessages(ResultSet rs) throws DAOException {
         ArrayList<Message> messages = new ArrayList<>();
         try {
             while (rs.next()) {
@@ -109,7 +102,7 @@ public class MessageDAO extends AbstractDAO<Message> {
                 message.setDeleted(rs.getBoolean("is_deleted"));
                 messages.add(message);
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new DAOException(e);
         }
         return messages;

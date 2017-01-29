@@ -12,17 +12,11 @@
 <div id="addHostelModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            <!-- Заголовок модального окна -->
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h4 class="modal-title"><fmt:message key="hostelmodal.title"/></h4>
             </div>
-            <!-- Основное содержимое модального окна -->
             <div class="modal-body">
-                <%--<div id="book-info" class="text-info marg-bott text-center">Вы оплачивает первые сутки проживания сразу на сайте, а--%>
-                    <%--оставшуюся сумму доплачиваете непосредственно при заезде.--%>
-                <%--</div>--%>
-                <%--<div id="book-payment" class="text-danger marg-bott text-center">Отменить оплату нельзя!</div>--%>
                     <form id="add-hostel-form" role="form" class="form-horizontal my-form" enctype="multipart/form-data"
                           action="${pageContext.request.contextPath}/service" method="post" data-parsley-validate>
                         <div class="form-group">
@@ -31,7 +25,6 @@
                                 <input class="form-control" name="newHostelName" id="newHostelName" type="text"
                                        placeholder="<fmt:message key="page.form.hostelname"/>"
                                        data-parsley-required>
-                                <%--<div id="err-login"></div>--%>
                             </div>
                         </div>
                         <div class="form-group">

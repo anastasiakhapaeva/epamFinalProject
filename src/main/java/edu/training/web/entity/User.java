@@ -7,12 +7,21 @@ public class User extends Entity {
     private int userId;
     private String username;
     private String password;
+    private UserProfile profile;
     private double money = 0.0;
     private double discount = 0.0;
     private boolean isAdmin;
     private boolean isBanned;
 
     public User() {
+    }
+
+    public UserProfile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(UserProfile profile) {
+        this.profile = profile;
     }
 
     public double getMoney() {

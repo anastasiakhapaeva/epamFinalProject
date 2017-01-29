@@ -5,7 +5,6 @@ import edu.training.web.exception.DAOException;
 import edu.training.web.pool.ProxyConnection;
 
 import java.sql.*;
-import java.util.List;
 
 /**
  * Created by Roman on 11.01.2017.
@@ -13,15 +12,12 @@ import java.util.List;
 public class ImageDAO extends AbstractDAO<HostelImage> {
     private static final String SQL_INSERT_NEW_IMAGE = "INSERT INTO `Image` (`image_id`, `hostel_id`, `main_img`, `image_path`)" +
             "VALUES (?, ?, ?, ?)";
+
     public ImageDAO(ProxyConnection connection) {
         super(connection);
     }
 
-    public List<HostelImage> findAll() {
-        return null;
-    }
-
-    public boolean create(HostelImage entity) throws DAOException{
+    public boolean create(HostelImage entity) throws DAOException {
         int flag = 0;
         PreparedStatement ps = null;
         try {
