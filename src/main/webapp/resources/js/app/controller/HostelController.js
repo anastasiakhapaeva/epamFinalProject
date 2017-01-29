@@ -29,16 +29,18 @@ $(function () {
             checkBookingState: function () {
                 var hostelId = $('#hostel_id').val();
                 var userId = $('#user_id').val();
-                BookingService.checkBookingState(userId, hostelId, function (data) {
-                    var result = JSON.parse(data);
-                    if(result){
-                        $('#book-status-booked').removeAttr('class');
-                        $('#book-status-free').attr('class','hidden');
-                    }else{
-                        $('#book-status-booked').attr('class','hidden');
-                        $('#book-status-free').removeAttr('class');
-                    }
-                });
+                if(userId) {
+                    BookingService.checkBookingState(userId, hostelId, function (data) {
+                        var result = JSON.parse(data);
+                        if (result) {
+                            $('#book-status-booked').removeAttr('class');
+                            $('#book-status-free').attr('class', 'hidden');
+                        } else {
+                            $('#book-status-booked').attr('class', 'hidden');
+                            $('#book-status-free').removeAttr('class');
+                        }
+                    });
+                }
             },
             bindEvents: function () {
                 $('#img0,#img1,#img2').click(function () {

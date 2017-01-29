@@ -28,9 +28,14 @@
     <script src="<c:url value="/resources/js/app/controller/MenuBarController.js"/>"></script>
     <script src="<c:url value="/resources/js/app/controller/DateController.js"/>"></script>
     <script src="<c:url value="/resources/js/app/pageupdate.js"/>"></script>
-    <script src="<c:url value="/resources/js/parsley/validator.js"/>"></script>
     <script src="<c:url value="/resources/js/i18n/en.js"/>"></script>
     <script src="<c:url value="/resources/js/i18n/ru.js"/>"></script>
+    <script>
+        $( document ).ready(function() {
+            window.Parsley.setLocale($("#locale").val());
+        });
+    </script>
+    <script src="<c:url value="/resources/js/parsley/validator.js"/>"></script>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>

@@ -10,7 +10,6 @@ $(function () {
            },
            setLang: function () {
                var locale = $('#locale').val();
-               window.Parsley.setLocale(locale.substring(0, 2));
                setLang(locale);
            },
            bindEvents: function () {
@@ -112,9 +111,6 @@ $(function () {
        };
 
        function setLang(lang) {
-           if(lang == ""){
-               lang = "ru_RU";
-           }
            $.i18n.properties({
                name: 'msg',
                path: 'resources/i18n/',
