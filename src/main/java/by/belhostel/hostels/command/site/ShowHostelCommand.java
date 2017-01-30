@@ -15,12 +15,32 @@ import javax.servlet.http.HttpSession;
  * Created by Roman on 01.01.2017.
  */
 public class ShowHostelCommand implements ActionCommand {
+
+    /** The Constant LOG. */
     private static final Logger LOG = LogManager.getLogger();
+
+    /** The Constant PARAM_HOSTEL. */
     private static final String PARAM_HOSTEL = "hostel";
+
+    /** The Constant PARAM_HOSTEL_ID. */
     private static final String PARAM_HOSTEL_ID = "id";
+
+    /** The Constant PARAM_HOSTEL_PAGE. */
     private static final String PARAM_HOSTEL_PAGE = "/resources/jsp/hostel.jsp";
+
+    /** The Constant PARAM_ERROR_MESSAGE. */
     private static final String PARAM_ERROR_MESSAGE = "errorMessage";
+
+    /** The Constant PARAM_ERROR. */
     private static final String PARAM_ERROR = "/resources/jsp/error.jsp";
+
+    /**
+     * Execute.
+     *
+     * @param request is servlet's request
+     * @param response is servlet's response
+     * @return the string
+     */
 
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         String page = PARAM_HOSTEL_PAGE;

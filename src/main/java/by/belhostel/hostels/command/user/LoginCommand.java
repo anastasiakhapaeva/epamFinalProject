@@ -20,15 +20,41 @@ import java.util.ArrayList;
  * Created by Roman on 26.12.2016.
  */
 public class LoginCommand implements ActionCommand {
+
+    /** The Constant LOG. */
     private static final Logger LOG = LogManager.getLogger();
+
+    /** The Constant PARAM_NAME_LOGIN. */
     private static final String PARAM_NAME_LOGIN = "login";
+
+    /** The Constant PARAM_NAME_PASSWORD. */
     private static final String PARAM_NAME_PASSWORD = "password";
+
+    /** The Constant PARAM_CURRENT_USER. */
     private static final String PARAM_CURRENT_USER = "currentUser";
+
+    /** The Constant PARAM_MESSAGES. */
     private static final String PARAM_MESSAGES = "messages";
+
+    /** The Constant PARAM_UNCONFIRMED_CLAIMS. */
     private static final String PARAM_UNCONFIRMED_CLAIMS = "unconfirmedClaims";
+
+    /** The Constant PARAM_INDEX. */
     private static final String PARAM_INDEX = "/index.jsp";
+
+    /** The Constant PARAM_ERROR_MESSAGE. */
     private static final String PARAM_ERROR_MESSAGE = "errorMessage";
+
+    /** The Constant PARAM_ERROR. */
     private static final String PARAM_ERROR = "/resources/jsp/error.jsp";
+
+    /**
+     * Execute.
+     *
+     * @param request is servlet's request
+     * @param response is servlet's response
+     * @return the string
+     */
 
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         String page = PARAM_INDEX;

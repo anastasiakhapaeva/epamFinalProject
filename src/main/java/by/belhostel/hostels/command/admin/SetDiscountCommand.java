@@ -22,14 +22,38 @@ import java.util.List;
  * Created by Roman on 10.01.2017.
  */
 public class SetDiscountCommand implements ActionCommand {
+
+    /** The Constant LOG. */
     private static final Logger LOG = LogManager.getLogger();
+
+    /** The Constant PARAM_USER_ID. */
     private static final String PARAM_USER_ID = "userId";
+
+    /** The Constant PARAM_MESSAGES. */
     private static final String PARAM_MESSAGES = "messages";
+
+    /** The Constant PARAM_CURRENT_USER. */
     private static final String PARAM_CURRENT_USER = "currentUser";
+
+    /** The Constant PARAM_DISCOUNT. */
     private static final String PARAM_DISCOUNT = "discount";
+
+    /** The Constant PARAM_ERROR_MESSAGE. */
     private static final String PARAM_ERROR_MESSAGE = "errorMessage";
+
+    /** The Constant PARAM_ERROR. */
     private static final String PARAM_ERROR = "/resources/jsp/error.jsp";
+
+    /** The Constant PARAM_MAIN. */
     private static final String PARAM_MAIN = "/resources/jsp/main.jsp";
+
+    /**
+     * Execute.
+     *
+     * @param request is servlet's request
+     * @param response is servlet's response
+     * @return the string
+     */
 
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         String page = "";

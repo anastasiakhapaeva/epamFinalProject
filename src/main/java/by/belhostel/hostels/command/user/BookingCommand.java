@@ -23,20 +23,56 @@ import java.util.List;
  * Created by Roman on 01.01.2017.
  */
 public class BookingCommand implements ActionCommand {
+
+    /** The Constant LOG. */
     private static final Logger LOG = LogManager.getLogger();
+
+    /** The Constant PARAM_HOSTEL_ID. */
     private static final String PARAM_HOSTEL_ID = "hostel_id";
+
+    /** The Constant PARAM_CURRENT_USER. */
     private static final String PARAM_CURRENT_USER = "currentUser";
+
+    /** The Constant PARAM_DATE_IN. */
     private static final String PARAM_DATE_IN = "date_in";
+
+    /** The Constant PARAM_DATE_OUT. */
     private static final String PARAM_DATE_OUT = "date_out";
+
+    /** The Constant PARAM_GUESTS. */
     private static final String PARAM_GUESTS = "guests";
+
+    /** The Constant PARAM_BOOKING_TYPE. */
     private static final String PARAM_BOOKING_TYPE = "bookingType";
+
+    /** The Constant PARAM_UNCONFIRMED_CLAIMS. */
     private static final String PARAM_UNCONFIRMED_CLAIMS = "unconfirmedClaims";
+
+    /** The Constant DATE_FORMAT. */
     private static final String DATE_FORMAT = "yyyy-MM-dd";
+
+    /** The Constant PARAM_HOSTEL_PAGE. */
     private static final String PARAM_HOSTEL_PAGE = "/service?command=go&page=hostel";
+
+    /** The Constant PARAM_ERROR_MESSAGE. */
     private static final String PARAM_ERROR_MESSAGE = "errorMessage";
+
+    /** The Constant PARAM_MESSAGES. */
     private static final String PARAM_MESSAGES = "messages";
+
+    /** The Constant PARAM_ERROR. */
     private static final String PARAM_ERROR = "/resources/jsp/error.jsp";
+
+    /** The Constant PARAM_MAIN. */
     private static final String PARAM_MAIN = "/resources/jsp/main.jsp";
+
+    /**
+     * Execute.
+     *
+     * @param request is servlet's request
+     * @param response is servlet's response
+     * @return the string
+     */
 
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         String page = "";

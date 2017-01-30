@@ -23,26 +23,61 @@ import java.io.IOException;
 @WebServlet("/service")
 @MultipartConfig(maxFileSize = 16177215)
 public class HostelServlet extends HttpServlet {
+
+    /** The Constant LOG. */
     private static final Logger LOG = LogManager.getLogger();
+
+    /**
+     * Instantiates a new hostel servlet.
+     */
     public HostelServlet() {
         super();
     }
 
+    /**
+     * Inits the servlet.
+     *
+     * @throws ServletException the servlet exception
+     */
     public void init() throws ServletException {
         LOG.info("Servlet started!");
     }
 
+    /**
+     * Do get.
+     *
+     * @param request the request
+     * @param response the response
+     * @throws ServletException the servlet exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
 
     }
 
+    /**
+     * Do post.
+     *
+     * @param request the request
+     * @param response the response
+     * @throws ServletException the servlet exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
+    /**
+     * Process request.
+     *
+     * @param request the request
+     * @param response the response
+     * @throws ServletException the servlet exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String page = null;
@@ -61,6 +96,9 @@ public class HostelServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Destroy.
+     */
     public void destroy() {
         super.destroy();
         ConnectionPool.getInstance().closePool();

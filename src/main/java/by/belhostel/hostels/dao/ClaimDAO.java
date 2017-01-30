@@ -12,22 +12,52 @@ import java.util.ArrayList;
  * Created by Roman on 02.01.2017.
  */
 public class ClaimDAO extends AbstractDAO<Claim> {
+
+    /** The Constant SQL_SELECT_CLAIM_BY_ID. */
     private static final String SQL_SELECT_CLAIM_BY_ID = "SELECT * FROM Claim WHERE claim_id=?";
+
+    /** The Constant SQL_SELECT_CLAIM_BY_IDS. */
     private static final String SQL_SELECT_CLAIM_BY_IDS = "SELECT * FROM Claim WHERE (is_deleted=0 AND is_confirmed=0) AND (user_id=? AND hostel_id=?)";
+
+    /** The Constant SQL_SELECT_UNCONFIRMED_CLAIMS. */
     private static final String SQL_SELECT_UNCONFIRMED_CLAIMS = "SELECT * FROM Claim WHERE is_deleted=0 AND is_confirmed=0 AND claimtype='reservation'";
+
+    /** The Constant SQL_SELECT_CLAIM_BY_HOSTEL_ID. */
     private static final String SQL_SELECT_CLAIM_BY_HOSTEL_ID = "SELECT * FROM Claim WHERE is_deleted=0 AND hostel_id=?";
+
+    /** The Constant SQL_UPDATE_CLAIM_BY_IDS. */
     private static final String SQL_UPDATE_CLAIM_BY_IDS = "UPDATE Claim SET is_deleted=1 WHERE user_id=? AND hostel_id=? AND is_confirmed=0 AND is_deleted = 0";
+
+    /** The Constant SQL_UPDATE_CLAIM_BY_ID. */
     private static final String SQL_UPDATE_CLAIM_BY_ID = "UPDATE Claim SET is_confirmed=1 WHERE claim_id=?";
+
+    /** The Constant SQL_DELETE_CLAIM_BY_ID. */
     private static final String SQL_DELETE_CLAIM_BY_ID = "UPDATE Claim SET is_deleted=1 WHERE claim_id=?";
+
+    /** The Constant SQL_INSERT_NEW_CLAIM. */
     private static final String SQL_INSERT_NEW_CLAIM =
             "INSERT INTO `Claim` (`claim_id`, `hostel_id`, `user_id`, `claimtype`, `required_places`, `date_in`, `date_out`, `is_confirmed`)" +
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+    /** The Constant SQL_DELETE_ALL_CLAIMS_BY_ID. */
     private static final String SQL_DELETE_ALL_CLAIMS_BY_ID = "UPDATE Claim SET is_deleted=1 WHERE user_id=? AND is_confirmed=0 AND is_deleted=0";
 
+    /**
+     * Instantiates a new claim DAO.
+     *
+     * @param connection the connection
+     */
     public ClaimDAO(ProxyConnection connection) {
         super(connection);
     }
 
+    /**
+     * Find claim by id.
+     *
+     * @param claimId the claim id
+     * @return the claim
+     * @throws DAOException the DAO exception
+     */
     public Claim findClaimById(int claimId) throws DAOException {
         Claim claim;
         PreparedStatement ps = null;
@@ -44,6 +74,13 @@ public class ClaimDAO extends AbstractDAO<Claim> {
         return claim;
     }
 
+    /**
+     * Delete all claims for user.
+     *
+     * @param userId the user id
+     * @return true, if successful
+     * @throws DAOException the DAO exception
+     */
     public boolean deleteAllClaimsForUser(int userId) throws DAOException {
         int deleted = 0;
         PreparedStatement ps = null;
@@ -59,6 +96,14 @@ public class ClaimDAO extends AbstractDAO<Claim> {
         return deleted > 0;
     }
 
+    /**
+     * Find claim by ids.
+     *
+     * @param userId the user id
+     * @param hostelId the hostel id
+     * @return true, if successful
+     * @throws DAOException the DAO exception
+     */
     public boolean findClaimByIds(int userId, int hostelId) throws DAOException {
         boolean isBooked = false;
         PreparedStatement ps = null;
@@ -78,6 +123,14 @@ public class ClaimDAO extends AbstractDAO<Claim> {
         return isBooked;
     }
 
+    /**
+     * Cancel booking by ids.
+     *
+     * @param userId the user id
+     * @param hostelId the hostel id
+     * @return true, if successful
+     * @throws DAOException the DAO exception
+     */
     public boolean cancelBookingByIds(int userId, int hostelId) throws DAOException {
         int canceled = 0;
         PreparedStatement ps = null;
@@ -94,6 +147,13 @@ public class ClaimDAO extends AbstractDAO<Claim> {
         return canceled > 0;
     }
 
+    /**
+     * Confirm claim by id.
+     *
+     * @param claimId the claim id
+     * @return true, if successful
+     * @throws DAOException the DAO exception
+     */
     public boolean confirmClaimById(int claimId) throws DAOException {
         int confirmed = 0;
         PreparedStatement ps = null;
@@ -109,6 +169,13 @@ public class ClaimDAO extends AbstractDAO<Claim> {
         return confirmed > 0;
     }
 
+    /**
+     * Delete claim by id.
+     *
+     * @param claimId the claim id
+     * @return true, if successful
+     * @throws DAOException the DAO exception
+     */
     public boolean deleteClaimById(int claimId) throws DAOException {
         int deleted = 0;
         PreparedStatement ps = null;
@@ -124,6 +191,13 @@ public class ClaimDAO extends AbstractDAO<Claim> {
         return deleted > 0;
     }
 
+    /**
+     * Find claims by hostel id.
+     *
+     * @param hostelId the hostel id
+     * @return the array list
+     * @throws DAOException the DAO exception
+     */
     public ArrayList<Claim> findClaimsByHostelId(int hostelId) throws DAOException {
         ArrayList<Claim> claims;
         PreparedStatement ps = null;
@@ -140,6 +214,12 @@ public class ClaimDAO extends AbstractDAO<Claim> {
         return claims;
     }
 
+    /**
+     * Find unconfirmed claims.
+     *
+     * @return the array list
+     * @throws DAOException the DAO exception
+     */
     public ArrayList<Claim> findUnconfirmedClaims() throws DAOException {
         ArrayList<Claim> claims;
         Statement st = null;
@@ -180,6 +260,13 @@ public class ClaimDAO extends AbstractDAO<Claim> {
         return flag > 0;
     }
 
+    /**
+     * Take claims.
+     *
+     * @param rs the rs
+     * @return the array list
+     * @throws DAOException the DAO exception
+     */
     private ArrayList<Claim> takeClaims(ResultSet rs) throws DAOException {
         ArrayList<Claim> claims = new ArrayList<>();
         try {

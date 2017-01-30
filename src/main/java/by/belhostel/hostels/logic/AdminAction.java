@@ -16,6 +16,14 @@ import java.util.ArrayList;
  * Created by Roman on 07.01.2017.
  */
 public class AdminAction {
+
+    /**
+     * Confirm claim by id.
+     *
+     * @param claimId the claim id
+     * @return true, if successful
+     * @throws LogicException the logic exception
+     */
     public static boolean confirmClaimById(int claimId) throws LogicException {
         boolean result = false;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -32,6 +40,13 @@ public class AdminAction {
         }
         return result;
     }
+
+    /**
+     * Find all users.
+     *
+     * @return ArrayList of users
+     * @throws LogicException the logic exception
+     */
 
     public static ArrayList<User> findAllUsers() throws LogicException {
         ArrayList<User> users = new ArrayList<User>();
@@ -51,6 +66,14 @@ public class AdminAction {
         return users;
     }
 
+    /**
+     * Delete claim by id.
+     *
+     * @param claimId the claim id
+     * @return true, if successful
+     * @throws LogicException the logic exception
+     */
+
     public static boolean deleteClaimById(int claimId) throws LogicException {
         boolean result = false;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -67,6 +90,15 @@ public class AdminAction {
         }
         return result;
     }
+
+    /**
+     * Ban user by id.
+     *
+     * @param userId the user id
+     * @param ban the user ban status
+     * @return ban status
+     * @throws LogicException the logic exception
+     */
 
     public static boolean banUserById(int userId, boolean ban) throws LogicException {
         boolean result = false;
@@ -87,6 +119,15 @@ public class AdminAction {
         return result;
     }
 
+    /**
+     * Set discount for user.
+     *
+     * @param userId the user id
+     * @param discount the user discount
+     * @return true, if successful
+     * @throws LogicException the logic exception
+     */
+
     public static boolean setDiscountForUser(int userId, double discount) throws LogicException {
         boolean result = false;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -103,6 +144,14 @@ public class AdminAction {
         }
         return result;
     }
+
+    /**
+     * Edit hostel.
+     *
+     * @param editedHostel the edited hostel
+     * @return true, if successful
+     * @throws LogicException the logic exception
+     */
 
     public static boolean editHostel(Hostel editedHostel) throws LogicException {
         boolean result = false;
@@ -121,6 +170,14 @@ public class AdminAction {
         return result;
     }
 
+    /**
+     * Add hostel.
+     *
+     * @param hostel the new hostel
+     * @return true, if successful
+     * @throws LogicException the logic exception
+     */
+
     public static boolean addHostel(Hostel hostel) throws LogicException {
         boolean result = false;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -137,6 +194,14 @@ public class AdminAction {
         }
         return result;
     }
+
+    /**
+     * Add hostel image.
+     *
+     * @param img the hostel image
+     * @return true, if successful
+     * @throws LogicException the logic exception
+     */
 
     public static boolean addHostelImage(HostelImage img) throws LogicException {
         boolean result = false;

@@ -19,6 +19,14 @@ public class LoginExistenceCommand implements ActionCommand {
     private static final String PARAM_ERROR_MESSAGE = "errorMessage";
     private static final String PARAM_ERROR = "/resources/jsp/error.jsp";
 
+    /**
+     * Execute.
+     *
+     * @param request is servlet's request
+     * @param response is servlet's response
+     * @return the string
+     */
+
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         String page = "";
         try {

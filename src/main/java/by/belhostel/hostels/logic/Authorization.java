@@ -17,6 +17,15 @@ import java.util.ArrayList;
  * Created by Roman on 25.12.2016.
  */
 public class Authorization {
+
+    /**
+     * Login.
+     *
+     * @param username the username
+     * @param password the password
+     * @return true, if successful
+     * @throws LogicException the logic exception
+     */
     public static boolean login(String username, String password) throws LogicException {
         boolean result = false;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -30,6 +39,15 @@ public class Authorization {
         }
         return result;
     }
+
+    /**
+     * Find current user.
+     *
+     * @param login the user login
+     * @param password the user password
+     * @return the user
+     * @throws LogicException the logic exception
+     */
 
     public static User findCurrentUser(String login, String password) throws LogicException {
         User current;
@@ -45,6 +63,14 @@ public class Authorization {
         return current;
     }
 
+    /**
+     * Find user profile by id.
+     *
+     * @param id the user id
+     * @return the user profile
+     * @throws LogicException the logic exception
+     */
+
     public static UserProfile findUserProfileById(int id) throws LogicException {
         UserProfile current;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -58,6 +84,13 @@ public class Authorization {
         }
         return current;
     }
+
+    /**
+     * Find messages for user.
+     *
+     * @return ArrayList of messages
+     * @throws LogicException the logic exception
+     */
 
     public static ArrayList<Message> findMessagesForUser(int userId) throws LogicException {
         ArrayList<Message> messages;

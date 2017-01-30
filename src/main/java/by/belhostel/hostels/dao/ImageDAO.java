@@ -17,6 +17,7 @@ public class ImageDAO extends AbstractDAO<HostelImage> {
         super(connection);
     }
 
+
     public boolean create(HostelImage entity) throws DAOException {
         int flag = 0;
         PreparedStatement ps = null;

@@ -19,6 +19,14 @@ public class LogicException extends Exception {
         super(cause);
     }
 
+    /**
+     * Instantiates a new logic exception.
+     *
+     * @param message the message
+     * @param cause the cause
+     * @param enableSuppression the enable suppression
+     * @param writableStackTrace the writable stack trace
+     */
     public LogicException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }

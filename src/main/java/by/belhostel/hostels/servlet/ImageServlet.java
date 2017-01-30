@@ -20,6 +20,9 @@ public class ImageServlet extends HttpServlet {
     private static final Logger LOG = LogManager.getLogger();
     private static final String IMG_MAIN_PATH = "../hostels";
 
+    /**
+     * Instantiates a new image servlet.
+     */
     public ImageServlet() {
         super();
     }

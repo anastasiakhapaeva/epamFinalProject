@@ -14,6 +14,14 @@ import java.sql.SQLException;
  * Created by Roman on 08.12.2016.
  */
 public class Registration {
+
+    /**
+     * Register.
+     *
+     * @param user the user
+     * @return true, if successful
+     * @throws LogicException the logic exception
+     */
     public static boolean register(User user) throws LogicException{
         boolean result = false;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -34,6 +42,13 @@ public class Registration {
         return result;
     }
 
+    /**
+     * Checks login existence.
+     *
+     * @param login the user login
+     * @return true, if successful
+     * @throws LogicException the logic exception
+     */
     public static boolean checkLoginExistence(String login) throws LogicException{
         boolean result = false;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();

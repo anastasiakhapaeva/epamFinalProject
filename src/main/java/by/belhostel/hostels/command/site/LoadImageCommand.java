@@ -20,9 +20,19 @@ import java.util.ArrayList;
 public class LoadImageCommand implements ActionCommand {
     private static final Logger LOG = LogManager.getLogger();
     private static final String PARAM_HOSTEL_ID = "hostelId";
+
+    /** The Constant PARAM_LOAD_TYPE. */
     private static final String PARAM_LOAD_TYPE = "loadType";
     private static final String PARAM_ERROR_MESSAGE = "errorMessage";
     private static final String PARAM_ERROR = "/resources/jsp/error.jsp";
+
+    /**
+     * Execute.
+     *
+     * @param request is servlet's request
+     * @param response is servlet's response
+     * @return the string
+     */
 
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         String page = "";

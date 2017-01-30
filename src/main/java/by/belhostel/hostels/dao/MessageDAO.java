@@ -11,16 +11,36 @@ import java.util.ArrayList;
  * Created by Roman on 08.01.2017.
  */
 public class MessageDAO extends AbstractDAO<Message> {
+
+    /** The Constant SQL_SELECT_MESSAGE_BY_ID. */
     private static final String SQL_SELECT_MESSAGE_BY_ID = "SELECT * FROM Message WHERE message_id=?";
+
+    /** The Constant SQL_DELETE_MESSAGE_BY_ID. */
     private static final String SQL_DELETE_MESSAGE_BY_ID = "UPDATE Message SET is_deleted=1 WHERE message_id=?";
+
+    /** The Constant SQL_SELECT_MESSAGES_BY_ID. */
     private static final String SQL_SELECT_MESSAGES_BY_ID = "SELECT * FROM Message WHERE user_id=? and is_deleted=0";
+
+    /** The Constant SQL_INSERT_NEW_MESSAGE. */
     private static final String SQL_INSERT_NEW_MESSAGE =
             "INSERT INTO `Message` (`message_id`, `user_id`, `sender`, `text`, `is_deleted`) VALUES (?, ?, ?, ?, ?)";
 
+    /**
+     * Instantiates a new message DAO.
+     *
+     * @param connection the connection
+     */
     public MessageDAO(ProxyConnection connection) {
         super(connection);
     }
 
+    /**
+     * Find message by id.
+     *
+     * @param messageId the message id
+     * @return the message
+     * @throws DAOException the DAO exception
+     */
     public Message findMessageById(int messageId) throws DAOException {
         Message message;
         PreparedStatement ps = null;
@@ -37,6 +57,13 @@ public class MessageDAO extends AbstractDAO<Message> {
         return message;
     }
 
+    /**
+     * Delete message by id.
+     *
+     * @param messageId the message id
+     * @return true, if successful
+     * @throws DAOException the DAO exception
+     */
     public boolean deleteMessageById(int messageId) throws DAOException {
         int deleted = 0;
         PreparedStatement ps = null;
@@ -52,6 +79,13 @@ public class MessageDAO extends AbstractDAO<Message> {
         return deleted > 0;
     }
 
+    /**
+     * Find messages by user id.
+     *
+     * @param userId the user id
+     * @return the array list
+     * @throws DAOException the DAO exception
+     */
     public ArrayList<Message> findMessagesByUserId(int userId) throws DAOException {
         ArrayList<Message> messages;
         PreparedStatement ps = null;
@@ -90,6 +124,13 @@ public class MessageDAO extends AbstractDAO<Message> {
         return flag > 0;
     }
 
+    /**
+     * Take messages.
+     *
+     * @param rs the rs
+     * @return the array list
+     * @throws DAOException the DAO exception
+     */
     private ArrayList<Message> takeMessages(ResultSet rs) throws DAOException {
         ArrayList<Message> messages = new ArrayList<>();
         try {

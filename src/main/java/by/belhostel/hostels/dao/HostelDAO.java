@@ -13,11 +13,12 @@ import java.util.List;
  * Created by Roman on 27.12.2016.
  */
 public class HostelDAO extends AbstractDAO<Hostel> {
-    private static final String SQL_SELECT_ALL_HOSTELS = "SELECT SQL_CALC_FOUND_ROWS * FROM Hostel LIMIT ?, ?";
     private static final String SQL_SELECT_HOSTELS_BY_CITY = "SELECT SQL_CALC_FOUND_ROWS * FROM Hostel WHERE city=?";
     private static final String SQL_SELECT_HOSTEL_BY_ID = "SELECT * FROM Hostel WHERE hostel_id=?";
     private static final String SQL_SELECT_HOSTEL_MAIN_IMG = "SELECT image_path FROM Image WHERE hostel_id=? AND main_img=1";
     private static final String SQL_SELECT_HOSTEL_ALL_IMG = "SELECT image_path FROM Image WHERE hostel_id=?";
+
+    /** The Constant SQL_SELECT_BOOKED_HOSTELS. */
     private static final String SQL_SELECT_BOOKED_HOSTELS = "SELECT `hostel`.`hostel_id`, `hostel`.`name`, `hostel`.`free_places`," +
             "`hostel`.`price`, `hostel`.`phone`, `hostel`.`city`, `hostel`.`address`," +
             "`hostel`.`description`, `hostel`.`is_deleted`" + " FROM Claim inner join Hostel on `claim`.`hostel_id`=`hostel`.`hostel_id`" +

@@ -19,14 +19,34 @@ import java.io.IOException;
                 @WebInitParam(name = "CLAIMS", value = "claims"),
                 @WebInitParam(name = "INDEX_PATH", value = "/index.jsp")})
 public class ForwardSecurityFilter implements Filter {
+
+    /** The Constant PARAM_CURRENT_USER. */
     private static final String PARAM_CURRENT_USER = "currentUser";
+
+    /** The Constant PARAM_PAGE. */
     private static final String PARAM_PAGE = "page";
+
+    /** The Constant PARAM_COMMAND. */
     private static final String PARAM_COMMAND = "command";
+
+    /** The index path. */
     private String indexPath;
+
+    /** The users page. */
     private String usersPage;
+
+    /** The claims page. */
     private String claimsPage;
+
+    /** The command. */
     private String command;
 
+    /**
+     * Inits the.
+     *
+     * @param fConfig the f config
+     * @throws ServletException the servlet exception
+     */
     @Override
     public void init(FilterConfig fConfig) throws ServletException {
         indexPath = fConfig.getInitParameter("INDEX_PATH");
@@ -35,6 +55,15 @@ public class ForwardSecurityFilter implements Filter {
         command = fConfig.getInitParameter("COMMAND");
     }
 
+    /**
+     * Do filter.
+     *
+     * @param request the request
+     * @param response the response
+     * @param chain the chain
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws ServletException the servlet exception
+     */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
@@ -55,6 +84,9 @@ public class ForwardSecurityFilter implements Filter {
         chain.doFilter(request, response);
     }
 
+    /**
+     * Destroy.
+     */
     @Override
     public void destroy() {
     }

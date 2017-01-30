@@ -28,7 +28,7 @@
 
                             <input id="user-id-profile" type="hidden" value="">
                             <div class="col-md-3 col-lg-3 " align="center"><img alt="User Pic"
-                                                                                src="http://image.flaticon.com/icons/svg/149/149071.svg"
+                                                                                src="resources/img/user.svg"
                                                                                 class="img-circle img-responsive">
                             </div>
                             <div class=" col-md-9 col-lg-9 ">

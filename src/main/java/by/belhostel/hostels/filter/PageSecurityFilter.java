@@ -12,17 +12,36 @@ import java.io.IOException;
  */
 @WebFilter(urlPatterns = {"/resources/jsp/*", "/service?command=go&page="},
         initParams = {@WebInitParam(name = "INDEX_PATH", value = "/index.jsp"),
-                    @WebInitParam(name = "PAGES", value = "users, claims")})
+                @WebInitParam(name = "PAGES", value = "users, claims")})
 public class PageSecurityFilter implements Filter {
+
+    /** The index path. */
     private String indexPath;
+
+    /** The pages. */
     private String pages;
 
+    /**
+     * Inits the.
+     *
+     * @param fConfig the f config
+     * @throws ServletException the servlet exception
+     */
     @Override
     public void init(FilterConfig fConfig) throws ServletException {
         indexPath = fConfig.getInitParameter("INDEX_PATH");
         pages = fConfig.getInitParameter("PAGES");
     }
 
+    /**
+     * Do filter.
+     *
+     * @param request the request
+     * @param response the response
+     * @param chain the chain
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws ServletException the servlet exception
+     */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
@@ -35,6 +54,9 @@ public class PageSecurityFilter implements Filter {
         chain.doFilter(request, response);
     }
 
+    /**
+     * Destroy.
+     */
     @Override
     public void destroy() {
     }

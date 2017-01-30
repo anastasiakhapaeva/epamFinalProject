@@ -9,9 +9,6 @@ public class HostelImage extends Entity {
     private boolean isMain;
     private String fileName;
 
-    public HostelImage() {
-    }
-
     public HostelImage(int hostelId, boolean isMain, String fileName) {
         this.hostelId = hostelId;
         this.isMain = isMain;

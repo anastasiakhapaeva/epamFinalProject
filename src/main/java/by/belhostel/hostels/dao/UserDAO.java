@@ -12,23 +12,54 @@ import java.util.ArrayList;
  * Created by Roman on 07.12.2016.
  */
 public class UserDAO extends AbstractDAO<User> {
+
+    /** The Constant SQL_SELECT_ALL_USERS. */
     private static final String SQL_SELECT_ALL_USERS = "SELECT * FROM User";
+
+    /** The Constant SQL_INSERT_NEW_USER. */
     private static final String SQL_INSERT_NEW_USER =
             "INSERT INTO `User` (`user_id`, `username`, `password`, `money`, `is_admin`, `discount`, `is_banned`)" +
                     " VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+    /** The Constant SQL_SELECT_USER_BY_USERNAME. */
     private static final String SQL_SELECT_USER_BY_USERNAME = "SELECT * FROM User WHERE username=?";
+
+    /** The Constant SQL_SELECT_USER_BY_ID. */
     private static final String SQL_SELECT_USER_BY_ID = "SELECT * FROM User WHERE user_id=?";
+
+    /** The Constant SQL_LOGIN_USER. */
     private static final String SQL_LOGIN_USER = "SELECT * FROM User WHERE username=? AND password=?";
+
+    /** The Constant SQL_UPDATE_MONEY_USER. */
     private static final String SQL_UPDATE_MONEY_USER = "UPDATE User SET money=money+? WHERE user_id=?";
+
+    /** The Constant SQL_UPDATE_BAN_USER. */
     private static final String SQL_UPDATE_BAN_USER = "UPDATE User SET `is_banned` = ? WHERE user_id=?";
+
+    /** The Constant SQL_UPDATE_DISCOUNT_USER. */
     private static final String SQL_UPDATE_DISCOUNT_USER = "UPDATE User SET `discount` = ? WHERE user_id=?";
+
+    /** The converter. */
     private MD5Converter converter = new MD5Converter();
 
 
+    /**
+     * Instantiates a new user DAO.
+     *
+     * @param connection the connection
+     */
     public UserDAO(ProxyConnection connection) {
         super(connection);
     }
 
+    /**
+     * Update money for user.
+     *
+     * @param userId the user id
+     * @param amount the amount
+     * @return true, if successful
+     * @throws DAOException the DAO exception
+     */
     public boolean updateMoneyForUser(int userId, double amount) throws DAOException {
         int flag = 0;
         PreparedStatement ps = null;
@@ -45,6 +76,14 @@ public class UserDAO extends AbstractDAO<User> {
         return flag > 0;
     }
 
+    /**
+     * Ban user by id.
+     *
+     * @param userId the user id
+     * @param ban the ban
+     * @return true, if successful
+     * @throws DAOException the DAO exception
+     */
     public boolean banUserById(int userId, boolean ban) throws DAOException {
         PreparedStatement ps = null;
         try {
@@ -60,6 +99,14 @@ public class UserDAO extends AbstractDAO<User> {
         return ban;
     }
 
+    /**
+     * Sets the discount for user.
+     *
+     * @param userId the user id
+     * @param discount the discount
+     * @return true, if successful
+     * @throws DAOException the DAO exception
+     */
     public boolean setDiscountForUser(int userId, double discount) throws DAOException {
         int flag = 0;
         PreparedStatement ps = null;
@@ -76,6 +123,13 @@ public class UserDAO extends AbstractDAO<User> {
         return flag > 0;
     }
 
+    /**
+     * Find user by login.
+     *
+     * @param login the login
+     * @return true, if successful
+     * @throws DAOException the DAO exception
+     */
     public boolean findUserByLogin(String login) throws DAOException {
         boolean isFounded = false;
         PreparedStatement ps = null;
@@ -94,6 +148,13 @@ public class UserDAO extends AbstractDAO<User> {
         return isFounded;
     }
 
+    /**
+     * Find user by id.
+     *
+     * @param userId the user id
+     * @return the user
+     * @throws DAOException the DAO exception
+     */
     public User findUserById(int userId) throws DAOException {
         PreparedStatement ps = null;
         User user;
@@ -110,6 +171,14 @@ public class UserDAO extends AbstractDAO<User> {
         return user;
     }
 
+    /**
+     * Find registered user.
+     *
+     * @param login the login
+     * @param password the password
+     * @return the user
+     * @throws DAOException the DAO exception
+     */
     public User findRegisteredUser(String login, String password) throws DAOException {
         User current;
         PreparedStatement ps = null;
@@ -127,6 +196,14 @@ public class UserDAO extends AbstractDAO<User> {
         return current;
     }
 
+    /**
+     * Login user.
+     *
+     * @param username the username
+     * @param password the password
+     * @return true, if successful
+     * @throws DAOException the DAO exception
+     */
     public boolean loginUser(String username, String password) throws DAOException {
         boolean login = false;
         PreparedStatement ps = null;
@@ -146,6 +223,12 @@ public class UserDAO extends AbstractDAO<User> {
         return login;
     }
 
+    /**
+     * Find all users.
+     *
+     * @return the array list
+     * @throws DAOException the DAO exception
+     */
     public ArrayList<User> findAllUsers() throws DAOException {
         ArrayList<User> users;
         Statement st = null;
@@ -187,6 +270,13 @@ public class UserDAO extends AbstractDAO<User> {
         return flag > 0;
     }
 
+    /**
+     * Take users.
+     *
+     * @param rs the rs
+     * @return the array list
+     * @throws DAOException the DAO exception
+     */
     private ArrayList<User> takeUsers(ResultSet rs) throws DAOException {
         ArrayList<User> users = new ArrayList<>();
         try {

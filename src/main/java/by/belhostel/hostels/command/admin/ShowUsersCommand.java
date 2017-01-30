@@ -21,10 +21,21 @@ public class ShowUsersCommand implements ActionCommand {
     private static final Logger LOG = LogManager.getLogger();
     private static final String PARAM_CURRENT_USER = "currentUser";
     private static final String PARAM_USERS = "users";
+
+    /** The Constant PARAM_USERS_PAGE. */
     private static final String PARAM_USERS_PAGE = "/resources/jsp/users.jsp";
     private static final String PARAM_ERROR_MESSAGE = "errorMessage";
     private static final String PARAM_ERROR = "/resources/jsp/error.jsp";
     private static final String PARAM_MAIN = "/resources/jsp/main.jsp";
+
+    /**
+     * Execute.
+     *
+     * @param request is servlet's request
+     * @param response is servlet's response
+     * @return the string
+     */
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String page = PARAM_MAIN;

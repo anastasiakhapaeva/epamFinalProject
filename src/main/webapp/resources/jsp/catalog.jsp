@@ -17,7 +17,6 @@
     <link href="<c:url value="/resources/css/lib/jquery-ui.css"/>" rel="stylesheet">
     <link href="<c:url value="/resources/css/hosteladvert.css"/>" rel="stylesheet">
     <link href="<c:url value="/resources/css/lib/font-awesome.css"/>" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Pattaya" rel="stylesheet">
 
     <script src="<c:url value="/resources/js/lib/jquery.1.10.2.min.js"/>"></script>
     <script src="<c:url value="/resources/js/lib/jquery.i18n.properties-min-1.0.9.js"/>"></script>

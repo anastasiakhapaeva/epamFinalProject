@@ -11,9 +11,17 @@ import javax.servlet.http.HttpServletResponse;
  * Created by Roman on 25.11.2016.
  */
 public class EmptyCommand implements ActionCommand {
-    private static final Logger LOG = LogManager.getLogger();
+
+    /** The Constant PARAM_INDEX. */
     private static final String PARAM_INDEX = "/index.jsp";
 
+    /**
+     * Execute.
+     *
+     * @param request is servlet's request
+     * @param response is servlet's response
+     * @return the string
+     */
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         return PARAM_INDEX;
     }

@@ -24,9 +24,7 @@
     <link href="<c:url value="/resources/css/hostel.css"/>" rel="stylesheet">
     <link href="<c:url value="/resources/css/lib/jquery-ui.css"/>" rel="stylesheet">
     <link href="<c:url value="/resources/css/lib/font-awesome.css"/>" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Pattaya" rel="stylesheet">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="<c:url value="/resources/js/lib/jquery.1.10.2.min.js"/>"></script>
     <script src="<c:url value="/resources/js/lib/jquery.i18n.properties-min-1.0.9.js"/>"></script>
     <script src="<c:url value="/resources/js/lib/jquery-ui.min.js"/>"></script>

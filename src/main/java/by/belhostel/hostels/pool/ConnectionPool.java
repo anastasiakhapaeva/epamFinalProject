@@ -17,6 +17,8 @@ import java.util.concurrent.locks.ReentrantLock;
 public class ConnectionPool {
     private static final Logger LOG = LogManager.getLogger();
     private static AtomicBoolean isCreated = new AtomicBoolean(false);
+
+    /** The lock. */
     private static ReentrantLock lock = new ReentrantLock();
     private static ConnectionPool instance;
     private static DatabaseInitializer initializer;
@@ -39,7 +41,7 @@ public class ConnectionPool {
         if (!isCreated.get()) {
             lock.lock();
             try {
-                if (instance == null) {
+                if (!isCreated.get()) {
                     instance = new ConnectionPool();
                     isCreated.getAndSet(true);
                 }

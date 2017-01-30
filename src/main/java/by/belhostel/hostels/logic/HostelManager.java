@@ -23,6 +23,13 @@ import java.util.ArrayList;
  */
 public class HostelManager {
 
+    /**
+     * Find hostel by id.
+     *
+     * @param hostelId the hostel id
+     * @return the hostel
+     * @throws LogicException the logic exception
+     */
     public static Hostel findHostelById(int hostelId) throws LogicException{
         Hostel hostel;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -37,6 +44,13 @@ public class HostelManager {
         return hostel;
     }
 
+    /**
+     * Find claim by id.
+     *
+     * @param claimId the claim id
+     * @return the claim
+     * @throws LogicException the logic exception
+     */
     public static Claim findClaimById(int claimId) throws LogicException{
         Claim claim;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -51,6 +65,13 @@ public class HostelManager {
         return claim;
     }
 
+    /**
+     * Find user by id.
+     *
+     * @param userId the user id
+     * @return the user
+     * @throws LogicException the logic exception
+     */
     public static User findUserById(int userId) throws LogicException{
         User user;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -65,6 +86,13 @@ public class HostelManager {
         return user;
     }
 
+    /**
+     * Find message by id.
+     *
+     * @param messageId the message id
+     * @return the message
+     * @throws LogicException the logic exception
+     */
     public static Message findMessageById(int messageId) throws LogicException{
         Message message;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -80,6 +108,14 @@ public class HostelManager {
     }
 
 
+    /**
+     * Find hostels by city.
+     *
+     * @param city the city
+     * @param control the control
+     * @return the array list
+     * @throws LogicException the logic exception
+     */
     public static ArrayList<Hostel> findHostelsByCity(String city, PaginationControl control) throws LogicException{
         ArrayList<Hostel> hostels = new ArrayList<Hostel>();
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -94,6 +130,17 @@ public class HostelManager {
         return hostels;
     }
 
+    /**
+     * Find suitable hostels.
+     *
+     * @param dateIn the date in
+     * @param dateOut the date out
+     * @param city the city
+     * @param places the places
+     * @param control the control
+     * @return the array list
+     * @throws LogicException the logic exception
+     */
     public static ArrayList<Hostel> findSuitableHostels(String dateIn, String dateOut, String city, int places, PaginationControl control) throws LogicException{
         ArrayList<Hostel> hostels = new ArrayList<Hostel>();
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -108,6 +155,13 @@ public class HostelManager {
         return hostels;
     }
 
+    /**
+     * Find all hostels.
+     *
+     * @param control the control
+     * @return the array list
+     * @throws LogicException the logic exception
+     */
     public static ArrayList<Hostel> findAllHostels(PaginationControl control) throws LogicException{
         ArrayList<Hostel> hostels;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -122,6 +176,13 @@ public class HostelManager {
         return hostels;
     }
 
+    /**
+     * Load main image for hostel.
+     *
+     * @param id the id
+     * @return the string
+     * @throws LogicException the logic exception
+     */
     public static String loadMainImageForHostel(int id) throws LogicException{
         String imgPath;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -135,6 +196,14 @@ public class HostelManager {
         }
         return imgPath;
     }
+
+    /**
+     * Load all images for hostel.
+     *
+     * @param id the id
+     * @return the array list
+     * @throws LogicException the logic exception
+     */
     public static ArrayList<String> loadAllImagesForHostel(int id) throws LogicException{
         ArrayList<String> imgPaths;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -148,6 +217,14 @@ public class HostelManager {
         }
         return imgPaths;
     }
+
+    /**
+     * Book hostel by claim.
+     *
+     * @param claim the claim
+     * @return true, if successful
+     * @throws LogicException the logic exception
+     */
     public static boolean bookHostelByClaim(Claim claim) throws LogicException{
         boolean result = false;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -165,6 +242,13 @@ public class HostelManager {
         return result;
     }
 
+    /**
+     * Delete message by id.
+     *
+     * @param messageId the message id
+     * @return true, if successful
+     * @throws LogicException the logic exception
+     */
     public static boolean deleteMessageById(int messageId) throws LogicException{
         boolean result = false;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -182,6 +266,13 @@ public class HostelManager {
         return result;
     }
 
+    /**
+     * Send message to user.
+     *
+     * @param message the message
+     * @return true, if successful
+     * @throws LogicException the logic exception
+     */
     public static boolean sendMessageToUser(Message message) throws LogicException{
         boolean result = false;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -199,6 +290,15 @@ public class HostelManager {
         return result;
     }
 
+    /**
+     * Count free places.
+     *
+     * @param hostelId the hostel id
+     * @param dateIn the date in
+     * @param dateOut the date out
+     * @return the integer
+     * @throws LogicException the logic exception
+     */
     public static Integer countFreePlaces(int hostelId, LocalDate dateIn, LocalDate dateOut) throws LogicException{
         int freePlaces = 0;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -224,6 +324,14 @@ public class HostelManager {
         return freePlaces;
     }
 
+    /**
+     * Cancel booking by ids.
+     *
+     * @param userId the user id
+     * @param hostelId the hostel id
+     * @return true, if successful
+     * @throws LogicException the logic exception
+     */
     public static boolean cancelBookingByIds(int userId, int hostelId) throws LogicException{
         boolean result = false;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -241,6 +349,14 @@ public class HostelManager {
         return result;
     }
 
+    /**
+     * Deposit money for user.
+     *
+     * @param userId the user id
+     * @param amount the amount
+     * @return true, if successful
+     * @throws LogicException the logic exception
+     */
     public static boolean depositMoneyForUser(int userId, double amount) throws LogicException{
         boolean result = false;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -258,6 +374,14 @@ public class HostelManager {
         return result;
     }
 
+    /**
+     * Checks if is booked hostel by user.
+     *
+     * @param userId the user id
+     * @param hostelId the hostel id
+     * @return true, if is booked hostel by user
+     * @throws LogicException the logic exception
+     */
     public static boolean isBookedHostelByUser(int userId, int hostelId) throws LogicException{
         boolean result = false;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -275,6 +399,13 @@ public class HostelManager {
         return result;
     }
 
+    /**
+     * Find booked hostels for user.
+     *
+     * @param userId the user id
+     * @return the array list
+     * @throws LogicException the logic exception
+     */
     public static ArrayList<Hostel> findBookedHostelsForUser(int userId) throws LogicException{
         ArrayList<Hostel> bookedHostels;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -289,6 +420,13 @@ public class HostelManager {
         return bookedHostels;
     }
 
+    /**
+     * Find paid hostels for user.
+     *
+     * @param userId the user id
+     * @return the array list
+     * @throws LogicException the logic exception
+     */
     public static ArrayList<Hostel> findPaidHostelsForUser(int userId) throws LogicException{
         ArrayList<Hostel> paidHostels;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -303,6 +441,14 @@ public class HostelManager {
         return paidHostels;
     }
 
+    /**
+     * Pay for hostel.
+     *
+     * @param userId the user id
+     * @param amount the amount
+     * @return true, if successful
+     * @throws LogicException the logic exception
+     */
     public static boolean payForHostel(int userId, double amount) throws LogicException{
         boolean result = false;
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();
@@ -320,6 +466,12 @@ public class HostelManager {
         return result;
     }
 
+    /**
+     * Find unconfirmed claims.
+     *
+     * @return the array list
+     * @throws LogicException the logic exception
+     */
     public static ArrayList<Claim> findUnconfirmedClaims() throws LogicException{
         ArrayList<Claim> unconfirmed = new ArrayList<Claim>();
         ProxyConnection cn = ConnectionPool.getInstance().getConnection();

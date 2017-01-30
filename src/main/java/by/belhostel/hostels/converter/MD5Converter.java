@@ -14,6 +14,9 @@ public class MD5Converter {
     private static final String ALGORITHM = "MD5";
     private static MessageDigest md;
 
+    /**
+     * Instantiates a new MD 5 converter.
+     */
     public MD5Converter() {
         try {
             md = MessageDigest.getInstance(ALGORITHM);

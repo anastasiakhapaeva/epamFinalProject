@@ -16,6 +16,12 @@ public class ActionFactory {
     private static final Logger LOG = LogManager.getLogger();
     private static final String PARAM_COMMAND = "command";
 
+    /**
+     * Define command.
+     *
+     * @param request the request
+     * @return the action command
+     */
     public ActionCommand defineCommand(HttpServletRequest request) {
         ActionCommand current = new EmptyCommand();
         String action = request.getParameter(PARAM_COMMAND);

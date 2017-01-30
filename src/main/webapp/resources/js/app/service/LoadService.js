@@ -29,7 +29,7 @@ var LoadService = (function () {
                 data: {
                     userId: JSON.stringify(userId),
                     hostelId: JSON.stringify(hostelId),
-                    command: 'ajax_load_names',
+                    command: 'ajax_load_names'
                 },
                 success: function (data) {
                     callback(data);

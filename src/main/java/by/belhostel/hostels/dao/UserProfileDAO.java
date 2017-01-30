@@ -19,6 +19,11 @@ public class UserProfileDAO extends AbstractDAO<UserProfile> {
                     " VALUES (?, ?, ?, ?, ?, ?)";
     private static final String SQL_SELECT_PROFILE = "SELECT * FROM UserProfile WHERE user_id=?";
 
+    /**
+     * Instantiates a new user profile DAO.
+     *
+     * @param connection the connection
+     */
     public UserProfileDAO(ProxyConnection connection) {
         super(connection);
     }

@@ -16,13 +16,35 @@ import java.time.format.DateTimeFormatter;
  * Created by Roman on 05.01.2017.
  */
 public class FreePlacesCommand implements ActionCommand {
+
+    /** The Constant LOG. */
     private static final Logger LOG = LogManager.getLogger();
+
+    /** The Constant PARAM_HOSTEL_ID. */
     private static final String PARAM_HOSTEL_ID = "hostelId";
+
+    /** The Constant PARAM_DATE_IN. */
     private static final String PARAM_DATE_IN = "dateIn";
+
+    /** The Constant PARAM_DATE_OUT. */
     private static final String PARAM_DATE_OUT = "dateOut";
+
+    /** The Constant DATE_FORMAT. */
     private static final String DATE_FORMAT = "yyyy-MM-dd";
+
+    /** The Constant PARAM_ERROR_MESSAGE. */
     private static final String PARAM_ERROR_MESSAGE = "errorMessage";
+
+    /** The Constant PARAM_ERROR. */
     private static final String PARAM_ERROR = "/resources/jsp/error.jsp";
+
+    /**
+     * Execute.
+     *
+     * @param request is servlet's request
+     * @param response is servlet's response
+     * @return the string
+     */
 
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         String page = "";
