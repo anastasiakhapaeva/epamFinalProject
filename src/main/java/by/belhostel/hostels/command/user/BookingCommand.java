@@ -36,61 +36,66 @@ public class BookingCommand implements ActionCommand {
     private static final String PARAM_ERROR_MESSAGE = "errorMessage";
     private static final String PARAM_MESSAGES = "messages";
     private static final String PARAM_ERROR = "/resources/jsp/error.jsp";
+    private static final String PARAM_MAIN = "/resources/jsp/main.jsp";
 
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         String page = "";
         HttpSession session = request.getSession(true);
-        try {
-            User currentUser = (User) session.getAttribute(PARAM_CURRENT_USER);
-            int hostelId = Integer.parseInt(request.getParameter(PARAM_HOSTEL_ID));
-            LocalDate dateIn = LocalDate.parse(request.getParameter(PARAM_DATE_IN), DateTimeFormatter.ofPattern(DATE_FORMAT));
-            LocalDate dateOut = LocalDate.parse(request.getParameter(PARAM_DATE_OUT), DateTimeFormatter.ofPattern(DATE_FORMAT));
-            int guests = Integer.parseInt(request.getParameter(PARAM_GUESTS));
+        User currentUser = (User) session.getAttribute(PARAM_CURRENT_USER);
+        if(currentUser != null) {
+            try {
+                int hostelId = Integer.parseInt(request.getParameter(PARAM_HOSTEL_ID));
+                LocalDate dateIn = LocalDate.parse(request.getParameter(PARAM_DATE_IN), DateTimeFormatter.ofPattern(DATE_FORMAT));
+                LocalDate dateOut = LocalDate.parse(request.getParameter(PARAM_DATE_OUT), DateTimeFormatter.ofPattern(DATE_FORMAT));
+                int guests = Integer.parseInt(request.getParameter(PARAM_GUESTS));
 
-            ClaimType bookingType = ClaimType.valueOf(request.getParameter(PARAM_BOOKING_TYPE).toUpperCase());
-            Claim newClaim = new Claim(hostelId, currentUser.getUserId(), bookingType, guests, dateIn, dateOut);
-            switch (bookingType) {
-                case RESERVATION:
-                    newClaim.setConfirmed(false);
-                    boolean resReserve = HostelManager.bookHostelByClaim(newClaim);
-                    if (resReserve) {
-                        List<HttpSession> adminSessions = UserSessions.getAdminsSessions();
-                        for (HttpSession adminSession : adminSessions) {
-                            ArrayList<Claim> unconfirmedClaims = (ArrayList<Claim>) adminSession.getAttribute(PARAM_UNCONFIRMED_CLAIMS);
-                            unconfirmedClaims.add(newClaim);
-                        }
-                    }
-                    break;
-                case PAYMENT:
-                    newClaim.setConfirmed(true);
-                    boolean resPayment = HostelManager.bookHostelByClaim(newClaim);
-                    if (resPayment) {
-                        Hostel current = HostelManager.findHostelById(hostelId);
-                        boolean isPaid = HostelManager.payForHostel(currentUser.getUserId(), current.getPrice() * guests * (1 - currentUser.getDiscount() / 100));
-                        if (isPaid) {
-                            Message paymentMessage = Messenger.generatePaymentMessage(currentUser.getUserId(), current.getName(), newClaim);
-                            boolean isSent = HostelManager.sendMessageToUser(paymentMessage);
-                            if (isSent) {
-                                List<HttpSession> userSessions = UserSessions.getUserSessions(currentUser.getUserId());
-                                for (HttpSession userSession : userSessions) {
-                                    ArrayList<Message> messages = (ArrayList<Message>) userSession.getAttribute(PARAM_MESSAGES);
-                                    messages.add(paymentMessage);
-                                }
+                ClaimType bookingType = ClaimType.valueOf(request.getParameter(PARAM_BOOKING_TYPE).toUpperCase());
+                Claim newClaim = new Claim(hostelId, currentUser.getUserId(), bookingType, guests, dateIn, dateOut);
+                switch (bookingType) {
+                    case RESERVATION:
+                        newClaim.setConfirmed(false);
+                        boolean resReserve = HostelManager.bookHostelByClaim(newClaim);
+                        if (resReserve) {
+                            List<HttpSession> adminSessions = UserSessions.getAdminsSessions();
+                            for (HttpSession adminSession : adminSessions) {
+                                ArrayList<Claim> unconfirmedClaims = (ArrayList<Claim>) adminSession.getAttribute(PARAM_UNCONFIRMED_CLAIMS);
+                                unconfirmedClaims.add(newClaim);
                             }
-                            currentUser.setMoney(currentUser.getMoney() - current.getPrice() * guests * (1 - currentUser.getDiscount() / 100));
                         }
-                    }
-                    break;
-                default:
-                    throw new NoSuchTypeException("No such constant in ClaimType enum");
+                        break;
+                    case PAYMENT:
+                        newClaim.setConfirmed(true);
+                        boolean resPayment = HostelManager.bookHostelByClaim(newClaim);
+                        if (resPayment) {
+                            Hostel current = HostelManager.findHostelById(hostelId);
+                            boolean isPaid = HostelManager.payForHostel(currentUser.getUserId(), current.getPrice() * guests * (1 - currentUser.getDiscount() / 100));
+                            if (isPaid) {
+                                Message paymentMessage = Messenger.generatePaymentMessage(currentUser.getUserId(), current.getName(), newClaim);
+                                boolean isSent = HostelManager.sendMessageToUser(paymentMessage);
+                                if (isSent) {
+                                    List<HttpSession> userSessions = UserSessions.getUserSessions(currentUser.getUserId());
+                                    for (HttpSession userSession : userSessions) {
+                                        ArrayList<Message> messages = (ArrayList<Message>) userSession.getAttribute(PARAM_MESSAGES);
+                                        messages.add(paymentMessage);
+                                    }
+                                }
+                                currentUser.setMoney(currentUser.getMoney() - current.getPrice() * guests * (1 - currentUser.getDiscount() / 100));
+                            }
+                        }
+                        break;
+                    default:
+                        throw new NoSuchTypeException("No such constant in ClaimType enum");
+                }
+
+
+                response.sendRedirect(request.getContextPath() + PARAM_HOSTEL_PAGE);
+            } catch (IOException | NoSuchTypeException | NumberFormatException | LogicException e) {
+                LOG.error(e);
+                request.setAttribute(PARAM_ERROR_MESSAGE, e);
+                page = PARAM_ERROR;
             }
-
-
-            response.sendRedirect(request.getContextPath() + PARAM_HOSTEL_PAGE);
-        } catch (IOException | NoSuchTypeException | NumberFormatException | LogicException e) {
-            LOG.error(e);
-            request.setAttribute(PARAM_ERROR_MESSAGE, e);
-            page = PARAM_ERROR;
+        } else {
+            page = PARAM_MAIN;
         }
         return page;
     }

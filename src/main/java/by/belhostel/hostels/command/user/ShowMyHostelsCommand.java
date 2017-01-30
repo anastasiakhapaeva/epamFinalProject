@@ -28,32 +28,37 @@ public class ShowMyHostelsCommand implements ActionCommand {
     private static final String PARAM_ERROR_MESSAGE = "errorMessage";
     private static final String PARAM_ERROR = "/resources/jsp/error.jsp";
     private static final String MY_HOSTELS_PAGE = "/resources/jsp/bookedhostels.jsp";
+    private static final String PARAM_MAIN = "/resources/jsp/main.jsp";
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String page = MY_HOSTELS_PAGE;
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute(PARAM_CURRENT_USER);
-        String bookType = request.getParameter(PARAM_BOOK_TYPE);
-        ArrayList<Hostel> myHostels;
-        try {
-            ClaimType type = ClaimType.valueOf(bookType.toUpperCase());
-            switch (type) {
-                case RESERVATION:
-                    myHostels = HostelManager.findBookedHostelsForUser(currentUser.getUserId());
-                    break;
-                case PAYMENT:
-                    myHostels = HostelManager.findPaidHostelsForUser(currentUser.getUserId());
-                    break;
-                default:
-                    throw new NoSuchTypeException("No such constant in ClaimType enum");
+        if(currentUser != null) {
+            String bookType = request.getParameter(PARAM_BOOK_TYPE);
+            ArrayList<Hostel> myHostels;
+            try {
+                ClaimType type = ClaimType.valueOf(bookType.toUpperCase());
+                switch (type) {
+                    case RESERVATION:
+                        myHostels = HostelManager.findBookedHostelsForUser(currentUser.getUserId());
+                        break;
+                    case PAYMENT:
+                        myHostels = HostelManager.findPaidHostelsForUser(currentUser.getUserId());
+                        break;
+                    default:
+                        throw new NoSuchTypeException("No such constant in ClaimType enum");
+                }
+                request.setAttribute(PARAM_MY_HOSTELS, myHostels);
+                request.setAttribute(PARAM_BOOK_TYPE, bookType);
+            } catch (NoSuchTypeException | LogicException e) {
+                LOG.error(e);
+                request.setAttribute(PARAM_ERROR_MESSAGE, e);
+                page = PARAM_ERROR;
             }
-            request.setAttribute(PARAM_MY_HOSTELS, myHostels);
-            request.setAttribute(PARAM_BOOK_TYPE, bookType);
-        } catch (NoSuchTypeException | LogicException e) {
-            LOG.error(e);
-            request.setAttribute(PARAM_ERROR_MESSAGE, e);
-            page = PARAM_ERROR;
+        }else{
+            page = PARAM_MAIN;
         }
         return page;
     }

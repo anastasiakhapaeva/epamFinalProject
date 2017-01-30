@@ -21,17 +21,24 @@ public class CancelBookingCommand implements ActionCommand {
     private static final String PARAM_HOSTEL_PAGE = "/resources/jsp/hostel.jsp";
     private static final String PARAM_ERROR_MESSAGE = "errorMessage";
     private static final String PARAM_ERROR = "/resources/jsp/error.jsp";
+    private static final String PARAM_MAIN = "/resources/jsp/main.jsp";
+
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        String page = PARAM_HOSTEL_PAGE;
+        String page = PARAM_MAIN;
         HttpSession session = request.getSession(true);
         User currentUser = (User) session.getAttribute(PARAM_CURRENT_USER);
-        try {
-            int hostelId = Integer.parseInt(request.getParameter(PARAM_HOSTEL_ID));
-            HostelManager.cancelBookingByIds(currentUser.getUserId(), hostelId);
-        }catch (NumberFormatException | LogicException e){
-            LOG.error(e);
-            request.setAttribute(PARAM_ERROR_MESSAGE, e);
-            page = PARAM_ERROR;
+        if(currentUser != null) {
+            try {
+                int hostelId = Integer.parseInt(request.getParameter(PARAM_HOSTEL_ID));
+                boolean res = HostelManager.cancelBookingByIds(currentUser.getUserId(), hostelId);
+                if(res){
+                    page = PARAM_HOSTEL_PAGE;
+                }
+            } catch (NumberFormatException | LogicException e) {
+                LOG.error(e);
+                request.setAttribute(PARAM_ERROR_MESSAGE, e);
+                page = PARAM_ERROR;
+            }
         }
         return page;
     }

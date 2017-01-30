@@ -54,7 +54,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12 text-center text-warning">
-                <img src="/resources/img/error.png" alt="error" width="400">
+                <img src="/web/resources/img/error.png" alt="error" width="400">
                 <h2>${pageContext.errorData.statusCode} <fmt:message key="page.error.error"/></h2>
                 <p><fmt:message key="page.error.title"/></p>
                 <c:if test="${not empty pageContext.exception}">

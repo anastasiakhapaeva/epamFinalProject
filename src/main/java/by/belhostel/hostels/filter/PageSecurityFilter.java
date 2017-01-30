@@ -10,14 +10,17 @@ import java.io.IOException;
 /**
  * Created by Roman on 29.01.2017.
  */
-@WebFilter(urlPatterns = {"/resources/jsp/*"},
-        initParams = {@WebInitParam(name = "INDEX_PATH", value = "/index.jsp")})
+@WebFilter(urlPatterns = {"/resources/jsp/*", "/service?command=go&page="},
+        initParams = {@WebInitParam(name = "INDEX_PATH", value = "/index.jsp"),
+                    @WebInitParam(name = "PAGES", value = "users, claims")})
 public class PageSecurityFilter implements Filter {
     private String indexPath;
+    private String pages;
 
     @Override
     public void init(FilterConfig fConfig) throws ServletException {
         indexPath = fConfig.getInitParameter("INDEX_PATH");
+        pages = fConfig.getInitParameter("PAGES");
     }
 
     @Override
@@ -25,7 +28,10 @@ public class PageSecurityFilter implements Filter {
             throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
-        httpResponse.sendRedirect(httpRequest.getContextPath() + indexPath);
+        String page = request.getParameter("page");
+        if(page == null || pages.contains(page)) {
+            httpResponse.sendRedirect(httpRequest.getContextPath() + indexPath);
+        }
         chain.doFilter(request, response);
     }
 
