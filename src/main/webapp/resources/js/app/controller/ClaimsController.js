@@ -15,18 +15,23 @@ $(function () {
             loadNames: function () {
                 var userIds = $("input[name='user_id']");
                 var hostelIds = $("input[name='hostel_id']");
-                var i;
-                for (i = 0; i < userIds.length; i++) {
-                    LoadService.loadNames(userIds[i].value, hostelIds[i].value, function (data) {
-                        var names = JSON.parse(data);
-                        var us_prefix = "user";
-                        var hs_prefix = "hostel";
+                var inputsUser = userIds.map(function() {
+                    return $(this).val();
+                }).get();
+                var inputsHostel = hostelIds.map(function() {
+                    return $(this).val();
+                }).get();
+                LoadService.loadNames(inputsUser, inputsHostel, function (data) {
+                    var us_prefix = "user";
+                    var hs_prefix = "hostel";
+                    var i;
+                    for(i=0;i<data.length;i++){
                         var us_id = userIds[i].value;
                         var hs_id = hostelIds[i].value;
-                        $("[data-name="+us_prefix+us_id+"]").text(names[0]);
-                        $("[data-name="+hs_prefix+hs_id+"]").text(names[1]);
-                    });
-                }
+                        $("[data-name="+us_prefix+us_id+"]").text(data[i][0]);
+                        $("[data-name="+hs_prefix+hs_id+"]").text(data[i][1]);
+                    }
+                });
             }
         };
 

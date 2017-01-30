@@ -18,11 +18,10 @@ $(function () {
                 var hostelId = $('#hostel_id').val();
                 var loadType = 'all';
                 LoadService.loadImages(hostelId, loadType, function (data) {
-                    var images = JSON.parse(data);
-                    $('#main-img').attr('src', images[0]);
+                    $('#main-img').attr('src', data[0]);
                     var j;
-                    for(j=0;j<images.length;j++){
-                        $("#img" + j).attr('src', images[j]);
+                    for(j=0;j<data.length;j++){
+                        $("#img" + j).attr('src', data[j]);
                     }
                 });
             },

@@ -6,7 +6,6 @@ import by.belhostel.hostels.exception.NoSuchTypeException;
 import by.belhostel.hostels.logic.HostelManager;
 import com.google.gson.Gson;
 import by.belhostel.hostels.exception.LogicException;
-import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,17 +27,20 @@ public class LoadImageCommand implements ActionCommand {
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         String page = "";
         try {
-            int hostelId = Integer.parseInt(request.getParameter(PARAM_HOSTEL_ID));
             ImageLoadType loadType = ImageLoadType.valueOf(request.getParameter(PARAM_LOAD_TYPE).toUpperCase());
             switch (loadType) {
                 case MAIN:
-                    String imgPath = HostelManager.loadMainImageForHostel(hostelId);
-                    response.getWriter().write(imgPath);
+                    ArrayList<String> imgMainPaths = new ArrayList<>();
+                    int[] hostelIds = new Gson().fromJson(request.getParameter(PARAM_HOSTEL_ID), int[].class);
+                    for(int id : hostelIds){
+                        imgMainPaths.add(HostelManager.loadMainImageForHostel(id));
+                    }
+                    response.getWriter().write(new Gson().toJson(imgMainPaths));
                     break;
                 case ALL:
+                    int hostelId = new Gson().fromJson(request.getParameter(PARAM_HOSTEL_ID), int.class);
                     ArrayList<String> imgPaths = HostelManager.loadAllImagesForHostel(hostelId);
-                    String json = new Gson().toJson(imgPaths);
-                    response.getWriter().write(json);
+                    response.getWriter().write(new Gson().toJson(imgPaths));
                     break;
                 default:
                     throw new NoSuchTypeException("No such constant in ImageLoadType enum.");

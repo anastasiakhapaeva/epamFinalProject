@@ -5,14 +5,14 @@ var LoadService = (function () {
     var methods = {
         loadImages: function (hostelId, type, callback) {
             $.ajax({
-                type: 'GET',
-                url: '/web/service',
+                type: 'POST',
+                dataType: 'json',
                 data: {
-                    hostelId: hostelId,
+                    hostelId: JSON.stringify(hostelId),
                     command: 'ajax_load_img',
                     loadType: type
                 },
-                async: false,
+                url: '/web/service',
                 success: function (data) {
                     callback(data);
                 },
@@ -23,14 +23,14 @@ var LoadService = (function () {
         },
         loadNames: function (userId, hostelId, callback) {
             $.ajax({
-                type: 'GET',
+                type: 'POST',
                 url: '/web/service',
+                dataType: 'json',
                 data: {
-                    userId: userId,
-                    hostelId: hostelId,
+                    userId: JSON.stringify(userId),
+                    hostelId: JSON.stringify(hostelId),
                     command: 'ajax_load_names',
                 },
-                async: false,
                 success: function (data) {
                     callback(data);
                 },

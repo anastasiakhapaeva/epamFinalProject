@@ -16,14 +16,17 @@ $(function () {
                 setLang(locale);
             },
             loadMainImages: function () {
-                var inputs = $("input[name='id']");
+                var images = $("input[name='id']");
+                var inputs = images.map(function() {
+                    return $(this).val();
+                }).get();
                 var loadType = 'main';
-                var i;
-                for(i=0; i< inputs.length;i++) {
-                    LoadService.loadImages(inputs[i].value, loadType, function (data) {
-                        $("#" + inputs[i].value).attr('src', data);
-                    });
-                }
+                LoadService.loadImages(inputs, loadType, function (data) {
+                    var i;
+                    for(i=0;i<data.length;i++){
+                        $("#" + images[i].value).attr('src', data[i]);
+                    }
+                });
             },
             setCurrentPage: function () {
                 var currPage = $('#currPage').val();
